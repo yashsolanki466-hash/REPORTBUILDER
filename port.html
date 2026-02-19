@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title> Unigenome NGS-240563</title>
+
+    <!-- Dependencies -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        body {
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #333;
+            background-color: #fff;
+            margin: 0;
+        }
+
+        /* Fixed TOC Sidebar Style */
+        #TOC {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 250px;
+            height: 100%;
+            overflow-y: auto;
+            background: #f8f8f8;
+            border-right: 1px solid #eee;
+            padding: 20px 0;
+            z-index: 1000;
+        }
+
+        #TOC ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        #TOC li a {
+            display: block;
+            padding: 8px 20px;
+            color: #777;
+            text-decoration: none;
+            font-size: 13px;
+            border-left: 4px solid transparent;
+        }
+
+        #TOC li a:hover {
+            background: #eee;
+            color: #337ab7;
+        }
+
+        #TOC li a.active {
+            color: #337ab7;
+            background: #fff;
+            border-left: 4px solid #337ab7;
+            font-weight: bold;
+        }
+
+        /* Content Area */
+        .main-container {
+            margin-left: 250px;
+            padding: 60px 80px;
+            max-width: 1100px;
+        }
+
+        h1.title {
+            font-size: 32px;
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-weight: 700;
+            color: #000;
+        }
+
+        .subtitle {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 30px;
+            font-weight: 400;
+        }
+
+        h2 {
+            font-size: 24px;
+            color: #337ab7;
+            border-bottom: 2px solid #337ab7;
+            padding-bottom: 8px;
+            margin-top: 60px;
+            margin-bottom: 25px;
+            font-weight: 700;
+        }
+
+        h3 {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 35px;
+            margin-bottom: 15px;
+            color: #444;
+        }
+
+        h4 {
+            font-size: 15px;
+            font-weight: bold;
+            margin-top: 25px;
+            margin-bottom: 10px;
+            color: #555;
+        }
+
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            margin: 20px 0 30px 0;
+        }
+
+        .table-title {
+            font-weight: bold;
+            font-size: 13px;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        table {
+            width: 100%;
+            max-width: 100%;
+            border-spacing: 0;
+            border-collapse: collapse;
+            border: 1px solid #ddd;
+            font-size: 13px;
+        }
+
+        table th {
+            padding: 10px;
+            background-color: #f2f2f2;
+            border: 1px solid #ddd;
+            text-align: left;
+            font-weight: 700;
+        }
+
+        table td {
+            padding: 8px 10px;
+            border: 1px solid #ddd;
+            vertical-align: middle;
+        }
+
+        table tr:nth-of-type(even) {
+            background-color: #fafafa;
+        }
+
+        .figure {
+            margin: 30px 0;
+            text-align: center;
+            background: #fdfdfd;
+            padding: 20px;
+            border: 1px solid #efefef;
+        }
+
+        .caption {
+            font-size: 12px;
+            color: #666;
+            margin-top: 15px;
+            font-style: italic;
+        }
+
+        .info-box {
+            padding: 20px;
+            margin-bottom: 25px;
+            border: 1px solid #d9edf7;
+            border-radius: 4px;
+            background-color: #f4f8fb;
+            color: #31708f;
+        }
+
+        .mono {
+            font-family: "Menlo", "Monaco", "Consolas", monospace;
+            font-size: 12px;
+        }
+
+        .confidential {
+            color: #999;
+            font-size: 11px;
+            margin-top: 5px;
+        }
+
+        @media (max-width: 992px) {
+            #TOC {
+                display: none;
+            }
+
+            .main-container {
+                margin-left: 0;
+                padding: 30px;
+            }
+        }
+
+        /* Print formatting */
+        @media print {
+            #TOC {
+                display: none;
+            }
+
+            .main-container {
+                margin-left: 0;
+                width: 100%;
+                padding: 0;
+            }
+
+            h2 {
+                page-break-before: always;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="TOC">
+        <div style="padding: 0 20px 20px 20px; border-bottom: 1px solid #eee; margin-bottom: 15px;">
+            <div style="font-weight: bold; color: #337ab7; font-size: 18px;">UNIGENOME</div>
+            <div style="font-size: 11px; color: #999;">Final Analysis Report</div>
+        </div>
+        <ul>
+            <li><a href="#section-1" class="active">1 Project Details</a></li>
+            <li><a href="#section-2">2 Sample Information</a></li>
+            <li><a href="#section-3">3 Methods</a></li>
+            <li><a href="#section-4">4 Library Quality Control</a></li>
+            <li><a href="#section-5">5 Bioinformatics Analysis</a></li>
+            <li><a href="#section-6">6 Data Statistics</a></li>
+            <li><a href="#section-7">7 Reference Genome</a></li>
+            <li><a href="#section-8">8 Mapping & Assembly</a></li>
+            <li><a href="#section-9">9 Differential Expression</a></li>
+            <li><a href="#section-10">10 Functional Annotation</a></li>
+            <li><a href="#section-11">11 Deliverables</a></li>
+        </ul>
+    </div>
+
+    <div class="main-container">
+
+        <header>
+            <h1 class="title">Final Report of Whole Transcriptome Analysis</h1>
+            <p class="subtitle">On Illumina Novaseq X Plus Platform</p>
+            <div class="info-box">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div>
+                        <p><strong>Submitted to:</strong><br>
+                            Dr. Vijay Sharma<br>
+                            GPB BUAT, India</p>
+                    </div>
+                    <div>
+                        <p><strong>Prepared by:</strong><br>
+                            Unigenome Division<br>
+                            Unipath Specialty Laboratory Ltd.</p>
+                    </div>
+                </div>
+                <hr style="border: 0; border-top: 1px solid #d9edf7; margin: 10px 0;">
+                <p style="margin: 0;"><strong>Project ID:</strong> NGS-240563 | <strong>Report Date:</strong> 15-11-25
+                </p>
+                <p class="confidential">Unigenome | Confidential Restricted use only</p>
+            </div>
+        </header>
+
+        <!-- Section 1 -->
+        <div id="section-1" class="section">
+            <h2>1 Project Details</h2>
+            <p>This report details the whole transcriptome sequencing and bioinformatics analysis for the project
+                NGS-240563. Sequencing was carried out using high-throughput technology to provide deep coverage of the
+                transcriptome.</p>
+            <div class="table-wrapper">
+                <div class="table-title">Table 1.1: Project Specifications</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Service Type</th>
+                            <th>Platform</th>
+                            <th>Read Length</th>
+                            <th>Data Throughput</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Transcriptome Sequencing</td>
+                            <td>Illumina Novaseq X Plus</td>
+                            <td>2 X 150 PE</td>
+                            <td>~05 GB / Sample</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Section 2 -->
+        <div id="section-2" class="section">
+            <h2>2 Sample Information</h2>
+            <p>A total of 08 samples were received for library preparation and sequencing. The samples were collected
+                from plant root tissues and maintained under strict temperature controls during transport.</p>
+            <div class="table-wrapper">
+                <div class="table-title">Table 2.1: Sample Overview</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Type</th>
+                            <th>No. of Samples</th>
+                            <th>Shipping Condition</th>
+                            <th>Libraries Prepared</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Plant Root</td>
+                            <td>08</td>
+                            <td>-20°C</td>
+                            <td>08</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p><strong>Sample Nomenclature:</strong> WS-C-R1, WS-C-R2, WS-2D-R1, WS-4D-R1, WS-6D-R, WS-2D-R2, WS-4D-R2,
+                WS-6D-R2, WT-C-R1, WT-C-R2, WT-2D-R1, WT-4D-R1, WT-6D-R, WT-2D-R2, WT-4D-R2, WT-6D-R2.</p>
+        </div>
+
+        <!-- Section 3 -->
+        <div id="section-3" class="section">
+            <h2>3 Methods</h2>
+
+            <h3>3.1 Isolation and Quantitative analysis of RNA</h3>
+            <p>RNA were extracted from Plant Root samples using the PVP extraction method. This method is optimized for
+                plant tissues containing high levels of polyphenols and polysaccharides. Following extraction, RNA
+                quantity was measured using a Qubit® 4.0 fluorometer, and quality was analyzed by 1% agarose gel
+                electrophoresis to ensure the absence of degradation.</p>
+
+            <h3>3.2 Preparation of Library</h3>
+            <p>The paired-end sequencing library was prepared using the <strong>KAPA mRNA HyperPrep Kit for Illumina
+                    (CAT #KK8581)</strong>. The process was initiated with 500-1000 ng of input RNA. The workflow
+                included mRNA enrichment, fragmentation, first and second-strand cDNA synthesis, end-repair, 3´
+                adenylation, and adapter ligation.</p>
+            <p>Selective enrichment of adapter-ligated DNA fragments was achieved through PCR amplification. The
+                resulting libraries were validated for size distribution and concentration.</p>
+
+            <h3>3.3 Quantification using Qubit 4.0 Fluorometer</h3>
+            <div class="table-wrapper">
+                <div class="table-title">Table 3.1: RNA Quantification (Qubit)</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>S.N</th>
+                            <th>Sample ID</th>
+                            <th>Conc. (ng/µl)</th>
+                            <th>Volume (µl)</th>
+                            <th>Yield (µg)</th>
+                            <th>Remarks</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>WS-C-R1</td>
+                            <td>69.1</td>
+                            <td>50</td>
+                            <td>3.455</td>
+                            <td>QC PASS</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>WS-C-R2</td>
+                            <td>56.2</td>
+                            <td>50</td>
+                            <td>2.810</td>
+                            <td>QC PASS</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>WS-2D-R1...</td>
+                            <td>71.4</td>
+                            <td>50</td>
+                            <td>3.570</td>
+                            <td>QC PASS</td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td>WS-2D-R2...</td>
+                            <td>47.5</td>
+                            <td>50</td>
+                            <td>2.375</td>
+                            <td>QC PASS</td>
+                        </tr>
+                        <tr>
+                            <td>5</td>
+                            <td>WT-C-R1</td>
+                            <td>76.6</td>
+                            <td>50</td>
+                            <td>3.830</td>
+                            <td>QC PASS</td>
+                        </tr>
+                        <tr>
+                            <td>6</td>
+                            <td>WT-C-R2</td>
+                            <td>77.4</td>
+                            <td>50</td>
+                            <td>3.870</td>
+                            <td>QC PASS</td>
+                        </tr>
+                        <tr>
+                            <td>7</td>
+                            <td>WT-2D-R1...</td>
+                            <td>51.5</td>
+                            <td>50</td>
+                            <td>2.575</td>
+                            <td>QC PASS</td>
+                        </tr>
+                        <tr>
+                            <td>8</td>
+                            <td>WT-2D-R2...</td>
+                            <td>119.0</td>
+                            <td>50</td>
+                            <td>5.950</td>
+                            <td>QC PASS</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>3.4 Cluster Generation and Sequencing</h3>
+            <p>Library molecules bind to complementary adapter oligos on the paired-end flow cell. Cluster generation
+                and sequencing were performed on the Illumina Novaseq X Plus platform. Paired-end sequencing allows
+                template fragments to be sequenced from both directions, improving alignment accuracy and detecting
+                structural variations.</p>
+        </div>
+
+        <!-- Section 4 -->
+        <div id="section-4" class="section">
+            <h2>4 Library Quality Control</h2>
+            <p>Amplified libraries were analyzed on a TapeStation 4150 (Agilent Technologies) using High Sensitivity
+                D1000 ScreenTape® to determine mean peak sizes and ensure proper fragment distribution.</p>
+
+            <div class="figure">
+                <div style="height: 300px; width: 100%;">
+                    <canvas id="qcChart"></canvas>
+                </div>
+                <p class="caption">Figure 4.1: Mean library peak size distribution (bp) validated via TapeStation 4150.
+                </p>
+            </div>
+
+            <h4>4.1 Wet Lab Inferences</h4>
+            <p>The average sizes of the generated libraries were determined to be 479bp, 503bp, 487bp, 539bp, 344bp,
+                356bp, 367bp, and 353bp respectively for the 8 samples. All libraries met the concentration and size
+                requirements for high-quality sequencing on the Novaseq X Plus platform.</p>
+        </div>
+
+        <!-- Section 5 -->
+        <div id="section-5" class="section">
+            <h2>5 Bioinformatics Analysis</h2>
+
+            <h3>5.1 Bioinformatics Workflow</h3>
+            <p>Raw data was filtered to remove adapters and low-quality bases. Clean reads thus produced were used for
+                analysis. Reference-guided transcript assembly was performed by mapping clean reads onto the reference
+                genome using <strong>STAR (v2.7.10a)</strong> and assembling transcripts with <strong>StringTie
+                    (v2.2.1)</strong>.</p>
+            <p>A consensus set of transcripts was obtained using the StringTie merge function. Transcript abundance was
+                estimated for each individual sample, and read counts were used for differential expression analysis
+                using the <strong>edgeR</strong> package. Gene Ontology and pathway analysis were performed using
+                <strong>Blast2go cli</strong> and <strong>KEGG-KAAS</strong> respectively.
+            </p>
+
+            <h3>5.2 Detail of Software used for analysis</h3>
+            <div class="table-wrapper">
+                <div class="table-title">Table 5.1: Software Stack</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Software</th>
+                            <th>Version</th>
+                            <th>Application</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Trim Galore</td>
+                            <td>0.6.4</td>
+                            <td>Adapter & Quality Trimming</td>
+                        </tr>
+                        <tr>
+                            <td>STAR</td>
+                            <td>2.7.10</td>
+                            <td>Reference Genome Mapping</td>
+                        </tr>
+                        <tr>
+                            <td>Stringtie</td>
+                            <td>2.2.1</td>
+                            <td>Reference-based Assembly</td>
+                        </tr>
+                        <tr>
+                            <td>gffcompare</td>
+                            <td>0.12.6</td>
+                            <td>Genome Comparison</td>
+                        </tr>
+                        <tr>
+                            <td>Blast2go cli</td>
+                            <td>1.5</td>
+                            <td>GO Mapping & Annotation</td>
+                        </tr>
+                        <tr>
+                            <td>edgeR</td>
+                            <td>3.6.2</td>
+                            <td>Differential Expression Analysis</td>
+                        </tr>
+                        <tr>
+                            <td>clusterProfiler</td>
+                            <td>4.12.6</td>
+                            <td>Enrichment Analysis</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Section 6 -->
+        <div id="section-6" class="section">
+            <h2>6 Data Statistics</h2>
+            <p>Next-generation sequencing statistics for raw data generated on the Novaseq platform are provided in the
+                table below.</p>
+            <div class="table-wrapper">
+                <div class="table-title">Table 6.1: Sequencing Data Statistics</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Sample</th>
+                            <th>Total Reads</th>
+                            <th>Total Bases</th>
+                            <th>Data (GB)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>WS-C-R1</td>
+                            <td class="mono">37,627,864</td>
+                            <td class="mono">5,982,830,376</td>
+                            <td class="font-bold">5.98</td>
+                        </tr>
+                        <tr>
+                            <td>WS-C-R2</td>
+                            <td class="mono">38,547,754</td>
+                            <td class="mono">6,129,092,886</td>
+                            <td class="font-bold">6.13</td>
+                        </tr>
+                        <tr>
+                            <td>WS-2D-R1...</td>
+                            <td class="mono">38,707,402</td>
+                            <td class="mono">6,154,476,918</td>
+                            <td class="font-bold">6.15</td>
+                        </tr>
+                        <tr>
+                            <td>WS-2D-R2...</td>
+                            <td class="mono">44,489,962</td>
+                            <td class="mono">7,073,903,958</td>
+                            <td class="font-bold">7.07</td>
+                        </tr>
+                        <tr>
+                            <td>WT-C-R1</td>
+                            <td class="mono">32,457,290</td>
+                            <td class="mono">5,160,709,110</td>
+                            <td class="font-bold">5.16</td>
+                        </tr>
+                        <tr>
+                            <td>WT-C-R2</td>
+                            <td class="mono">38,612,288</td>
+                            <td class="mono">6,139,353,792</td>
+                            <td class="font-bold">6.14</td>
+                        </tr>
+                        <tr>
+                            <td>WT-2D-R1...</td>
+                            <td class="mono">46,243,856</td>
+                            <td class="mono">7,352,773,104</td>
+                            <td class="font-bold">7.35</td>
+                        </tr>
+                        <tr>
+                            <td>WT-2D-R2...</td>
+                            <td class="mono">79,828,846</td>
+                            <td class="mono">12,692,786,514</td>
+                            <td class="font-bold">12.69</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Section 7 -->
+        <div id="section-7" class="section">
+            <h2>7 Reference Genome</h2>
+            <p>The reference genome of <strong>Sesamum indicum (GCF_000512975.1)</strong> was used for alignment and
+                annotation. The corresponding GFF file contains locus and structural information regarding 26,075 genes.
+            </p>
+            <div class="table-wrapper">
+                <div class="table-title">Table 7.1: Reference Genome Statistics</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Description</th>
+                            <th>Stats</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Total Chromosomes/Scaffolds</td>
+                            <td>16,236</td>
+                        </tr>
+                        <tr>
+                            <td>Total Genome Length (bp)</td>
+                            <td>275,059,498</td>
+                        </tr>
+                        <tr>
+                            <td>Mean Scaffold Size</td>
+                            <td>16,941</td>
+                        </tr>
+                        <tr>
+                            <td>Max Scaffold Size (bp)</td>
+                            <td>25,289,714</td>
+                        </tr>
+                        <tr>
+                            <td>Total Genes Annotated</td>
+                            <td>26,075</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Section 8 -->
+        <div id="section-8" class="section">
+            <h2>8 Mapping & Assembly</h2>
+            <p>Alignment to the reference genome allows the identification of reads originating from specific loci.
+                Mapping results show high percentages of uniquely mapped reads for most samples.</p>
+            <div class="table-wrapper">
+                <div class="table-title">Table 8.1: Mapping Statistics</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Sample Name</th>
+                            <th>Total Clean Reads</th>
+                            <th>Mapped Reads</th>
+                            <th>% Mapped</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>WS-2D-R1...</td>
+                            <td class="mono">19,332,387</td>
+                            <td class="mono">12,137,945</td>
+                            <td>62.79%</td>
+                        </tr>
+                        <tr>
+                            <td>WS-2D-R2...</td>
+                            <td class="mono">22,199,824</td>
+                            <td class="mono">17,700,050</td>
+                            <td>79.73%</td>
+                        </tr>
+                        <tr>
+                            <td>WS-C-R1</td>
+                            <td class="mono">18,778,537</td>
+                            <td class="mono">10,746,516</td>
+                            <td>57.23%</td>
+                        </tr>
+                        <tr>
+                            <td>WT-2D-R1...</td>
+                            <td class="mono">23,096,784</td>
+                            <td class="mono">18,752,120</td>
+                            <td>81.19%</td>
+                        </tr>
+                        <tr>
+                            <td>WT-CR-2</td>
+                            <td class="mono">16,207,978</td>
+                            <td class="mono">13,662,520</td>
+                            <td>84.35%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <p>A total of 61,369 transcripts were identified in the merged assembly with a mean size of 1,612 bp.</p>
+            <div class="table-wrapper">
+                <div class="table-title">Table 8.2: Assembly Statistics</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Sample Name</th>
+                            <th># Assembled Transcripts</th>
+                            <th>Total (bp)</th>
+                            <th>Mean Size (bp)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>merged.fasta</td>
+                            <td class="mono">61,369</td>
+                            <td class="mono">98,940,986</td>
+                            <td>1,612</td>
+                        </tr>
+                        <tr>
+                            <td>WS-2D-R1...</td>
+                            <td class="mono">34,845</td>
+                            <td class="mono">61,770,161</td>
+                            <td>1,772</td>
+                        </tr>
+                        <tr>
+                            <td>WT-C-R1</td>
+                            <td class="mono">30,041</td>
+                            <td class="mono">50,558,998</td>
+                            <td>1,683</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Section 9 -->
+        <div id="section-9" class="section">
+            <h2>9 Differential Expression</h2>
+            <p>Differential gene expression was inferred between samples by applying the R package
+                <strong>edgeR</strong>. This provides statistical significance based on a negative binomial distribution
+                model.
+            </p>
+            <div class="table-wrapper">
+                <div class="table-title">Table 9.1: Differential Expression Statistics</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Comparison</th>
+                            <th>Total DEGs</th>
+                            <th>Sig. Down</th>
+                            <th>Sig. Up</th>
+                            <th>Total Significant</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Comp 1 (WT-C-R1 vs WS-C-R1)</td>
+                            <td>13,528</td>
+                            <td>45</td>
+                            <td>28</td>
+                            <td class="font-bold">73</td>
+                        </tr>
+                        <tr>
+                            <td>Comp 3 (WS_TC_R1 vs WS-C-R1)</td>
+                            <td>17,028</td>
+                            <td>1406</td>
+                            <td>982</td>
+                            <td class="font-bold">2388</td>
+                        </tr>
+                        <tr>
+                            <td>Comp 4 (WS_TC_R2 vs WS-C-R2)</td>
+                            <td>14,558</td>
+                            <td>1291</td>
+                            <td>2235</td>
+                            <td class="font-bold">3526</td>
+                        </tr>
+                        <tr>
+                            <td>Comp 7 (WT_TC_R1 vs WS_TC_R1)</td>
+                            <td>17,329</td>
+                            <td>981</td>
+                            <td>1367</td>
+                            <td class="font-bold">2348</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="figure">
+                <div style="height: 350px; width: 100%;">
+                    <canvas id="dgeChart"></canvas>
+                </div>
+                <p class="caption">Figure 9.1: Summary of Significantly Upregulated and Downregulated genes per
+                    comparison.</p>
+            </div>
+        </div>
+
+        <!-- Section 10 -->
+        <div id="section-10" class="section">
+            <h2>10 Functional Annotation</h2>
+            <p>Mapping of significantly differentially expressed transcripts to biological pathways was performed using
+                <strong>KEGG-KAAS</strong>. Results represent metabolic pathways of major biomolecules.
+            </p>
+            <div class="table-wrapper">
+                <div class="table-title">Table 10.1: KEGG Pathway Statistics (Comparison-1)</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Level 1 Category</th>
+                            <th>Level 2 Sub-Category</th>
+                            <th>Counts</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Metabolism</td>
+                            <td>Carbohydrate metabolism</td>
+                            <td>8</td>
+                        </tr>
+                        <tr>
+                            <td>Metabolism</td>
+                            <td>Energy metabolism</td>
+                            <td>4</td>
+                        </tr>
+                        <tr>
+                            <td>Environmental Info</td>
+                            <td>Signal transduction</td>
+                            <td>11</td>
+                        </tr>
+                        <tr>
+                            <td>Human Diseases</td>
+                            <td>Neurodegenerative disease</td>
+                            <td>22</td>
+                        </tr>
+                        <tr>
+                            <td>Protein Families</td>
+                            <td>Genetic information processing</td>
+                            <td>25</td>
+                        </tr>
+                        <tr>
+                            <td>Organismal Systems</td>
+                            <td>Nervous system</td>
+                            <td>2</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Section 11 -->
+        <div id="section-11" class="section">
+            <h2>11 Deliverables</h2>
+            <p>All raw and analyzed data have been structured into the following folders for delivery:</p>
+            <div class="info-box">
+                <p class="mono" style="white-space: pre-wrap; font-size: 11px;">
+                    ├── 01_Raw_Data
+                    │ └── (8 Samples FastQ + MD5 Checksums)
+                    ├── 02_reference_genome_and_gff
+                    │ └── Sesamum_indicum_v1.0.fna / .gff
+                    ├── 03_transcript_assembly_gtf
+                    │ └── merged_transcripts.gtf + novel.isoforms.gtf
+                    ├── 04_transcript_sequences_fasta
+                    │ └── Merged.fasta + Sample_transcripts.fasta
+                    ├── 05_differential_expression_analysis
+                    │ └── DGE Tables, Volcano, MA & Heatmaps
+                    ├── 06_Significant_DGE_GO
+                    ├── 07_Significant_DGE_pathways
+                    └── 08_Significant_DGE_Enrichment</p>
+            </div>
+        </div>
+
+        <footer
+            style="margin-top: 80px; padding-top: 20px; border-top: 1px solid #eee; text-align: center; font-size: 11px; color: #999; margin-bottom: 50px;">
+            <p>© 2025 Unigenome Division | Unipath Specialty Laboratory Ltd.</p>
+            <p>3rd Floor, PASL House | Beside Sahjanand College | Panjara pol, Ambawadi | Ahmedabad - 380015 | Gujarat,
+                India</p>
+            <p>Tel :- +91-79-66197701 | genomics@unipath.in | www.unigenome.in</p>
+        </footer>
+
+    </div>
+
+    <script>
+        // Init Lucide Icons
+        if (window.lucide) lucide.createIcons();
+
+        // ScrollSpy logic to highlight TOC on scroll
+        window.addEventListener('scroll', () => {
+            const sections = document.querySelectorAll('.section');
+            const navLinks = document.querySelectorAll('#TOC a');
+
+            let current = "";
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (pageYOffset >= sectionTop - 180) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href').includes(current)) {
+                    link.classList.add('active');
+                }
+            });
+        });
+
+        // Charts Initialization
+        window.onload = function () {
+            // QC Mean Peak Size Chart
+            new Chart(document.getElementById('qcChart'), {
+                type: 'bar',
+                data: {
+                    labels: ['WS-C-R1', 'WS-C-R2', 'WS-2D-R1', 'WS-2D-R2', 'WT-C-R1', 'WT-C-R2', 'WT-2D-R1', 'WT-2D-R2'],
+                    datasets: [{
+                        label: 'Mean Library Peak Size (bp)',
+                        data: [479, 503, 487, 539, 344, 356, 367, 353],
+                        backgroundColor: 'rgba(51, 122, 183, 0.7)',
+                        borderColor: '#337ab7',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { y: { beginAtZero: false, min: 300 } }
+                }
+            });
+
+            // DGE Summary Chart
+            new Chart(document.getElementById('dgeChart'), {
+                type: 'bar',
+                data: {
+                    labels: ['Comp 1', 'Comp 3', 'Comp 4', 'Comp 7'],
+                    datasets: [
+                        { label: 'Sig Up', data: [28, 982, 2235, 1367], backgroundColor: '#5cb85c' },
+                        { label: 'Sig Down', data: [45, 1406, 1291, 981], backgroundColor: '#d9534f' }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { x: { stacked: true }, y: { stacked: true } },
+                    plugins: { legend: { position: 'bottom' } }
+                }
+            });
+        };
+    </script>
+</body>
+
+</html>

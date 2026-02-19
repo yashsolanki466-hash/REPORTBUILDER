@@ -1,0 +1,378 @@
+
+
+Final Report of
+Whole Transcriptome Sequencing 
+& Analysis
+On Illumina Novaseq X Plus Platform
+
+
+
+
+Submitted to:
+
+Dr Madhurjit Singh Rathore        
+RVSKVV Gwalior 
+India
+
+	
+
+
+Submitted by:
+Unigenome
+A life sciences division of Unipath Specialty Laboratory Ltd.
+3rd Floor, PASL House | Beside Sahjanand College | Panjara pol, Ambawadi,
+Ahmedabad – 380015 | Gujarat, India
+Tel :- +91-79-66197701
+genomics@unipath.in | www.unigenome.in
+Table of Contents
+1.	Project Details	3
+2.	Sample Details	3
+3.	Methods	3
+3.1.	Isolation and Quantitative analysis of RNA:	3
+3.2.	Preparation of Library	3
+3.3.	Quantity and quality check (QC) of library on Agilent Tape Station 4150	4
+3.4.	Cluster Generation and Sequencing	4
+3.5.	Results: RNA QC on 1% agarose gel	4
+3.6.	Quantification using Qubit 4.0 Fluorometer	5
+4.	Quantity and quality check (QC) of library on Agilent Tape Station 4150	6
+4.1.	TapeStation 4150 profiles of library loaded in Agilent High Sensitivity D1000ScreenTape®:	6
+4.2.	Wet Lab Inferences	6
+5.	Bioinformatics Analysis	7
+5.1.	Bioinformatics Workflow	7
+5.2.	Detail of Software used for analysis	8
+5.3.	Data statistics	9
+5.4.	Reference genome information	10
+5.5.	Mapping to reference genome	11
+5.6.	Transcript assembly	11
+5.7.	Comparison of assembled transcripts with reference transcripts	14
+5.7.1.	Identification of novel isoform transcripts	15
+5.8.	Differential expression analysis	16
+5.8.1.	MA Plot for differentially expressed genes	19
+5.8.2.	Volcano plot for differentially expressed genes	20
+5.8.3.	Heatmap for significantly differential expressed genes	21
+5.8.4.	Gene Ontology (GO) analysis for significant DEG	22
+5.8.5.	Pathway analysis for significant DGE	23
+5.8.6.	Over-representation (or enrichment) analysis	27
+6.	Deliverables	30
+
+
+Project Details
+Sample Details
+Methods
+ Isolation and Quantitative analysis of RNA:
+RNA samples were extracted from leaf sample using PVP extraction method. RNA quantity was measured using Qubit® 4.0 fluorometer and quality were analyzed by using 1% agarose gel. 
+ Preparation of Library
+The paired-end sequencing library was prepared using KAPA mRNA HyperPrep Kit for Illumina. (CAT #KK8581). The library preparation process was initiated with 500-1000 ng input. mRNA enrichment was performed as per user manual and mRNA was subjected to fragmentation, first & second-strand cDNA synthesis, end-repair, 3´ adenylating, adapter ligation, selective enrichment of adapter-ligated DNA fragments through PCR amplification, followed by validation of Library on Agilent 4150 tape station. The final library was pooled with other-samples, denatured & loaded on to flow cell. On the flow cell, cluster generation & sequencing was performed using Illumina Novaseq X plus platform to generate 2×150bp paired-end (PE) read. 
+ Quantity and quality check (QC) of library on Agilent Tape Station 4150
+The amplified libraries were analyzed on TapeStation 4150 (Agilent Technologies) using High Sensitivity D1000 ScreenTape® as per manufacturer's instructions.
+ Cluster Generation and Sequencing
+After obtaining the Qubit concentration for the library and the mean peak size from Tape Station profile, library will be loaded onto illumine Novaseq X Plus for cluster generation and sequencing. Paired-End sequencing allows the template fragments to be sequenced in both the forward and reverse directions. The library molecules will bind to complementary adapter oligos on paired-end flow cell. The adapters are designed to allow selective cleavage of the forward strands after re-synthesis of the reverse strand during sequencing. The copied reverse strand is then used to sequence from the opposite end of the fragment.
+
+ Results: RNA QC on 1% agarose gel
+
+
+
+
+
+
+
+
+
+
+
+     Figure 1: RNA QC on 1% agarose gel    
+
+
+
+
+
+
+
+
+ Quantification using Qubit 4.0 Fluorometer
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Quantity and quality check (QC) of library on Agilent Tape Station 4150
+ TapeStation 4150 profiles of library loaded in Agilent High Sensitivity D1000ScreenTape®:
+
+        
+                     Figure 2: PM DROUGHT                             Figure 3: PM DROUGHT-2
+
+
+        
+                    Figure 4: PM CONTROL                              Figure 5: PM CONTROL-1
+
+
+
+Wet Lab Inferences
+The libraries were prepared from the samples by KAPA mRNA Hyper Prep Kit for Illumina (CAT #KK8581). 
+The average size of libraries is 451bp, 488bp, 482bp and 405bp for 1, 2, 3and 4.
+The libraries were sequenced on Illumina Novaseq X Plus platform using 2 x 150 bp chemistry to generate ~06-08GB/Sample.
+
+
+Bioinformatics Analysis
+ Bioinformatics Workflow
+
+
+Figure 6: Bioinformatics Analysis Workflow
+Workflow overview: Raw data was filtered to remove adapters and low-quality bases. Clean reads thus produced were used for analysis. Reference guided transcript assembly was performed for samples first by mapping clean reads on reference genome using STAR (v2.7.10a) aligner and then performing transcript assembly by StringTie (v 2.2.1). A consensus set of transcripts was obtained using SringTie merge function which merges together all the gene structures found in any of the samples. Transcript abundance was then estimated for individual sample using merged transcript consensus again using StringTie and read counts thus obtained for each transcript were taken as input for differential expression analysis using edgeR package. Gene Ontology and pathway analysis of the significantly differentially expressed transcripts were performed using Blast2go cli and KEGG-KAAS server respectively. Overall bioinformatics workflow is graphically represented in figure above and software version along with its use in table below.
+ Detail of Software used for analysis
+
+
+Data statistics
+The next generation sequencing for these samples were performed on the Illumina Novaseq plus X platform. Statistics of raw data is shown in Table below:
+Table 1: Data statistics
+
+The raw data has been provided in data deliverables folder entitled “01_Raw_Data”. These reads were subjected to adapter filtration and low quality bases filtration before analysis to generate clean/high quality (HQ) reads. 
+ Reference genome information
+Based on information received from client, the reference genome of Pearl Millet (GCF_000499845.2) and its corresponding GFF file was downloaded from (https://cegresources.icrisat.org/data_public/PearlMillet_Genome/v1.1/).
+Table 2: Reference genome stats
+
+The reference GFF file contains genome annotation. It includes information (locus and description) regarding genes and proteins. The fasta sequence of the reference genome along with the corresponding GFF file is provided with the deliverables in the folder named "02_reference_genome_and_gff" for client’s reference.
+Table 3: Detail Information of GFF file
+
+
+ Mapping to reference genome
+Indexing of the reference genome was carried out using STAR genomeGenerate mode option. Then the input reads, in FASTQ format, along with the indexed reference genome generated in previous step was given to the STAR aligner. The analysis begins by mapping HQ reads against the reference genome to identify the positions from where the reads originated. This mapping information allows us to collect subsets of the reads corresponding to each gene, and then to assemble and quantify transcripts represented by those reads. Hence, the high-quality reads were mapped to reference genome using STAR aligner to create alignment in BAM format for each sample with default parameters. The mapping statistics are provided in the table below:
+Table 4: Mapping Statistics
+
+ Transcript assembly
+StringTie assembles transcripts from RNA-seq reads that have been aligned to the genome, first grouping the reads into distinct gene loci and then assembling each locus into as many isoforms as are needed to explain the data. Following this, StringTie simultaneously assembles and quantify the final transcripts by using network flow algorithm and starting from most highly abundant transcripts. The reference genome GFF annotation files, containing exon structures of "known" genes, are then used to annotate the assembled transcripts and quantify the expression of known genes as well derive clues if a novel transcript has been found in the sample. 
+After assembling each sample, the full set of assemblies is passed to StringTie’s merge function, which merges together all the gene structures found in any of the samples. This step is required because transcripts in some of the samples might only be partially covered by reads, and as a consequence only partial versions of them will be assembled in the initial StringTie run. The merge step creates a set of transcripts that is consistent across all samples, so that the transcripts can be compared in subsequent steps in figure below:
+
+
+Figure 7: Explanation of merging transcript assemblies using StringTie’s merge function. In this example, four partial assemblies from four different samples are merged into two transcripts A and B. Samples 1 and 2 are both consistent with the reference annotation, which is used here to merge and extend them to create transcript A. Samples 3 and 4 are consistent with each other but not with the annotation, and these are merged to create transcript B. Please note that the 4 samples shown here are for example purpose only (Ref: Micheal P et al., 2016).
+
+The statistics of merged transcripts and individual transcript assembly is provided in the table below:
+Table 5: Transcript assembly statistics
+
+
+
+
+The output consists of assembled gene/transcript GTF file for all samples and another GTF file resulting from the merge step as described above. These files have been provided along with the deliverables in the folder named "03_transcript_assembly_gtf". In addition, the transcript sequences derived from these individual assembly is provided in folder "04_transcript_sequences_fasta".
+
+Note: “MSTRG" in output files generated from stringtie stands for "Merged StringTie Transcripts," followed by a unique number. This identifier is created by StringTie merged step to label transcript isoforms that were not previously annotated in the reference genome used.
+
+
+
+
+
+
+
+
+
+
+
+
+
+ Comparison of assembled transcripts with reference transcripts
+For comparison of assembled transcripts with reference transcripts, Gffcompare utility was run taking the reference GTF and the string-tie merged GTF file. This produces an output file, which adds to each transcript a "class code" and the name of the transcript from the reference annotation file to check how the predicted transcripts relate to an annotation file. Meaning of each class code is depicted in figure below:
+
+Figure 8: Different class codes and their descriptions
+(https://ccb.jhu.edu/software/stringtie/gffcompare.shtml)
+
+
+
+Identification of novel isoform transcripts
+To identify novel isoform transcripts not present in the reference GTF file, gffcompare utility was ran taking the reference GTF and the string-tie merged GTF file. This produces an output file, which adds to each transcript a "class code" and the name of the transcript from the reference annotation file to check how the predicted transcripts relate to an annotation file. Class code "j" means that predicted transcript is a potential novel isoform that shares at least one splice junction with a reference transcript. A total of 13,186 novel isoforms with the class code "j" were extracted and are provided with the deliverables in a file named novel.isoforms.gtf in the folder "03_transcript_assembly_gff". A brief description of the column names in the GTF file is provided in the same folder in the file named ReadMe.txt.
+ Differential expression analysis
+Abundances of the transcripts in all samples were estimated using StringTie with the help of merged transcripts generated from merge stringtie step. A python program (prepDE.py) was used to extract the read count information directly from the files generated by StringTie. For differential expression analysis, sample comparison was made according to grouping information provided by client:
+
+Comparison information
+
+Group wise sample information
+Table 6: Sample description
+
+
+Differential gene expression was inferred between samples by applying the R package edgeR It is Bioconductor package based on negative binomial distribution method. The analysis provides tabular result along with the normalized i.e., Counts Per Million mapped reads (CPM) for each involved sample. The description of selected result columns has been given in below mentioned table:
+
+
+Table 7: Column description of edgeR output
+
+The criterion used to identify upregulated and downregulated transcripts along with the significance is provided in the below table:
+Table 8: Criteria used to identify upregulated and downregulated genes and assigning the significance
+
+Differential expression analysis statistics is provided in table below and the data deliverable are given in the folder "05_differential_expression_analysis" which contains the Differential gene expression (DGE) analysis results.
+
+
+
+
+
+
+Table 9: Differential gene expression statistics
+
+Annotation for differentially expressed transcripts is provided based on blastX result obtained by similarity search against NCBI’s NR database followed by gene ontology analysis using blast2GO.
+
+Note: We recommend a minimum of triplicates per group in RNA-Seq experiments to obtain statistically significant results in differential expression analysis. However, as there are no replicates in this study, we performed DEG analysis using edgeR, which is capable of producing reasonable results in single-sample comparisons.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+MA Plot for differentially expressed genes
+The plot visualizes the differences between measurements taken in two samples, by transforming the data onto M (log ratio) and A (mean average) scales, then plotting these values. For illustration purpose, MA plot for Comparison1 has been depicted below:
+
+Figure 9: MA plot showing differentially expressed transcripts in Comparison-1. On X-axis normalized counts for all the samples and on Y-axis log2foldchange are plotted. Points colored are with red if the q-value is less than 0.05 and black if the q-value is greater than 0.05.
+
+ Note: MA plot for only one comparison has been shown above, however plots for all other combinations have been provided as a part of data deliverables “05_differential_expression_analysis”.
+Volcano plot for differentially expressed genes
+The "volcano plot" arranges expressed genes along dimensions of biological as well as statistical significance. For illustration purpose, Volcano plot for Comparison1 has been depicted below:
+
+Figure 10: Volcano plot showing differentially expressed transcripts in Comparison-1. X-axis represents the log2fold change values and Y-axis represents log10 of q-value (FDR corrected p-value. Points are colored red if the q-value is less than 0.05 and black if the q-value is greater than 0.05.
+Note: Volcano plot for only one comparison has been shown above, however plots for all other combinations has been provided as a part of data deliverables “05_differential_expression analysis”.
+Heatmap for significantly differential expressed genes
+List of transcripts were selected for heatmap generation based on following criteria:
+25 transcripts (downregulated) and 25 transcripts (upregulated) having lowest FDR/adjusted pvalue
+Transcripts must have proper annotations.
+pheatmap package from R software was used for producing heatmap. The colour coding ranges from red to blue where shades of red represent high transcripts expression and shades of blue represents low transcript expression.
+
+Figure 11: Heatmap representing most significant genes expressed in the samples was plotted using log10 of normalized read count values (CPM) for Comparison-1, where shades of blue represent downregulated genes and shades of red represents highly expressed genes.
+
+Note: Heatmap plot for only one comparison has been shown above, however plots for all other combinations have been provided as a part of data deliverables “05_differential_expression_analysis”.
+Gene Ontology (GO) analysis for significant DEG
+The Gene Ontology project provides controlled vocabularies of defined terms representing gene product properties. These cover three domains: Cellular Component, the parts of a cell or its extracellular environment; Molecular Function, the elemental activities of a gene product at the molecular level, such as binding or catalysis; and Biological Process, operations or sets of molecular events with a defined beginning and end, pertinent to the functioning of integrated living units: cells, tissues, organs, and organisms. GO was assigned to significant differentially expressed transcripts using Blast2go cli. Single gene can be assigned with multiple GO categories and hence multiple GO terms. The GO domain distribution is shown in table below:
+Table 10: GO Distribution of Significantly Differential expression transcripts
+
+Assigned Gene Ontology are also provided in deliverables "06_Significant_DGE_GO".
+Pathway analysis for significant DGE
+Ortholog assignment and mapping of Significant differentially expressed transcripts to the biological pathways were performed using KEGG automatic annotation server (KAAS). Significant differentially expressed transcripts were compared against the KEGG database using BLASTX with threshold bit-score value of 60 (default). Pathway analysis was performed using all differentially expressed transcripts. The mapped transcripts represented metabolic pathways of major biomolecules such as carbohydrates, lipids, nucleotides, amino acids, glycans, etc. The mapped transcripts also represented the genes involved in metabolism, genetic information processing, and environmental information processing, cellular processes and organismal systems. Detail of the transcripts following in particular pathway along with the pathway images is given in data deliverables entitled "07_Significant_DGE_pathways". Respective pathway images are also provided in the same folder. Pathway statistics for one of the comparisons and one representative pathway image have been given below for illustration purpose.
+
+Figure 12: Example of Glycolysis pathway for Comparison-1 DGE: Purple color entry has been assigned to at least one gene entry whereas a pink color entry corresponds to an ortholog table entry, which corresponds to a gene that is a part of a functional unit on the pathway.
+Table 11: KEGG pathway statistics for Significant differentially expressed transcripts for Comparison-1
+
+Note: 
+Non-specific organism pathway hits are obtained in pathway results due to lenient threshold (bit score: 60) applied in KAAS webserver.
+
+Pathway stats for only one comparison has been shown above, however stats and images for all other combinations has been provided as a part of data deliverables “07_Significant_DGE_pathways”.
+
+
+
+Over-representation (or enrichment) analysis
+Over-representation (enrichment) analysis is a statistical approach used to identify biological functions, pathways, or processes that are significantly over-represented among a given list of genes compared to a reference background. This helps in interpreting large-scale transcriptomic data by linking differentially expressed genes (DEGs) to specific molecular mechanisms and biological pathways.
+Functional enrichment analysis was performed using the clusterProfiler R package to identify over-represented Gene Ontology (GO) terms and Kyoto Encyclopedia of Genes and Genomes (KEGG) pathways among the significantly differentially expressed genes (DEGs). The functions enrichGO and enrichKEGG were applied independently to both up-regulated and down-regulated gene sets.
+Multiple hypothesis testing correction was performed using the Benjamini–Hochberg (BH) method, and GO and KEGG terms with pvalueCutoff = 0.05, and qvalueCutoff = 0.2 were considered statistically significant.
+The results of the enrichment analyses were visualized using dot plots and bar plots, highlighting the most significantly enriched GO terms and KEGG pathways that may represent key biological processes and molecular mechanisms underlying the observed expression changes.
+
+
+
+
+Figure 13: Dot plot of GO enrichment for Comparison1 of down-regulated genes showing the most significantly enriched Gene Ontology (GO) terms in the differentially expressed genes (DEGs).
+
+Figure 14: Dot plot of KEGG pathway enrichment for Comparison2 of up-regulated genes, highlighting the most significantly enriched KEGG pathways in the differentially expressed genes (DEGs).
+
+
+Note: Dot plot for only one comparison has been shown above, however plots for upregulated genes as well as all other combinations have been provided as a part of data deliverables “08_Significant_DGE_Enrichment/”. 
+Please note: No KEGG enrichment was obtained for the comparisons C1 Down, C1 Up, and C2 Down. Additionally, no GO enrichment was obtained for the comparison C2 Up.
+
+Deliverables
+.
+├── 01_Raw_Data
+│   ├── NGS_240540_md5sum.txt
+│   ├── NGS_240540_Raw_Stats.txt
+│   ├── PM-CONTROL-2_S73_L008_R1_001.fastq.gz
+│   ├── PM-CONTROL-2_S73_L008_R2_001.fastq.gz
+│   ├── PM-CONTROL_S74_L008_R1_001.fastq.gz
+│   ├── PM-CONTROL_S74_L008_R2_001.fastq.gz
+│   ├── PM-DROUGHT-1_S72_L008_R1_001.fastq.gz
+│   ├── PM-DROUGHT-1_S72_L008_R2_001.fastq.gz
+│   ├── PM-DROUGHT_S71_L008_R1_001.fastq.gz
+│   └── PM-DROUGHT_S71_L008_R2_001.fastq.gz
+├── 02_reference_genome_and_gff
+│   ├── pearl_millet_v1.1.fa
+│   └── PM.genechr.trans.gff
+├── 03_transcript_assembly_gtf
+│   ├── gffcompare_results.gtf
+│   ├── merged_transcripts.gtf
+│   ├── NGS_240540_PM-CONTROL-2Aligned_1.gtf
+│   ├── NGS_240540_PM-CONTROLAligned_1.gtf
+│   ├── NGS_240540_PM-DROUGHT-1Aligned_1.gtf
+│   ├── NGS_240540_PM-DROUGHTAligned_1.gtf
+│   ├── novel.isoforms.gtf
+│   └── ReadMe.txt
+├── 04_transcript_sequences_fasta
+│   ├── Merged.fasta
+│   ├── NGS_240540_PM-CONTROL-2Aligned_transcript.fasta
+│   ├── NGS_240540_PM-CONTROLAligned_transcript.fasta
+│   ├── NGS_240540_PM-DROUGHT-1Aligned_transcript.fasta
+│   └── NGS_240540_PM-DROUGHTAligned_transcript.fasta
+├── 05_differential_expression_analysis
+│   ├── Comparison1_DGE.xlsx
+│   ├── Comparison1_Heatmap.png
+│   ├── Comparison1_MA_and_Volcano.pdf
+│   ├── Comparison2_DGE.xlsx
+│   ├── Comparison2_Heatmap.png
+│   └── Comparison2_MA_and_Volcano.pdf
+├── 06_Significant_DGE_GO
+│   ├── Comparison1_Significant_DGE_with_GO.xlsx
+│   └── Comparison2_Significant_DGE_with_GO.xlsx
+├── 07_Significant_DGE_pathways
+│   ├── Comparison1_Significant_DGE_Pathway_images
+│   ├── Comparison1_Significant_DGE_Pathways.xlsx
+│   ├── Comparison2_Significant_DGE_Pathway_images
+│   └── Comparison2_Significant_DGE_Pathways.xlsx
+├── 08_Significant_DGE_Enrichment
+│   ├── C1_Sig_down_barplot_GO_enrichment.png
+│   ├── C1_Sig_down_barplot_KEGG_enrichment.png
+│   ├── C1_Sig_down_dotplot_GO_enrichment.png
+│   ├── C1_Sig_down_dotplot_KEGG_enrichment.png
+│   ├── C1_Sig_down_GO_enrichment_results.xlsx
+│   ├── C1_Sig_down_KEGG_enrichment_results.xlsx
+│   ├── C1_Sig_up_barplot_GO_enrichment.png
+│   ├── C1_Sig_up_barplot_KEGG_enrichment.png
+│   ├── C1_Sig_up_dotplot_GO_enrichment.png
+│   ├── C1_Sig_up_dotplot_KEGG_enrichment.png
+│   ├── C1_Sig_up_GO_enrichment_results.xlsx
+│   ├── C1_Sig_up_KEGG_enrichment_results.xlsx
+│   ├── C2_Sig_down_barplot_GO_enrichment.png
+│   ├── C2_Sig_down_barplot_KEGG_enrichment.png
+│   ├── C2_Sig_down_dotplot_GO_enrichment.png
+│   ├── C2_Sig_down_dotplot_KEGG_enrichment.png
+│   ├── C2_Sig_down_GO_enrichment_results.xlsx
+│   ├── C2_Sig_down_KEGG_enrichment_results.xlsx
+│   ├── C2_Sig_up_barplot_GO_enrichment.png
+│   ├── C2_Sig_up_barplot_KEGG_enrichment.png
+│   ├── C2_Sig_up_dotplot_GO_enrichment.png
+│   ├── C2_Sig_up_dotplot_KEGG_enrichment.png
+│   ├── C2_Sig_up_GO_enrichment_results.xlsx
+│   └── C2_Sig_up_KEGG_enrichment_results.xlsx
+└── Readme.txt
+└── NGS_240540_Final_Report_RNASeq_30.10.2025.pdf
+
+
+[END OF REPORT]
+

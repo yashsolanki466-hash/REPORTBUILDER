@@ -1,0 +1,1118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title> Unigenome 240540</title>
+
+    <!-- Dependencies -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        :root {
+            --primary-color: #F47920;
+            /* Orange */
+            --secondary-color: #1F3D7C;
+            /* Blue */
+            --text-color: #333;
+            --light-bg: #f8f9fa;
+        }
+
+        body {
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-size: 12pt;
+            line-height: 1.5;
+            color: var(--text-color);
+            background-color: #fff;
+            margin: 0;
+            print-color-adjust: exact;
+            -webkit-print-color-adjust: exact;
+        }
+
+        /* Fixed TOC Sidebar Style (Screen Only) */
+        #TOC {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 250px;
+            height: 100%;
+            overflow-y: auto;
+            background: #f8f8f8;
+            border-right: 1px solid #eee;
+            padding: 20px 0;
+            z-index: 1000;
+        }
+
+        #TOC ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        #TOC li a {
+            display: block;
+            padding: 8px 20px;
+            color: #777;
+            text-decoration: none;
+            font-size: 13px;
+            border-left: 4px solid transparent;
+        }
+
+        #TOC li a:hover {
+            background: #eee;
+            color: var(--secondary-color);
+        }
+
+        #TOC li a.active {
+            color: var(--secondary-color);
+            background: #fff;
+            border-left: 4px solid var(--secondary-color);
+            font-weight: bold;
+        }
+
+        /* Content Area */
+        .main-container {
+            margin-left: 250px;
+            padding: 40px 60px;
+            max-width: 900px;
+            /* Optimized for A4 reading on screen */
+        }
+
+        /* Cover Page */
+        .cover-page {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            text-align: center;
+            padding: 50px;
+            box-sizing: border-box;
+            page-break-after: always;
+        }
+
+        .cover-logo {
+            max-width: 300px;
+            margin-bottom: 40px;
+        }
+
+        .cover-title {
+            font-size: 36px;
+            font-weight: 800;
+            color: #000;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .cover-subtitle {
+            font-size: 24px;
+            font-weight: 600;
+            color: #000;
+            margin-bottom: 40px;
+        }
+
+        .cover-details {
+            font-size: 16px;
+            color: var(--primary-color);
+            font-weight: bold;
+            margin-bottom: 60px;
+        }
+
+        .submitted-to {
+            margin-top: auto;
+            color: var(--secondary-color);
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        /* Typography */
+        h1.title {
+            font-size: 28px;
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-weight: 700;
+            color: var(--secondary-color);
+        }
+
+        .subtitle {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 30px;
+            font-weight: 400;
+        }
+
+        h2 {
+            font-size: 22px;
+            color: var(--secondary-color);
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 8px;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            font-weight: 700;
+            page-break-after: avoid;
+        }
+
+        h3 {
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            color: var(--secondary-color);
+            page-break-after: avoid;
+        }
+
+        h4 {
+            font-size: 14px;
+            font-weight: bold;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            color: #555;
+        }
+
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+
+        /* Tables */
+        .table-wrapper {
+            overflow-x: auto;
+            margin: 20px 0 30px 0;
+            page-break-inside: avoid;
+        }
+
+        .table-title {
+            font-weight: bold;
+            font-size: 12px;
+            margin-bottom: 8px;
+            color: var(--secondary-color);
+        }
+
+        table {
+            width: 100%;
+            max-width: 100%;
+            border-spacing: 0;
+            border-collapse: collapse;
+            border: 1px solid #ddd;
+            font-size: 11px;
+            /* Smaller for print readiness */
+        }
+
+        table th {
+            padding: 8px 10px;
+            background-color: var(--secondary-color);
+            color: #fff;
+            border: 1px solid var(--secondary-color);
+            text-align: left;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        table td {
+            padding: 6px 10px;
+            border: 1px solid #ddd;
+            vertical-align: middle;
+        }
+
+        table tr:nth-of-type(even) {
+            background-color: #f2f2f2;
+        }
+
+        /* Figures */
+        .figure {
+            margin: 30px 0;
+            text-align: center;
+            background: #fff;
+            padding: 10px;
+            /* border: 1px solid #eee; */
+            page-break-inside: avoid;
+        }
+
+        .caption {
+            font-size: 11px;
+            color: var(--secondary-color);
+            margin-top: 10px;
+            font-style: italic;
+            font-weight: 600;
+        }
+
+        /* Info Box */
+        .info-box {
+            padding: 20px;
+            margin-bottom: 25px;
+            border-left: 5px solid var(--primary-color);
+            background-color: #f9f9f9;
+            color: #333;
+        }
+
+        .mono {
+            font-family: "Menlo", "Monaco", "Consolas", monospace;
+            font-size: 11px;
+        }
+
+        .confidential {
+            color: #999;
+            font-size: 10px;
+            margin-top: 5px;
+            text-align: right;
+        }
+
+        /* Footer for Print - Browser Compatible */
+        .print-footer {
+            display: none;
+        }
+
+        @media print {
+            .print-footer {
+                display: block;
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                height: 30px;
+                background-color: #fff;
+                font-size: 10px;
+                color: #999;
+                text-align: center;
+                border-top: 1px solid #eee;
+                padding-top: 5px;
+                z-index: 1000;
+            }
+
+            /* Add padding to body to prevent overlap with footer */
+            body {
+                margin-bottom: 40px;
+            }
+        }
+
+        @media screen and (max-width: 992px) {
+            #TOC {
+                display: none;
+            }
+
+            .main-container {
+                margin-left: 0;
+                padding: 20px;
+            }
+        }
+
+        /* Print Formatting */
+        @media print {
+            @page {
+                size: A4;
+                margin: 20mm 15mm 20mm 15mm;
+
+                @bottom-center {
+                    content: "Page " counter(page) " of " counter(pages);
+                    font-size: 9px;
+                    color: #999;
+                }
+            }
+
+            body {
+                background-color: #fff;
+                font-size: 10.5pt;
+                /* Slightly scaled for print */
+            }
+
+            #TOC {
+                display: none;
+            }
+
+            .main-container {
+                margin: 0;
+                padding: 0;
+                width: 100%;
+                max-width: none;
+            }
+
+            h2 {
+                page-break-before: always;
+                margin-top: 0;
+                padding-top: 20px;
+            }
+
+            /* Avoid breaking after h2/h3 */
+            h2,
+            h3 {
+                page-break-after: avoid;
+            }
+
+            /* Cover Page specialized print styles */
+            .cover-page {
+                height: 100vh;
+                margin: 0;
+                padding: 0;
+                page-break-after: always;
+                justify-content: center;
+                /* Center strictly on cover */
+            }
+
+            /* Hide interactive elements if any */
+            .no-print {
+                display: none;
+            }
+
+            a {
+                text-decoration: none;
+                color: inherit;
+            }
+
+            /* Ensure background colors print */
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="TOC">
+        <div style="padding: 0 20px 20px 20px; border-bottom: 1px solid #eee; margin-bottom: 15px;">
+            <div style="font-weight: bold; color: #337ab7; font-size: 18px;">UNIGENOME</div>
+            <div style="font-size: 11px; color: #999;">Final Analysis Report</div>
+        </div>
+        <ul>
+            <li><a href="#section-1" class="active">1 Project Details</a></li>
+            <li><a href="#section-2">2 Sample Information</a></li>
+            <li><a href="#section-3">3 Methods</a></li>
+            <li><a href="#section-4">4 Library Quality Control</a></li>
+            <li><a href="#section-5">5 Bioinformatics Analysis</a></li>
+            <li><a href="#section-6">6 Data Statistics</a></li>
+            <li><a href="#section-7">7 Reference Genome</a></li>
+            <li><a href="#section-8">8 Mapping & Assembly</a></li>
+            <li><a href="#section-9">9 Differential Expression</a></li>
+            <li><a href="#section-10">10 Functional Annotation</a></li>
+            <li><a href="#section-11">11 Deliverables</a></li>
+        </ul>
+    </div>
+
+    <div class="main-container">
+
+        <!-- Print Header (Repeating) -->
+        <div class="print-header">
+            <img src="assets/logo.png" alt="Logo" class="print-header-logo">
+            <div class="print-header-text">UNIGENOME - FINAL ANALYSIS REPORT</div>
+        </div>
+
+        <!-- Cover Page -->
+        <div class="cover-page">
+            <div style="width: 100%;">
+                <img src="assets/logo.png" alt="Unigenome Logo" class="cover-logo">
+            </div>
+
+            <div>
+                <div class="cover-title">Final Analysis Report</div>
+                <div class="cover-subtitle">Whole Transcriptome Sequencing<br>& Analysis</div>
+                <div class="cover-details">On Illumina Novaseq X Plus Platform</div>
+            </div>
+
+            <div class="submitted-to">
+                <p style="margin-bottom: 5px;">Submitted to:</p>
+                <div style="font-size: 22px; color: var(--primary-color);">Client Name</div>
+                <div style="font-size: 16px; color: #333;">Client Organization</div>
+            </div>
+
+            <div
+                style="width: 100%; border-top: 2px solid var(--primary-color); padding-top: 10px; margin-top: 40px; font-size: 10px; color: #666;">
+                Unigenome | Confidential | 240540 | 19-02-2026
+            </div>
+        </div>
+
+        <!-- Print Footer (Repeating) -->
+        <div class="print-footer">
+            Unigenome | Confidential | 240540
+        </div>
+
+        <!-- Section 1 -->
+        
+        <div id="section-warnings" class="section">
+            <h2>Input Validation Warnings</h2>
+            <div class="table-wrapper">
+                <div class="table-title">Warnings detected while scanning the deliverables folder</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Warning</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                        <tr>
+                            <td>No .fastq.gz files found in 01_Raw_Data (sample detection may rely on Mapping/Stats).</td>
+                        </tr>
+                        
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+
+        
+        <div id="section-provenance" class="section">
+            <h2>Data Provenance</h2>
+            <div class="table-wrapper">
+                <div class="table-title">Files used for computations in this report</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Component</th>
+                            <th>File</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                        <tr>
+                            <td>raw_stats</td>
+                            <td style="word-break: break-all;">Deliverables_Dummy/01_Raw_Data/Rawstats.xlsx</td>
+                        </tr>
+                        
+                        <tr>
+                            <td>reference_fasta</td>
+                            <td style="word-break: break-all;">Deliverables_Dummy/02_reference_genome_and_gff/pearl_millet_v1.1.fa</td>
+                        </tr>
+                        
+                        <tr>
+                            <td>reference_gff</td>
+                            <td style="word-break: break-all;">Deliverables_Dummy/02_reference_genome_and_gff/PM.genechr.trans.gff</td>
+                        </tr>
+                        
+                        <tr>
+                            <td>mapping</td>
+                            <td style="word-break: break-all;">Deliverables_Dummy/01_Raw_Data/Mapping.xlsx</td>
+                        </tr>
+                        
+                        <tr>
+                            <td>pathways</td>
+                            <td style="word-break: break-all;"></td>
+                        </tr>
+                        
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+
+        <div id="section-1" class="section">
+            <h2>1 Project Details</h2>
+            <p>This report details the whole transcriptome sequencing and bioinformatics analysis for the project
+                240540. Sequencing was carried out using high-throughput technology to provide deep coverage
+                of the
+                transcriptome.</p>
+            <div class="table-wrapper">
+                <div class="table-title">Table 1.1: Project Specifications</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Service Type</th>
+                            <th>Platform</th>
+                            <th>Read Length</th>
+                            <th>Data Throughput</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Transcriptome Sequencing</td>
+                            <td>Illumina Novaseq X Plus</td>
+                            <td>2 X 150 PE</td>
+                            <td>~05 GB / Sample</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Section 2 -->
+        <div id="section-2" class="section">
+            <h2>2 Sample Information</h2>
+            <p>A total of 4 samples were received for library preparation and sequencing. The samples
+                were collected
+                from plant root tissues and maintained under strict temperature controls during transport.</p>
+            <div class="table-wrapper">
+                <div class="table-title">Table 2.1: Sample Overview</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Type</th>
+                            <th>No. of Samples</th>
+                            <th>Shipping Condition</th>
+                            <th>Libraries Prepared</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Plant Root</td>
+                            <td>4</td>
+                            <td>-20°C</td>
+                            <td>4</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p><strong>Sample Nomenclature:</strong> NGS_240540_PM-CONTROL, NGS_240540_PM-CONTROL-2, NGS_240540_PM-DROUGHT, NGS_240540_PM-DROUGHT-1</p>
+        </div>
+
+        <!-- Section 3 -->
+        <div id="section-3" class="section">
+            <h2>3 Methods</h2>
+
+            <h3>3.1 Isolation and Quantitative analysis of RNA:</h3>
+            <p>RNA samples were extracted from leaf sample using PVP extraction method. RNA quantity was measured using
+                Qubit® 4.0 fluorometer and quality were analyzed by using 1% agarose gel.</p>
+
+            <h3>3.2 Preparation of Library</h3>
+            <p>The paired-end sequencing library was prepared using KAPA mRNA HyperPrep Kit for Illumina. (CAT #KK8581).
+                The library preparation process was initiated with 500-1000 ng input. mRNA enrichment was performed as
+                per user manual and mRNA was subjected to fragmentation, first & second-strand cDNA synthesis,
+                end-repair, 3´ adenylating, adapter ligation, selective enrichment of adapter-ligated DNA fragments
+                through PCR amplification, followed by validation of Library on Agilent 4150 tape station. The final
+                library was pooled with other-samples, denatured & loaded on to flow cell. On the flow cell, cluster
+                generation & sequencing was performed using Illumina Novaseq X plus platform to generate 2×150bp
+                paired-end (PE) read</p>
+
+            <h3>3.3 Quantification using Qubit 4.0 Fluorometer</h3>
+            <div class="table-wrapper">
+                <div class="table-title">Table 3.1: RNA Quantification (Qubit)</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>S.N</th>
+                            <th>Sample ID</th>
+                            <th>Conc. (ng/µl)</th>
+                            <th>Volume (µl)</th>
+                            <th>Yield (µg)</th>
+                            <th>Remarks</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Placeholder for Qubit Data: Assuming a static placeholder or passed data -->
+                        <!-- In a real scenario, this would loop over a 'qubit_data' list -->
+                        
+                        <tr>
+                            <td colspan="6">No Qubit data available</td>
+                        </tr>
+                        
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>3.4 Cluster Generation and Sequencing</h3>
+            <p>After obtaining the Qubit concentration for the library and the mean peak size from Tape Station profile,
+                library will be loaded onto illumine Novaseq X Plus for cluster generation and sequencing. Paired-End
+                sequencing allows the template fragments to be sequenced in both the forward and reverse directions. The
+                library molecules will bind to complementary adapter oligos on paired-end flow cell. The adapters are
+                designed to allow selective cleavage of the forward strands after re-synthesis of the reverse strand
+                during sequencing. The copied reverse strand is then used to sequence from the opposite end of the
+                fragment.</p>
+        </div>
+
+        <!-- Section 4 -->
+        <div id="section-4" class="section">
+            <h2>4 Library Quality Control</h2>
+            <p>Amplified libraries were analyzed on a TapeStation 4150 (Agilent Technologies) using High Sensitivity
+                D1000 ScreenTape® to determine mean peak sizes and ensure proper fragment distribution.</p>
+
+            <div class="figure">
+                <div style="height: 300px; width: 100%;">
+                    <canvas id="qcChart"></canvas>
+                </div>
+                <p class="caption">Figure 4.1: Mean library peak size distribution (bp) validated via TapeStation 4150.
+                </p>
+            </div>
+
+            <h4>4.1 Wet Lab Inferences</h4>
+            <!-- Assuming static text or needs dynamic generation based on average sizes -->
+            <p>The average sizes of the generated libraries were determined to be 450, 450, 450, 450
+                respectively for the 4 samples. All libraries met the concentration and size
+                requirements for high-quality sequencing on the Novaseq X Plus platform.</p>
+        </div>
+
+        <!-- Section 5 -->
+        <div id="section-5" class="section">
+            <h2>5 Bioinformatics Analysis</h2>
+
+            <h3>5.1 Bioinformatics Workflow</h3>
+            <p>Raw data was filtered to remove adapters and low-quality bases. Clean reads thus produced were used for
+                analysis. Reference guided transcript assembly was performed for samples first by mapping clean reads on
+                reference genome using STAR (v2.7.10a) aligner and then performing transcript assembly by StringTie (v
+                2.2.1). A consensus set of transcripts was obtained using SringTie merge function which merges together
+                all the gene structures found in any of the samples. Transcript abundance was then estimated for
+                individual sample using merged transcript consensus again using StringTie and read counts thus obtained
+                for each transcript were taken as input for differential expression analysis using edgeR package. Gene
+                Ontology and pathway analysis of the significantly differentially expressed transcripts were performed
+                using Blast2go cli and KEGG-KAAS server respectively. Overall bioinformatics workflow is graphically
+                represented in figure above and software version along with its use in table below.</p>
+
+            <h3>5.2 Detail of Software used for analysis</h3>
+            <div class="table-wrapper">
+                <div class="table-title">Table 5.1: Software Stack</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Software</th>
+                            <th>Version</th>
+                            <th>Application</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Trim Galore</td>
+                            <td>0.6.4</td>
+                            <td>Adapter and low-quality data removal</td>
+                        </tr>
+                        <tr>
+                            <td>STAR</td>
+                            <td>2.7.10</td>
+                            <td>Mapping of reads to reference genome</td>
+                        </tr>
+                        <tr>
+                            <td>Stringtie</td>
+                            <td>2.2.1</td>
+                            <td>Reference based assembly</td>
+                        </tr>
+                        <tr>
+                            <td>gffcompare</td>
+                            <td>0.12.6</td>
+                            <td>Comparing reference genome gff with merged gff file generated from stringtie</td>
+                        </tr>
+                        <tr>
+                            <td>gffread</td>
+                            <td>0.12.7</td>
+                            <td>Fetching fasta sequences corresponding to gff file generated after reference-based
+                                assembly by stringtie</td>
+                        </tr>
+                        <tr>
+                            <td>Blastx</td>
+                            <td>2.30.0+</td>
+                            <td>Similarity search against NCBI NR database</td>
+                        </tr>
+                        <tr>
+                            <td>Blast2go cli</td>
+                            <td>1.5</td>
+                            <td>GO mapping and annotation</td>
+                        </tr>
+                        <tr>
+                            <td>edgeR</td>
+                            <td>3.6.2</td>
+                            <td>Differential expression analysis and its visualization</td>
+                        </tr>
+                        <tr>
+                            <td>KEGG KAAS</td>
+                            <td>Webserver</td>
+                            <td>Pathway analysis</td>
+                        </tr>
+                        <tr>
+                            <td>clusterProfiler</td>
+                            <td>4.12.6</td>
+                            <td>Over-representation (or enrichment) analysis</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Section 6 -->
+        <div id="section-6" class="section">
+            <h2>6 Data Statistics</h2>
+            <p>Next-generation sequencing statistics for raw data generated on the Novaseq platform are provided in the
+                table below.</p>
+            <div class="table-wrapper">
+                <div class="table-title">Table 6.1: Sequencing Data Statistics</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Sample</th>
+                            <th>Total Reads</th>
+                            <th>Total Bases</th>
+                            <th>Data (GB)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                        <tr>
+                            <td>PM-CONTROL-2</td>
+                            <td class="mono">52,580,666</td>
+                            <td class="mono">8,360,325,894</td>
+                            <td class="font-bold">8.36</td>
+                        </tr>
+                        
+                        <tr>
+                            <td>PM-CONTROL</td>
+                            <td class="mono">59,173,242</td>
+                            <td class="mono">9,408,545,478</td>
+                            <td class="font-bold">9.41</td>
+                        </tr>
+                        
+                        <tr>
+                            <td>PM-DROUGHT-1</td>
+                            <td class="mono">48,744,634</td>
+                            <td class="mono">7,750,396,806</td>
+                            <td class="font-bold">7.75</td>
+                        </tr>
+                        
+                        <tr>
+                            <td>PM-DROUGHT</td>
+                            <td class="mono">49,981,628</td>
+                            <td class="mono">7,947,078,852</td>
+                            <td class="font-bold">7.95</td>
+                        </tr>
+                        
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Section 7 -->
+        <div id="section-7" class="section">
+            <h2>7 Reference Genome</h2>
+            <p>The reference genome of <strong>Organism Name</strong> was used for alignment and
+                annotation. The corresponding GFF file contains locus and structural information regarding 0 genes.
+            </p>
+            <div class="table-wrapper">
+                <div class="table-title">Table 7.1: Reference Genome Statistics</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Description</th>
+                            <th>Stats</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Total Chromosomes/Scaffolds</td>
+                            <td>7</td>
+                        </tr>
+                        <tr>
+                            <td>Total Genome Length (bp)</td>
+                            <td>1,564,537,551</td>
+                        </tr>
+                        <tr>
+                            <td>Mean Scaffold Size</td>
+                            <td>223,505,364</td>
+                        </tr>
+                        <tr>
+                            <td>Max Scaffold Size (bp)</td>
+                            <td>300,907,625</td>
+                        </tr>
+                        <tr>
+                            <td>Total Genes Annotated</td>
+                            <td>0</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Section 8 -->
+        <div id="section-8" class="section">
+            <h2>8 Mapping & Assembly</h2>
+            <p>Alignment to the reference genome allows the identification of reads originating from specific loci.
+                Mapping results show high percentages of uniquely mapped reads for most samples.</p>
+            <div class="table-wrapper">
+                <div class="table-title">Table 8.1: Mapping Statistics</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Sample Name</th>
+                            <th>Total Clean Reads</th>
+                            <th>No. of Mapped Reads</th>
+                            <th>% Mapped</th>
+                            <th># Uniquely Mapped</th>
+                            <th>% Uniquely Mapped</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                        <tr>
+                            <td>NGS_240540_PM-CONTROL</td>
+                            <td class="mono">N/A</td>
+                            <td class="mono">N/A</td>
+                            <td>N/A</td>
+                            <td class="mono">N/A</td>
+                            <td>N/A</td>
+                        </tr>
+                        
+                        <tr>
+                            <td>NGS_240540_PM-CONTROL-2</td>
+                            <td class="mono">N/A</td>
+                            <td class="mono">N/A</td>
+                            <td>N/A</td>
+                            <td class="mono">N/A</td>
+                            <td>N/A</td>
+                        </tr>
+                        
+                        <tr>
+                            <td>NGS_240540_PM-DROUGHT</td>
+                            <td class="mono">N/A</td>
+                            <td class="mono">N/A</td>
+                            <td>N/A</td>
+                            <td class="mono">N/A</td>
+                            <td>N/A</td>
+                        </tr>
+                        
+                        <tr>
+                            <td>NGS_240540_PM-DROUGHT-1</td>
+                            <td class="mono">N/A</td>
+                            <td class="mono">N/A</td>
+                            <td>N/A</td>
+                            <td class="mono">N/A</td>
+                            <td>N/A</td>
+                        </tr>
+                        
+                    </tbody>
+                </table>
+            </div>
+
+            <p>A total of 66758 transcripts were identified in the merged assembly with a mean size of
+                1,392 bp.</p>
+            <div class="table-wrapper">
+                <div class="table-title">Table 8.2: Assembly Statistics</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Sample Name</th>
+                            <th># Assembled Transcripts</th>
+                            <th>Total (bp)</th>
+                            <th>Mean Size (bp)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                        <tr>
+                            <td>merged.fasta</td>
+                            <td class="mono">66,758</td>
+                            <td class="mono">92,931,869</td>
+                            <td>1,392</td>
+                        </tr>
+                        
+                        <tr>
+                            <td>NGS_240540_PM-CONTROLAligned_transcript.fasta</td>
+                            <td class="mono">45,703</td>
+                            <td class="mono">72,429,977</td>
+                            <td>1,584</td>
+                        </tr>
+                        
+                        <tr>
+                            <td>NGS_240540_PM-CONTROL-2Aligned_transcript.fasta</td>
+                            <td class="mono">45,710</td>
+                            <td class="mono">72,393,952</td>
+                            <td>1,583</td>
+                        </tr>
+                        
+                        <tr>
+                            <td>NGS_240540_PM-CONTROL-2Aligned_transcript.fasta</td>
+                            <td class="mono">45,710</td>
+                            <td class="mono">72,393,952</td>
+                            <td>1,583</td>
+                        </tr>
+                        
+                        <tr>
+                            <td>NGS_240540_PM-DROUGHT-1Aligned_transcript.fasta</td>
+                            <td class="mono">45,820</td>
+                            <td class="mono">72,559,758</td>
+                            <td>1,583</td>
+                        </tr>
+                        
+                        <tr>
+                            <td>NGS_240540_PM-DROUGHTAligned_transcript.fasta</td>
+                            <td class="mono">45,288</td>
+                            <td class="mono">71,722,434</td>
+                            <td>1,583</td>
+                        </tr>
+                        
+                        <tr>
+                            <td>NGS_240540_PM-DROUGHT-1Aligned_transcript.fasta</td>
+                            <td class="mono">45,820</td>
+                            <td class="mono">72,559,758</td>
+                            <td>1,583</td>
+                        </tr>
+                        
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Section 9 -->
+        <div id="section-9" class="section">
+            <h2>9 Differential Expression</h2>
+            <p>Differential gene expression was inferred between samples by applying the R package
+                <strong>edgeR</strong>. This provides statistical significance based on a negative binomial distribution
+                model.
+            </p>
+            <div class="table-wrapper">
+                <div class="table-title">Table 9.1: Differential Expression Statistics</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Comparison</th>
+                            <th>Total DEGs</th>
+                            <th>Sig. Down</th>
+                            <th>Sig. Up</th>
+                            <th>Total Significant</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                        <tr>
+                            <td>Comparison2</td>
+                            <td>27819</td>
+                            <td>1349</td>
+                            <td>1220</td>
+                            <td class="font-bold">2569</td>
+                        </tr>
+                        
+                        <tr>
+                            <td>Comparison1</td>
+                            <td>28070</td>
+                            <td>966</td>
+                            <td>803</td>
+                            <td class="font-bold">1769</td>
+                        </tr>
+                        
+                    </tbody>
+                </table>
+            </div>
+            <div class="figure">
+                <div style="height: 350px; width: 100%;">
+                    <canvas id="dgeChart"></canvas>
+                </div>
+                <p class="caption">Figure 9.1: Summary of Significantly Upregulated and Downregulated genes per
+                    comparison.</p>
+            </div>
+        </div>
+
+        <!-- Section 10 -->
+        <div id="section-10" class="section">
+            <h2>10 Functional Annotation</h2>
+            <p>Mapping of significantly differentially expressed transcripts to biological pathways was performed using
+                <strong>KEGG-KAAS</strong>. Results represent metabolic pathways of major biomolecules.
+            </p>
+            <div class="table-wrapper">
+                <div class="table-title">Table 10.1: KEGG Pathway Statistics</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Level 1 Category</th>
+                            <th>Level 2 Sub-Category</th>
+                            <th>Counts</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- This is a placeholder as the data structure for pathways might be complex -->
+                        
+                    </tbody>
+                </table>
+            </div>
+            
+        </div>
+
+        <!-- Section 11 Deliverables (Optional, can be static or dynamic) -->
+        <div id="section-11" class="section">
+            <h2>11 Deliverables</h2>
+            <p>The following deliverables are provided with this report:</p>
+            <ul>
+                <li>Raw Data (FastQ)</li>
+                <li>Clean Data</li>
+                <li>Reference Genome & GFF</li>
+                <li>BAM Alignment Files</li>
+                <li>Gene Count Matrix</li>
+                <li>Differential Expression Results</li>
+                <li>GO & KEGG Enrichment Results</li>
+            </ul>
+        </div>
+
+    </div>
+
+    <script type="application/json" id="library-sizes-json">[450, 450, 450, 450]</script>
+    <script type="application/json" id="samples-json">["NGS_240540_PM-CONTROL", "NGS_240540_PM-CONTROL-2", "NGS_240540_PM-DROUGHT", "NGS_240540_PM-DROUGHT-1"]</script>
+    <script type="application/json" id="dge-labels-json">["Comparison2", "Comparison1"]</script>
+    <script type="application/json" id="dge-up-json">[1220, 803]</script>
+    <script type="application/json" id="dge-down-json">[1349, 966]</script>
+
+    <script>
+        // Data passed from Python
+        const librarySizes = JSON.parse(document.getElementById('library-sizes-json').textContent);
+        const sampleLabels = JSON.parse(document.getElementById('samples-json').textContent);
+        const dgeLabels = JSON.parse(document.getElementById('dge-labels-json').textContent);
+        const dgeUpData = JSON.parse(document.getElementById('dge-up-json').textContent);
+        const dgeDownData = JSON.parse(document.getElementById('dge-down-json').textContent);
+
+        // Initialize QC Chart
+        if (document.getElementById('qcChart')) {
+            const ctxQC = document.getElementById('qcChart').getContext('2d');
+            new Chart(ctxQC, {
+                type: 'bar',
+                data: {
+                    labels: sampleLabels,
+                    datasets: [{
+                        label: 'Mean Library Size (bp)',
+                        data: librarySizes,
+                        backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Size (bp)'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Initialize DGE Chart
+        if (document.getElementById('dgeChart')) {
+            const ctxDGE = document.getElementById('dgeChart').getContext('2d');
+            new Chart(ctxDGE, {
+                type: 'bar',
+                data: {
+                    labels: dgeLabels,
+                    datasets: [
+                        {
+                            label: 'Up-regulated',
+                            data: dgeUpData,
+                            backgroundColor: 'rgba(255, 99, 132, 0.6)',
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Down-regulated',
+                            data: dgeDownData,
+                            backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Gene Count'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>
