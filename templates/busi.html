@@ -1,0 +1,1268 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Trade Co - Export & Import</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* Scroll & Page Transitions */
+        #app-root {
+            transition: opacity 0.25s ease-in-out;
+            min-height: 70vh;
+        }
+
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+        .fade-up-init {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+
+        .fade-right-init {
+            opacity: 0;
+            transform: translateX(-50px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+
+        .fade-left-init {
+            opacity: 0;
+            transform: translateX(50px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+
+        .animate-in {
+            opacity: 1 !important;
+            transform: translate(0) !important;
+        }
+    </style>
+</head>
+
+<body class="bg-slate-50 text-slate-900 flex flex-col min-h-screen">
+
+    <!-- Header -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <!-- Top Bar -->
+        <div class="bg-slate-900 text-slate-300 text-xs py-2 hidden md:block">
+            <div class="w-full max-w-[1600px] mx-auto px-6 flex justify-between items-center">
+                <div class="flex items-center space-x-6">
+                    <span class="flex items-center gap-2">
+                        <i data-lucide="globe" class="w-3.5 h-3.5"></i> Global Shipping to 50+ Countries
+                    </span>
+                    <span class="flex items-center gap-2">
+                        <i data-lucide="phone" class="w-3.5 h-3.5"></i> +91 98765 43210
+                    </span>
+                    <span class="flex items-center gap-2">
+                        <i data-lucide="mail" class="w-3.5 h-3.5"></i> export@ahmedabad-trade.com
+                    </span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button onclick="showToast('Partner Portal coming soon!', 'info')"
+                        class="hover:text-white transition-colors">Partner Login</button>
+                    <span class="text-slate-600">|</span>
+                    <button onclick="showToast('Tracking system coming soon!', 'info')"
+                        class="hover:text-white transition-colors">Track Shipment</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Header -->
+        <div class="w-full max-w-[1600px] mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <!-- Logo -->
+                <a href="#/" class="flex items-center gap-2 group">
+                    <div class="bg-blue-600 text-white p-2 rounded-lg group-hover:bg-blue-700 transition-colors">
+                        <i data-lucide="ship" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold text-slate-900 leading-none">Global Trade Co</h1>
+                        <p class="text-xs text-slate-500 tracking-wider">EXPORT & IMPORT</p>
+                    </div>
+                </a>
+
+                <!-- Desktop Nav -->
+                <nav class="hidden md:flex items-center space-x-8" id="desktop-nav">
+                    <a href="#/" class="nav-link text-slate-600 hover:text-blue-600 font-medium transition-colors"
+                        data-path="/">Home</a>
+                    <a href="#/products"
+                        class="nav-link text-slate-600 hover:text-blue-600 font-medium transition-colors"
+                        data-path="/products">Products</a>
+                    <a href="#/quality"
+                        class="nav-link text-slate-600 hover:text-blue-600 font-medium transition-colors"
+                        data-path="/quality">Quality</a>
+                    <a href="#/about" class="nav-link text-slate-600 hover:text-blue-600 font-medium transition-colors"
+                        data-path="/about">About Us</a>
+                    <a href="#/contact"
+                        class="nav-link text-slate-600 hover:text-blue-600 font-medium transition-colors"
+                        data-path="/contact">Contact</a>
+                </nav>
+
+                <!-- Actions -->
+                <div class="flex items-center gap-4">
+                    <button class="p-2 text-slate-600 hover:text-blue-600 transition-colors">
+                        <i data-lucide="search" class="w-5 h-5"></i>
+                    </button>
+                    <a href="#/contact"
+                        class="hidden md:flex bg-slate-900 text-white px-5 py-2.5 rounded-full text-sm font-bold hover:bg-slate-800 transition-all shadow-lg shadow-slate-900/20 items-center gap-2">
+                        Get Quote <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </a>
+                    <button id="mobile-menu-btn" class="md:hidden p-2 text-slate-900">
+                        <i data-lucide="menu" class="w-6 h-6"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Dynamic SPA Content -->
+    <main id="app-root" class="flex-grow"></main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-300 pt-16 pb-8">
+        <div class="w-full max-w-[1600px] mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+                <div>
+                    <div class="flex items-center gap-2 mb-6 text-white">
+                        <div class="bg-blue-600 p-1.5 rounded-lg">
+                            <i data-lucide="ship" class="w-5 h-5"></i>
+                        </div>
+                        <span class="text-xl font-bold">Global Trade Co</span>
+                    </div>
+                    <p class="text-slate-400 mb-6 leading-relaxed">
+                        Your trusted partner in international trade, connecting markets with quality products and
+                        reliable logistics since 1998.
+                    </p>
+                    <div class="flex gap-4">
+                        <a href="#"
+                            class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-blue-600 transition-colors text-white">
+                            <i data-lucide="linkedin" class="w-5 h-5"></i>
+                        </a>
+                        <a href="#"
+                            class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-blue-600 transition-colors text-white">
+                            <i data-lucide="twitter" class="w-5 h-5"></i>
+                        </a>
+                        <a href="#"
+                            class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-blue-600 transition-colors text-white">
+                            <i data-lucide="facebook" class="w-5 h-5"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-white font-bold text-lg mb-6">Quick Links</h3>
+                    <ul class="space-y-3">
+                        <li><a href="#/" class="hover:text-blue-400 transition-colors flex items-center gap-2"><i
+                                    data-lucide="chevron-right" class="w-4 h-4"></i> Home</a></li>
+                        <li><a href="#/about" class="hover:text-blue-400 transition-colors flex items-center gap-2"><i
+                                    data-lucide="chevron-right" class="w-4 h-4"></i> About Us</a></li>
+                        <li><a href="#/products"
+                                class="hover:text-blue-400 transition-colors flex items-center gap-2"><i
+                                    data-lucide="chevron-right" class="w-4 h-4"></i> Products</a></li>
+                        <li><a href="#/quality" class="hover:text-blue-400 transition-colors flex items-center gap-2"><i
+                                    data-lucide="chevron-right" class="w-4 h-4"></i> Quality Policy</a></li>
+                        <li><a href="#/contact" class="hover:text-blue-400 transition-colors flex items-center gap-2"><i
+                                    data-lucide="chevron-right" class="w-4 h-4"></i> Contact</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="text-white font-bold text-lg mb-6">Our Products</h3>
+                    <ul class="space-y-3">
+                        <li><a href="#/products?cat=Agriculture"
+                                class="hover:text-blue-400 transition-colors flex items-center gap-2"><i
+                                    data-lucide="chevron-right" class="w-4 h-4"></i> Agriculture</a></li>
+                        <li><a href="#/products?cat=Textiles"
+                                class="hover:text-blue-400 transition-colors flex items-center gap-2"><i
+                                    data-lucide="chevron-right" class="w-4 h-4"></i> Textiles</a></li>
+                        <li><a href="#/products?cat=Chemicals"
+                                class="hover:text-blue-400 transition-colors flex items-center gap-2"><i
+                                    data-lucide="chevron-right" class="w-4 h-4"></i> Chemicals</a></li>
+                        <li><a href="#/products?cat=Machinery"
+                                class="hover:text-blue-400 transition-colors flex items-center gap-2"><i
+                                    data-lucide="chevron-right" class="w-4 h-4"></i> Machinery</a></li>
+                        <li><a href="#/products?cat=Handicrafts"
+                                class="hover:text-blue-400 transition-colors flex items-center gap-2"><i
+                                    data-lucide="chevron-right" class="w-4 h-4"></i> Handicrafts</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="text-white font-bold text-lg mb-6">Contact Us</h3>
+                    <ul class="space-y-4">
+                        <li class="flex items-start gap-3">
+                            <i data-lucide="map-pin" class="w-5 h-5 text-blue-500 mt-1 shrink-0"></i>
+                            <span>123 Export Zone, GIDC Estate,<br>Ahmedabad, Gujarat 380015</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <i data-lucide="phone" class="w-5 h-5 text-blue-500 shrink-0"></i>
+                            <span>+91 98765 43210</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <i data-lucide="mail" class="w-5 h-5 text-blue-500 shrink-0"></i>
+                            <span>export@ahmedabad-trade.com</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div
+                class="border-t border-slate-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-slate-500">
+                <p>&copy; 2026 Global Trade Co. All rights reserved.</p>
+                <div class="flex gap-6">
+                    <a href="#" class="hover:text-white transition-colors">Privacy Policy</a>
+                    <a href="#" class="hover:text-white transition-colors">Terms of Service</a>
+                    <a href="#" class="hover:text-white transition-colors">Sitemap</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Mobile Menu Overlay -->
+    <div id="mobile-menu"
+        class="fixed inset-0 bg-white z-[60] transform translate-x-full transition-transform duration-300 md:hidden flex flex-col">
+        <div class="p-6 flex justify-between items-center border-b border-slate-100">
+            <span class="font-bold text-xl text-slate-900">Menu</span>
+            <button id="close-menu" class="p-2 text-slate-600 hover:text-slate-900">
+                <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
+        </div>
+        <nav class="flex-grow p-6 flex flex-col space-y-6 text-lg font-medium text-slate-600" id="mobile-nav-links">
+            <a href="#/" class="hover:text-blue-600 transition-colors">Home</a>
+            <a href="#/products" class="hover:text-blue-600 transition-colors">Products</a>
+            <a href="#/quality" class="hover:text-blue-600 transition-colors">Quality</a>
+            <a href="#/about" class="hover:text-blue-600 transition-colors">About Us</a>
+            <a href="#/contact" class="hover:text-blue-600 transition-colors">Contact</a>
+        </nav>
+        <div class="p-6 bg-slate-50 border-t border-slate-100">
+            <a href="#/contact" id="mobile-quote-btn"
+                class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 shadow-lg shadow-blue-600/20">
+                Get Quote <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </a>
+        </div>
+    </div>
+
+    <!-- Back to Top Button -->
+    <button id="back-to-top"
+        class="fixed bottom-6 right-6 bg-blue-600 text-white p-3 rounded-full shadow-xl opacity-0 translate-y-10 pointer-events-none transition-all duration-300 z-50 hover:bg-blue-700">
+        <i data-lucide="arrow-up" class="w-6 h-6"></i>
+    </button>
+
+    <script>
+        /* --- 1. DATA STORE --- */
+        const PRODUCTS = [
+            { id: '1', title: 'Premium Organic Cumin Seeds', category: 'Agriculture', image: 'https://picsum.photos/seed/cumin/800/600', minOrder: '1 Metric Ton', description: 'High-quality organic cumin seeds sourced directly from Gujarat farms. Rich aroma and high oil content.', sku: 'AGR-CUM-001', rating: 4.8, reviews: 124, longDescription: 'Our premium organic cumin seeds are sourced directly from certified organic farms in Gujarat and Rajasthan. Known for their intense aroma and high essential oil content, these seeds are perfect for culinary and medicinal uses.', specs: [{ label: 'Origin', value: 'Gujarat, India' }, { label: 'Purity', value: '99.5% Min' }, { label: 'Moisture', value: '8% Max' }, { label: 'Admixture', value: '1% Max' }, { label: 'Packaging', value: '25kg / 50kg PP Bags' }, { label: 'Shelf Life', value: '24 Months' }], logistics: { containerLoad: '14 MT in 20ft Container', leadTime: '10-15 Days after confirmation', paymentTerms: 'L/C, T/T', shipping: 'FOB, CIF, EXW' }, images: ['https://picsum.photos/seed/cumin/800/600', 'https://picsum.photos/seed/cumin2/800/600', 'https://picsum.photos/seed/cumin3/800/600'] },
+            { id: '2', title: 'Industrial Grade Caustic Soda', category: 'Chemicals', image: 'https://picsum.photos/seed/chemical/800/600', minOrder: '20 Metric Tons', description: 'Pure caustic soda flakes for industrial applications. 99% purity guaranteed with safety packaging.', sku: 'CHEM-CS-002', rating: 4.5, reviews: 85, longDescription: 'High purity Caustic Soda Flakes suitable for various industrial applications including textile processing, soap manufacturing, and water treatment.', specs: [{ label: 'Purity', value: '99% Min' }, { label: 'Appearance', value: 'White Flakes' }, { label: 'Packaging', value: '25kg HDPE Bags' }, { label: 'CAS No', value: '1310-73-2' }], logistics: { containerLoad: '25 MT in 20ft Container', leadTime: '7-10 Days', paymentTerms: 'L/C, T/T', shipping: 'FOB, CIF' }, images: ['https://picsum.photos/seed/chemical/800/600', 'https://picsum.photos/seed/chemical2/800/600'] },
+            { id: '3', title: 'Cotton Yarn 40s', category: 'Textiles', image: 'https://picsum.photos/seed/yarn/800/600', minOrder: '5 Metric Tons', description: 'Premium combed cotton yarn suitable for high-end fabric manufacturing. Consistent quality and strength.', sku: 'TEX-CY-003', rating: 4.7, reviews: 56, longDescription: 'Our 40s combed cotton yarn is produced using state-of-the-art spinning technology. It offers excellent strength, evenness, and low imperfections.', specs: [{ label: 'Count', value: '40s Combed' }, { label: 'Material', value: '100% Cotton' }, { label: 'Strength', value: 'High Tenacity' }, { label: 'Usage', value: 'Knitting, Weaving' }], logistics: { containerLoad: '20 MT in 40ft Container', leadTime: '15-20 Days', paymentTerms: 'L/C, T/T', shipping: 'FOB, CIF' }, images: ['https://picsum.photos/seed/yarn/800/600', 'https://picsum.photos/seed/yarn2/800/600'] },
+            { id: '4', title: 'Handcrafted Brass Statues', category: 'Handicrafts', image: 'https://picsum.photos/seed/brass/800/600', minOrder: '100 Pieces', description: 'Exquisite traditional Indian brass statues made by skilled artisans. Available in various sizes and finishes.', sku: 'ART-BR-004', rating: 4.9, reviews: 210, longDescription: 'These brass statues are handcrafted by master artisans using traditional lost-wax casting techniques. Each piece is a work of art.', specs: [{ label: 'Material', value: 'Solid Brass' }, { label: 'Finish', value: 'Antique / Polished' }, { label: 'Origin', value: 'Moradabad, India' }, { label: 'Customization', value: 'Available' }], logistics: { containerLoad: 'LCL / Air Cargo', leadTime: '20-30 Days', paymentTerms: 'T/T, PayPal', shipping: 'EXW, FOB, DDP' }, images: ['https://picsum.photos/seed/brass/800/600', 'https://picsum.photos/seed/brass2/800/600'] },
+            { id: '5', title: 'Hydraulic Press Machine', category: 'Machinery', image: 'https://picsum.photos/seed/machine/800/600', minOrder: '1 Unit', description: 'Heavy-duty hydraulic press for industrial manufacturing. ISO certified with 1-year warranty.', sku: 'MAC-HP-005', rating: 4.6, reviews: 32, longDescription: 'A robust hydraulic press designed for heavy-duty industrial applications. Features precision control, high safety standards, and durable construction.', specs: [{ label: 'Capacity', value: '100 Tons' }, { label: 'Power', value: '15 HP Motor' }, { label: 'Warranty', value: '1 Year' }, { label: 'Certification', value: 'ISO 9001:2015' }], logistics: { containerLoad: 'Flat Rack / Open Top', leadTime: '30-45 Days', paymentTerms: 'L/C', shipping: 'FOB, CIF' }, images: ['https://picsum.photos/seed/machine/800/600', 'https://picsum.photos/seed/machine2/800/600'] },
+            { id: '6', title: 'Psyllium Husk Powder', category: 'Pharmaceuticals', image: 'https://picsum.photos/seed/pharma/800/600', minOrder: '500 kg', description: '99% purity psyllium husk powder for pharmaceutical and dietary supplement use.', sku: 'PHA-PH-006', rating: 4.8, reviews: 94, longDescription: 'Premium quality Psyllium Husk Powder sourced from organic farms. It is a natural dietary fiber used in pharmaceuticals, nutraceuticals, and food products.', specs: [{ label: 'Purity', value: '99% Min' }, { label: 'Mesh Size', value: '40-100 Mesh' }, { label: 'Swell Volume', value: '50ml/g Min' }, { label: 'Packing', value: '25kg Paper Bags' }], logistics: { containerLoad: '10 MT in 20ft Container', leadTime: '10-15 Days', paymentTerms: 'L/C, T/T', shipping: 'FOB, CIF' }, images: ['https://picsum.photos/seed/pharma/800/600', 'https://picsum.photos/seed/pharma2/800/600'] }
+        ];
+
+        const CATEGORIES = ['All Products', 'Agriculture', 'Textiles', 'Chemicals', 'Machinery', 'Pharmaceuticals', 'Handicrafts', 'Spices'];
+
+        let productsState = { selectedCategory: 'All Products', searchQuery: '' };
+
+        /* --- 2. GLOBAL UTILS --- */
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = `fixed bottom-4 right-4 md:bottom-8 md:right-8 px-6 py-4 rounded-xl shadow-2xl text-white font-medium transform transition-all duration-300 translate-y-20 opacity-0 z-[100] flex items-center gap-3 ${type === 'success' ? 'bg-slate-900' : 'bg-blue-600'}`;
+            toast.innerHTML = `<i data-lucide="${type === 'success' ? 'check-circle' : 'info'}" class="w-5 h-5 text-blue-400"></i> ${message}`;
+            document.body.appendChild(toast);
+            lucide.createIcons({ root: toast });
+
+            requestAnimationFrame(() => toast.classList.remove('translate-y-20', 'opacity-0'));
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+
+        window.changeImage = (src) => { document.getElementById('main-image').src = src; };
+
+        /* --- 3. PAGE TEMPLATES --- */
+        const renderHome = () => `
+            <section class="relative h-[600px] flex items-center justify-center overflow-hidden">
+                <div class="absolute inset-0 z-0">
+                    <img src="https://picsum.photos/seed/shipping/1920/1080?blur=2" alt="Global Shipping" class="w-full h-full object-cover" referrerpolicy="no-referrer" />
+                    <div class="absolute inset-0 bg-slate-900/75"></div>
+                </div>
+                <div class="w-full max-w-[1600px] mx-auto px-6 relative z-10 text-center text-white animate-on-scroll">
+                    <h1 class="text-4xl md:text-6xl font-bold mb-6 leading-tight">
+                        Global Import & Export Solutions<br />
+                        <span class="text-blue-400">From Ahmedabad to the World</span>
+                    </h1>
+                    <p class="text-lg md:text-xl text-slate-200 mb-10 max-w-2xl mx-auto">
+                        Connecting businesses globally with premium quality products, reliable logistics, and seamless trade execution since 1998.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                        <a href="#/products" class="bg-blue-600 hover:bg-blue-500 text-white px-8 py-4 rounded-full font-semibold text-lg transition-all transform hover:scale-105 shadow-lg shadow-blue-600/30 flex items-center justify-center gap-2">
+                            Explore Products <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                        </a>
+                        <a href="#/contact" class="bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white border border-white/30 px-8 py-4 rounded-full font-semibold text-lg transition-all flex items-center justify-center">
+                            Request Quote
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <section class="py-10 bg-white shadow-lg relative z-20 -mt-10 w-full max-w-[1200px] mx-auto px-6 rounded-2xl animate-on-scroll border border-slate-100">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-8 divide-x divide-slate-100">
+                    <div class="text-center px-4 hover:-translate-y-1 transition-transform">
+                        <div class="text-4xl font-bold text-blue-600 mb-2">50+</div>
+                        <div class="text-slate-500 text-sm font-medium uppercase tracking-wider">Countries Served</div>
+                    </div>
+                    <div class="text-center px-4 hover:-translate-y-1 transition-transform">
+                        <div class="text-4xl font-bold text-blue-600 mb-2">25+</div>
+                        <div class="text-slate-500 text-sm font-medium uppercase tracking-wider">Years Experience</div>
+                    </div>
+                    <div class="text-center px-4 hover:-translate-y-1 transition-transform">
+                        <div class="text-4xl font-bold text-blue-600 mb-2">10k+</div>
+                        <div class="text-slate-500 text-sm font-medium uppercase tracking-wider">Shipments Delivered</div>
+                    </div>
+                    <div class="text-center px-4 hover:-translate-y-1 transition-transform">
+                        <div class="text-4xl font-bold text-blue-600 mb-2">500+</div>
+                        <div class="text-slate-500 text-sm font-medium uppercase tracking-wider">Happy Clients</div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="py-24 w-full max-w-[1600px] mx-auto px-6">
+                <div class="text-center mb-16 animate-on-scroll">
+                    <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Key Trading Sectors</h2>
+                    <p class="text-slate-600 max-w-2xl mx-auto text-lg">
+                        We specialize in sourcing and exporting high-quality products across diverse industries, ensuring international standards and timely delivery.
+                    </p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <div class="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-100 animate-on-scroll">
+                        <div class="h-48 overflow-hidden relative">
+                            <div class="absolute inset-0 bg-slate-900/20 group-hover:bg-slate-900/0 transition-colors z-10"></div>
+                            <img src="https://picsum.photos/seed/textile/400/300" alt="Textiles" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500" referrerpolicy="no-referrer" />
+                        </div>
+                        <div class="p-6">
+                            <div class="text-2xl mb-3">🧵</div>
+                            <h3 class="text-xl font-bold text-slate-900 mb-2">Textiles & Fabrics</h3>
+                            <p class="text-slate-500 text-sm mb-4">Premium quality sourcing with strict quality control measures.</p>
+                            <a href="#/products?cat=Textiles" class="text-blue-600 font-medium text-sm flex items-center gap-1 group-hover:gap-2 transition-all">
+                                View Products <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-100 animate-on-scroll" style="transition-delay: 0.1s">
+                        <div class="h-48 overflow-hidden relative">
+                            <div class="absolute inset-0 bg-slate-900/20 group-hover:bg-slate-900/0 transition-colors z-10"></div>
+                            <img src="https://picsum.photos/seed/spices/400/300" alt="Agriculture" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500" referrerpolicy="no-referrer" />
+                        </div>
+                        <div class="p-6">
+                            <div class="text-2xl mb-3">🌶️</div>
+                            <h3 class="text-xl font-bold text-slate-900 mb-2">Agriculture</h3>
+                            <p class="text-slate-500 text-sm mb-4">Premium quality sourcing with strict quality control measures.</p>
+                            <a href="#/products?cat=Agriculture" class="text-blue-600 font-medium text-sm flex items-center gap-1 group-hover:gap-2 transition-all">
+                                View Products <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-100 animate-on-scroll" style="transition-delay: 0.2s">
+                        <div class="h-48 overflow-hidden relative">
+                            <div class="absolute inset-0 bg-slate-900/20 group-hover:bg-slate-900/0 transition-colors z-10"></div>
+                            <img src="https://picsum.photos/seed/chemicals/400/300" alt="Chemicals" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500" referrerpolicy="no-referrer" />
+                        </div>
+                        <div class="p-6">
+                            <div class="text-2xl mb-3">⚗️</div>
+                            <h3 class="text-xl font-bold text-slate-900 mb-2">Chemicals</h3>
+                            <p class="text-slate-500 text-sm mb-4">Premium quality sourcing with strict quality control measures.</p>
+                            <a href="#/products?cat=Chemicals" class="text-blue-600 font-medium text-sm flex items-center gap-1 group-hover:gap-2 transition-all">
+                                View Products <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-100 animate-on-scroll" style="transition-delay: 0.3s">
+                        <div class="h-48 overflow-hidden relative">
+                            <div class="absolute inset-0 bg-slate-900/20 group-hover:bg-slate-900/0 transition-colors z-10"></div>
+                            <img src="https://picsum.photos/seed/art/400/300" alt="Handicrafts" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500" referrerpolicy="no-referrer" />
+                        </div>
+                        <div class="p-6">
+                            <div class="text-2xl mb-3">🎨</div>
+                            <h3 class="text-xl font-bold text-slate-900 mb-2">Handicrafts</h3>
+                            <p class="text-slate-500 text-sm mb-4">Premium quality sourcing with strict quality control measures.</p>
+                            <a href="#/products?cat=Handicrafts" class="text-blue-600 font-medium text-sm flex items-center gap-1 group-hover:gap-2 transition-all">
+                                View Products <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="py-24 bg-slate-900 text-white rounded-t-3xl md:rounded-3xl max-w-[1550px] mx-auto mb-10 overflow-hidden relative shadow-2xl">
+                <div class="absolute -inset-4 bg-blue-600/10 rounded-full blur-3xl"></div>
+                <div class="w-full px-8 md:px-16 relative z-10">
+                    <div class="flex flex-col lg:flex-row items-center gap-16">
+                        <div class="lg:w-1/2 animate-on-scroll">
+                            <h2 class="text-3xl md:text-5xl font-bold mb-6">Why Partner With Global Trade Co?</h2>
+                            <p class="text-slate-400 mb-10 text-lg">
+                                We don't just ship products; we build lasting partnerships through transparency, reliability, and unparalleled excellence in execution.
+                            </p>
+                            <div class="space-y-8">
+                                <div class="flex gap-5 group">
+                                    <div class="mt-1 bg-slate-800 p-4 rounded-xl h-fit group-hover:bg-blue-600 transition-colors">
+                                        <i data-lucide="check-circle" class="text-white w-6 h-6"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-xl font-bold mb-2">Quality Assurance</h3>
+                                        <p class="text-slate-400">Rigorous testing and certification for every shipment ensuring global compliance.</p>
+                                    </div>
+                                </div>
+                                <div class="flex gap-5 group">
+                                    <div class="mt-1 bg-slate-800 p-4 rounded-xl h-fit group-hover:bg-blue-600 transition-colors">
+                                        <i data-lucide="truck" class="text-white w-6 h-6"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-xl font-bold mb-2">Fast Logistics</h3>
+                                        <p class="text-slate-400">Highly optimized supply chain networks allowing for timely and cost-effective delivery worldwide.</p>
+                                    </div>
+                                </div>
+                                <div class="flex gap-5 group">
+                                    <div class="mt-1 bg-slate-800 p-4 rounded-xl h-fit group-hover:bg-blue-600 transition-colors">
+                                        <i data-lucide="users" class="text-white w-6 h-6"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-xl font-bold mb-2">24/7 Support</h3>
+                                        <p class="text-slate-400">Dedicated account managers ready to provide seamless communication and real-time updates.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="lg:w-1/2 relative animate-on-scroll">
+                            <img src="https://picsum.photos/seed/port/800/600" alt="Port Logistics" class="rounded-2xl shadow-2xl relative z-10 border border-slate-700/50" referrerpolicy="no-referrer" />
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="py-24 bg-blue-600 relative overflow-hidden">
+                <div class="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
+                <div class="w-full max-w-[1600px] mx-auto px-6 text-center relative z-10 animate-on-scroll">
+                    <h2 class="text-3xl md:text-5xl font-bold text-white mb-6">Ready to expand your business globally?</h2>
+                    <p class="text-blue-100 text-xl mb-10 max-w-2xl mx-auto">
+                        Get in touch with our export experts today for a customized quote and shipping plan.
+                    </p>
+                    <a href="#/contact" class="bg-white text-blue-700 hover:bg-slate-100 px-10 py-4 rounded-full font-bold text-lg shadow-xl transition-colors inline-flex items-center gap-2 transform hover:scale-105">
+                        Start Your Shipment <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                    </a>
+                </div>
+            </section>
+        `;
+
+        const renderProductsBase = () => `
+            <div class="bg-slate-50 py-12">
+                <div class="w-full max-w-[1600px] mx-auto px-6">
+                    <div class="flex flex-col md:flex-row justify-between items-end mb-8 gap-4">
+                        <div class="animate-on-scroll">
+                            <h1 class="text-3xl md:text-4xl font-bold text-slate-900 mb-2">Global Export Catalog</h1>
+                            <p class="text-slate-500">Browse our premium selection of export-quality products.</p>
+                        </div>
+                        <div class="flex items-center gap-3 w-full md:w-auto animate-on-scroll">
+                            <div class="relative flex-grow md:flex-grow-0">
+                                <input type="text" id="search-input" placeholder="Search catalog..." class="pl-10 pr-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 w-full md:w-72 outline-none shadow-sm transition-all" />
+                                <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col lg:flex-row gap-8">
+                        <!-- Sidebar -->
+                        <aside class="w-full lg:w-64 flex-shrink-0">
+                            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 sticky top-24 animate-on-scroll">
+                                <h3 class="font-bold text-slate-900 mb-4 flex items-center gap-2">
+                                    <i data-lucide="filter" class="w-4 h-4"></i> Categories
+                                </h3>
+                                <ul class="space-y-1.5" id="category-list"></ul>
+                                <div class="mt-8 pt-8 border-t border-slate-100">
+                                    <h3 class="font-bold text-slate-900 mb-3 text-sm">Need Custom Sourcing?</h3>
+                                    <p class="text-xs text-slate-500 mb-4 leading-relaxed">Can't find what you're looking for? We can source specific products for you.</p>
+                                    <a href="#/contact" class="block text-center w-full bg-slate-900 text-white text-sm font-bold py-3 rounded-xl hover:bg-slate-800 transition-colors shadow-lg">
+                                        Request Sourcing
+                                    </a>
+                                </div>
+                            </div>
+                        </aside>
+
+                        <!-- Product Grid -->
+                        <div class="flex-grow">
+                            <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+                            <div id="no-products" class="hidden text-center py-24 bg-white rounded-2xl border border-slate-100 shadow-sm">
+                                <div class="w-16 h-16 bg-slate-50 text-slate-400 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <i data-lucide="search-x" class="w-8 h-8"></i>
+                                </div>
+                                <h3 class="text-xl font-bold text-slate-900 mb-2">No products found</h3>
+                                <p class="text-slate-500 max-w-sm mx-auto">We couldn't find anything matching your criteria. Try adjusting your search or category filter.</p>
+                                <button id="clear-filters" class="mt-6 text-blue-600 font-bold hover:bg-blue-50 px-6 py-2 rounded-full transition-colors">
+                                    Clear all filters
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        const renderProductDetail = (id) => {
+            const product = PRODUCTS.find(p => p.id === id);
+            if (!product) {
+                return `
+                    <div class="min-h-[60vh] flex flex-col items-center justify-center py-12 text-center">
+                        <i data-lucide="package-x" class="w-16 h-16 text-slate-300 mb-4"></i>
+                        <h2 class="text-3xl font-bold text-slate-900 mb-4">Product Not Found</h2>
+                        <a href="#/products" class="text-blue-600 hover:text-blue-700 font-bold flex items-center gap-2 hover:bg-blue-50 px-6 py-2 rounded-full transition-colors">
+                            <i data-lucide="arrow-left" class="w-4 h-4"></i> Back to Products Catalog
+                        </a>
+                    </div>
+                `;
+            }
+            return `
+                <div class="bg-slate-50 py-12 min-h-[80vh]">
+                    <div class="w-full max-w-[1600px] mx-auto px-6">
+                        <nav class="text-sm text-slate-500 mb-8 flex items-center gap-2 animate-on-scroll">
+                            <a href="#/" class="hover:text-blue-600 transition-colors">Home</a>
+                            <i data-lucide="chevron-right" class="w-3 h-3"></i>
+                            <a href="#/products" class="hover:text-blue-600 transition-colors">Products</a>
+                            <i data-lucide="chevron-right" class="w-3 h-3"></i>
+                            <a href="#/products?cat=${encodeURIComponent(product.category)}" class="hover:text-blue-600 transition-colors">${product.category}</a>
+                            <i data-lucide="chevron-right" class="w-3 h-3"></i>
+                            <span class="text-slate-900 font-medium truncate">${product.title}</span>
+                        </nav>
+
+                        <div class="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden animate-on-scroll">
+                            <div class="grid grid-cols-1 lg:grid-cols-2 gap-0 lg:gap-4">
+                                <div class="p-6 md:p-10 bg-slate-50/50 flex flex-col items-center justify-center border-b lg:border-b-0 lg:border-r border-slate-100">
+                                    <div class="w-full aspect-square rounded-2xl overflow-hidden mb-6 bg-white shadow-sm border border-slate-200">
+                                        <img src="${product.images?.[0] || product.image}" alt="${product.title}" class="w-full h-full object-cover" referrerpolicy="no-referrer" id="main-image" />
+                                    </div>
+                                    ${product.images && product.images.length > 1 ? `
+                                        <div class="grid grid-cols-3 gap-4 w-full">
+                                            ${product.images.map((img, idx) => `
+                                                <div class="aspect-square rounded-xl overflow-hidden border-2 border-transparent hover:border-blue-500 cursor-pointer transition-colors shadow-sm" onclick="changeImage('${img}')">
+                                                    <img src="${img}" alt="View ${idx + 1}" class="w-full h-full object-cover" referrerpolicy="no-referrer" />
+                                                </div>
+                                            `).join('')}
+                                        </div>
+                                    ` : ''}
+                                </div>
+
+                                <div class="p-8 lg:p-12">
+                                    <div class="flex flex-col md:flex-row md:items-start justify-between mb-6 gap-4">
+                                        <div>
+                                            <span class="inline-block px-3 py-1 bg-blue-50 text-blue-600 text-xs font-bold rounded-full mb-3">${product.category}</span>
+                                            <h1 class="text-3xl md:text-4xl font-bold text-slate-900 mb-2 leading-tight">${product.title}</h1>
+                                            <p class="text-slate-400 text-sm font-medium">SKU: ${product.sku}</p>
+                                        </div>
+                                        <div class="flex items-center gap-1.5 bg-yellow-50 px-4 py-2 rounded-full border border-yellow-100 w-fit">
+                                            <i data-lucide="star" class="w-4 h-4 text-yellow-500 fill-yellow-500"></i>
+                                            <span class="font-bold text-slate-900">${product.rating}</span>
+                                            <span class="text-slate-500 text-xs">(${product.reviews})</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="prose prose-slate mb-10 text-slate-600 leading-relaxed text-lg">
+                                        <p>${product.longDescription || product.description}</p>
+                                    </div>
+
+                                    ${product.specs ? `
+                                        <div class="mb-10">
+                                            <h3 class="font-bold text-slate-900 mb-4 flex items-center gap-2 text-lg">
+                                                <i data-lucide="list-checks" class="w-5 h-5 text-blue-600"></i> Technical Specifications
+                                            </h3>
+                                            <div class="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm">
+                                                <table class="w-full text-sm text-left">
+                                                    <tbody>
+                                                        ${product.specs.map((spec, i) => `
+                                                            <tr class="${i !== product.specs.length - 1 ? 'border-b border-slate-100' : ''}">
+                                                                <td class="py-3.5 px-5 font-medium text-slate-500 w-1/3 bg-slate-50/80">${spec.label}</td>
+                                                                <td class="py-3.5 px-5 text-slate-900 font-semibold bg-white">${spec.value}</td>
+                                                            </tr>
+                                                        `).join('')}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    ` : ''}
+
+                                    ${product.logistics ? `
+                                        <div class="mb-10 bg-gradient-to-br from-blue-50 to-slate-50 rounded-2xl p-6 border border-blue-100/50 shadow-sm">
+                                            <h3 class="font-bold text-blue-900 mb-5 flex items-center gap-2 text-lg">
+                                                <i data-lucide="ship" class="w-5 h-5 text-blue-600"></i> Logistics & Shipping
+                                            </h3>
+                                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 text-sm">
+                                                <div>
+                                                    <span class="block text-blue-400 text-xs font-bold uppercase tracking-wider mb-1">Container Load</span>
+                                                    <span class="font-semibold text-slate-800 text-base">${product.logistics.containerLoad}</span>
+                                                </div>
+                                                <div>
+                                                    <span class="block text-blue-400 text-xs font-bold uppercase tracking-wider mb-1">Lead Time</span>
+                                                    <span class="font-semibold text-slate-800 text-base">${product.logistics.leadTime}</span>
+                                                </div>
+                                                <div>
+                                                    <span class="block text-blue-400 text-xs font-bold uppercase tracking-wider mb-1">Payment Terms</span>
+                                                    <span class="font-semibold text-slate-800 text-base">${product.logistics.paymentTerms}</span>
+                                                </div>
+                                                <div>
+                                                    <span class="block text-blue-400 text-xs font-bold uppercase tracking-wider mb-1">Shipping Terms</span>
+                                                    <span class="font-semibold text-slate-800 text-base">${product.logistics.shipping}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ` : ''}
+
+                                    <div class="flex flex-col sm:flex-row gap-4 pt-4 border-t border-slate-100">
+                                        <a href="#/contact" class="flex-1 bg-slate-900 hover:bg-blue-600 text-white py-4 rounded-xl font-bold text-center transition-colors shadow-lg shadow-slate-900/10 flex items-center justify-center gap-2 text-lg">
+                                            Enquire Now <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                                        </a>
+                                        <button onclick="showToast('WhatsApp redirect simulation', 'info')" class="flex-1 bg-[#25D366] hover:bg-[#1da851] text-white py-4 rounded-xl font-bold transition-colors shadow-lg shadow-green-500/20 flex items-center justify-center gap-2 text-lg">
+                                            <i data-lucide="message-circle" class="w-5 h-5"></i> WhatsApp Us
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        };
+
+        const renderAbout = () => `
+            <section class="relative h-[500px] flex items-center justify-center overflow-hidden bg-slate-900">
+                <div class="absolute inset-0 opacity-40">
+                    <img src="https://picsum.photos/seed/office/1920/1080?blur=2" alt="Office" class="w-full h-full object-cover" referrerpolicy="no-referrer" />
+                </div>
+                <div class="w-full max-w-[1600px] mx-auto px-6 relative z-10 text-center text-white">
+                    <h1 class="text-5xl md:text-7xl font-bold mb-6 animate-on-scroll fade-up-init">
+                        Bridging Borders, Building Trust
+                    </h1>
+                    <p class="text-xl md:text-2xl text-slate-300 max-w-3xl mx-auto animate-on-scroll fade-up-init" style="transition-delay: 0.1s;">
+                        Connecting Ahmedabad's industrial prowess to the global marketplace since 1998.
+                    </p>
+                </div>
+            </section>
+
+            <section class="py-24 w-full max-w-[1600px] mx-auto px-6">
+                <div class="flex flex-col lg:flex-row items-center gap-20">
+                    <div class="lg:w-1/2 animate-on-scroll fade-right-init">
+                        <div class="relative">
+                            <div class="absolute -top-4 -left-4 w-24 h-24 bg-blue-100 rounded-full -z-10"></div>
+                            <div class="absolute -bottom-4 -right-4 w-32 h-32 bg-blue-50 rounded-full -z-10"></div>
+                            <img src="https://picsum.photos/seed/handshake/800/600" alt="Business Meeting" class="rounded-3xl shadow-2xl w-full border border-slate-100" referrerpolicy="no-referrer" />
+                        </div>
+                    </div>
+                    <div class="lg:w-1/2 animate-on-scroll fade-left-init">
+                        <h2 class="text-4xl font-bold text-slate-900 mb-8 leading-tight">Connecting Ahmedabad to the World</h2>
+                        <p class="text-slate-600 mb-6 leading-relaxed text-lg">
+                            Founded with a vision to showcase Indian excellence on the global stage, Ahmedabad Exports has grown from a small trading house to a premier export conglomerate. We specialize in identifying high-quality manufacturers in Gujarat and connecting them with international buyers who value quality and reliability.
+                        </p>
+                        <p class="text-slate-600 mb-8 leading-relaxed text-lg">
+                            Our deep roots in the local market allow us to source the best products at competitive prices, while our global logistics network ensures timely delivery to over 50 countries.
+                        </p>
+                        <div class="grid grid-cols-2 gap-8">
+                            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                                <div class="text-5xl font-black text-blue-600 mb-2">25+</div>
+                                <div class="text-sm text-slate-500 font-bold uppercase tracking-wider">Years of Excellence</div>
+                            </div>
+                            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                                <div class="text-5xl font-black text-blue-600 mb-2">500+</div>
+                                <div class="text-sm text-slate-500 font-bold uppercase tracking-wider">Global Partners</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="py-24 bg-white shadow-inner">
+                <div class="w-full max-w-[1600px] mx-auto px-6">
+                    <div class="text-center mb-20 animate-on-scroll">
+                        <h2 class="text-4xl font-bold text-slate-900 mb-4">Our Core Philosophy</h2>
+                        <p class="text-slate-500 text-xl max-w-2xl mx-auto">Driven by values, powered by innovation.</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+                        <div class="bg-slate-50 rounded-3xl p-10 hover:-translate-y-2 transition-transform duration-300 border border-slate-100 animate-on-scroll fade-up-init shadow-sm">
+                            <div class="bg-blue-600 w-20 h-20 rounded-2xl flex items-center justify-center mb-8 shadow-xl shadow-blue-900/10 text-white">
+                                <i data-lucide="target" class="w-10 h-10"></i>
+                            </div>
+                            <h3 class="text-2xl font-bold text-slate-900 mb-4">Our Mission</h3>
+                            <p class="text-slate-600 leading-relaxed text-lg">To be the most trusted bridge between Indian manufacturers and global markets.</p>
+                        </div>
+                        <div class="bg-slate-50 rounded-3xl p-10 hover:-translate-y-2 transition-transform duration-300 border border-slate-100 animate-on-scroll fade-up-init shadow-sm" style="transition-delay: 0.1s;">
+                            <div class="bg-slate-800 w-20 h-20 rounded-2xl flex items-center justify-center mb-8 shadow-xl shadow-slate-900/10 text-white">
+                                <i data-lucide="eye" class="w-10 h-10"></i>
+                            </div>
+                            <h3 class="text-2xl font-bold text-slate-900 mb-4">Our Vision</h3>
+                            <p class="text-slate-600 leading-relaxed text-lg">To redefine global trade standards through technology, transparency, and trust.</p>
+                        </div>
+                        <div class="bg-slate-50 rounded-3xl p-10 hover:-translate-y-2 transition-transform duration-300 border border-slate-100 animate-on-scroll fade-up-init shadow-sm" style="transition-delay: 0.2s;">
+                            <div class="bg-blue-500 w-20 h-20 rounded-2xl flex items-center justify-center mb-8 shadow-xl shadow-blue-500/20 text-white">
+                                <i data-lucide="heart" class="w-10 h-10"></i>
+                            </div>
+                            <h3 class="text-2xl font-bold text-slate-900 mb-4">Our Values</h3>
+                            <p class="text-slate-600 leading-relaxed text-lg">Integrity, Quality, Customer-Centricity, and Sustainable Growth.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="py-32 w-full max-w-[1200px] mx-auto px-6 relative" id="timeline-section">
+                <h2 class="text-4xl md:text-5xl font-bold text-slate-900 mb-24 text-center animate-on-scroll">
+                    Milestones of Success
+                </h2>
+                
+                <div class="relative">
+                    <div class="absolute left-6 md:left-1/2 top-0 bottom-0 w-1 bg-slate-200 -translate-x-1/2 md:translate-x-0 rounded-full overflow-hidden">
+                        <div id="timeline-line" class="w-full h-full bg-blue-600 origin-top transform scale-y-0 transition-transform duration-100 ease-linear rounded-full"></div>
+                    </div>
+
+                    <div class="space-y-24">
+                        <div class="relative flex items-center md:flex-row-reverse animate-on-scroll fade-up-init">
+                            <div class="hidden md:block w-1/2"></div>
+                            <div class="absolute left-6 md:left-1/2 w-10 h-10 bg-blue-600 rounded-full border-4 border-white shadow-xl -translate-x-1/2 z-10 flex items-center justify-center">
+                                <div class="w-2.5 h-2.5 bg-white rounded-full"></div>
+                            </div>
+                            <div class="w-full md:w-1/2 pl-16 md:pl-0 md:pr-20 md:text-right">
+                                <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 hover:shadow-xl transition-all duration-300">
+                                    <span class="text-blue-600 font-black text-3xl block mb-2">1998</span>
+                                    <h3 class="text-2xl font-bold text-slate-900 mb-3">Inception</h3>
+                                    <p class="text-slate-600 text-lg">Started as a small spice trading firm in Kalupur market.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="relative flex items-center animate-on-scroll fade-up-init">
+                            <div class="hidden md:block w-1/2"></div>
+                            <div class="absolute left-6 md:left-1/2 w-10 h-10 bg-blue-600 rounded-full border-4 border-white shadow-xl -translate-x-1/2 z-10 flex items-center justify-center">
+                                <div class="w-2.5 h-2.5 bg-white rounded-full"></div>
+                            </div>
+                            <div class="w-full md:w-1/2 pl-16 md:pl-20">
+                                <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 hover:shadow-xl transition-all duration-300">
+                                    <span class="text-blue-600 font-black text-3xl block mb-2">2005</span>
+                                    <h3 class="text-2xl font-bold text-slate-900 mb-3">First Export</h3>
+                                    <p class="text-slate-600 text-lg">Successfully executed first international shipment to UAE.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="relative flex items-center md:flex-row-reverse animate-on-scroll fade-up-init">
+                            <div class="hidden md:block w-1/2"></div>
+                            <div class="absolute left-6 md:left-1/2 w-10 h-10 bg-blue-600 rounded-full border-4 border-white shadow-xl -translate-x-1/2 z-10 flex items-center justify-center">
+                                <div class="w-2.5 h-2.5 bg-white rounded-full"></div>
+                            </div>
+                            <div class="w-full md:w-1/2 pl-16 md:pl-0 md:pr-20 md:text-right">
+                                <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 hover:shadow-xl transition-all duration-300">
+                                    <span class="text-blue-600 font-black text-3xl block mb-2">2012</span>
+                                    <h3 class="text-2xl font-bold text-slate-900 mb-3">Expansion</h3>
+                                    <p class="text-slate-600 text-lg">Expanded portfolio to include textiles and chemicals.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        `;
+
+        const renderQuality = () => `
+            <section class="bg-slate-900 text-white py-24 md:py-32 relative overflow-hidden">
+                <div class="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
+                <div class="absolute -right-40 -top-40 w-96 h-96 bg-blue-600 rounded-full blur-[100px] opacity-20"></div>
+                <div class="w-full max-w-[1600px] mx-auto px-6 text-center relative z-10 animate-on-scroll">
+                    <div class="inline-flex items-center gap-2 bg-blue-600/20 border border-blue-500/30 rounded-full px-5 py-2 text-blue-300 text-sm font-bold tracking-wide mb-8">
+                        <i data-lucide="shield-check" class="w-4 h-4"></i> UNCOMPROMISING STANDARDS
+                    </div>
+                    <h1 class="text-5xl md:text-6xl font-black mb-6 tracking-tight">Quality & Certifications</h1>
+                    <p class="text-slate-400 max-w-2xl mx-auto text-xl leading-relaxed">
+                        Our commitment to quality is validated by global certifications and rigorous testing protocols at every stage of the supply chain.
+                    </p>
+                </div>
+            </section>
+
+            <section class="py-24 w-full max-w-[1600px] mx-auto px-6">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-24">
+                    <div class="bg-white p-10 rounded-3xl shadow-sm border border-slate-100 hover:shadow-xl transition-all duration-300 animate-on-scroll">
+                        <div class="bg-blue-50 w-20 h-20 rounded-2xl flex items-center justify-center mb-8 text-blue-600">
+                            <i data-lucide="file-check" class="w-10 h-10"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-slate-900 mb-4">Rigorous Testing</h3>
+                        <p class="text-slate-500 leading-relaxed text-lg">Every batch undergoes multi-stage testing in our NABL accredited labs before dispatch.</p>
+                    </div>
+                    <div class="bg-white p-10 rounded-3xl shadow-sm border border-slate-100 hover:shadow-xl transition-all duration-300 animate-on-scroll" style="transition-delay: 0.1s">
+                        <div class="bg-blue-50 w-20 h-20 rounded-2xl flex items-center justify-center mb-8 text-blue-600">
+                            <i data-lucide="globe" class="w-10 h-10"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-slate-900 mb-4">Global Compliance</h3>
+                        <p class="text-slate-500 leading-relaxed text-lg">Strict adherence to international market standards including FDA, EU, and CODEX.</p>
+                    </div>
+                    <div class="bg-white p-10 rounded-3xl shadow-sm border border-slate-100 hover:shadow-xl transition-all duration-300 animate-on-scroll" style="transition-delay: 0.2s">
+                        <div class="bg-blue-50 w-20 h-20 rounded-2xl flex items-center justify-center mb-8 text-blue-600">
+                            <i data-lucide="check-circle" class="w-10 h-10"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-slate-900 mb-4">Full Traceability</h3>
+                        <p class="text-slate-500 leading-relaxed text-lg">Robust farm-to-fork tracking system ensuring complete transparency and accountability.</p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-[2.5rem] shadow-xl border border-slate-100 p-12 md:p-20 text-center relative overflow-hidden animate-on-scroll">
+                    <div class="absolute inset-0 bg-gradient-to-br from-slate-50 to-white -z-10"></div>
+                    <h2 class="text-4xl font-black text-slate-900 mb-16">Accreditations & Memberships</h2>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-12 items-center">
+                        <div class="flex flex-col items-center gap-5 group cursor-default">
+                            <div class="w-32 h-32 bg-slate-50 rounded-full flex items-center justify-center text-4xl font-black text-slate-300 border-4 border-slate-100 group-hover:border-blue-500 group-hover:text-blue-600 transition-all duration-300 shadow-inner">ISO</div>
+                            <span class="font-bold text-slate-700 text-lg">ISO 9001:2015</span>
+                        </div>
+                        <div class="flex flex-col items-center gap-5 group cursor-default">
+                            <div class="w-32 h-32 bg-slate-50 rounded-full flex items-center justify-center text-4xl font-black text-slate-300 border-4 border-slate-100 group-hover:border-blue-500 group-hover:text-blue-600 transition-all duration-300 shadow-inner">FDA</div>
+                            <span class="font-bold text-slate-700 text-lg">US FDA Registered</span>
+                        </div>
+                        <div class="flex flex-col items-center gap-5 group cursor-default">
+                            <div class="w-32 h-32 bg-slate-50 rounded-full flex items-center justify-center text-4xl font-black text-slate-300 border-4 border-slate-100 group-hover:border-blue-500 group-hover:text-blue-600 transition-all duration-300 shadow-inner">GMP</div>
+                            <span class="font-bold text-slate-700 text-lg">GMP Certified</span>
+                        </div>
+                        <div class="flex flex-col items-center gap-5 group cursor-default">
+                            <div class="w-32 h-32 bg-slate-50 rounded-full flex items-center justify-center text-4xl font-black text-slate-300 border-4 border-slate-100 group-hover:border-blue-500 group-hover:text-blue-600 transition-all duration-300 shadow-inner">FSSAI</div>
+                            <span class="font-bold text-slate-700 text-lg">FSSAI License</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="bg-blue-600 py-20">
+                <div class="w-full max-w-[1600px] mx-auto px-6 text-center animate-on-scroll">
+                    <h2 class="text-3xl font-bold text-white mb-8">Need specific compliance documentation?</h2>
+                    <button onclick="showToast('Document request portal opening soon.', 'info')" class="bg-white text-blue-700 hover:bg-slate-100 px-10 py-4 rounded-full font-bold text-lg transition-colors shadow-2xl">
+                        Request Certificates
+                    </button>
+                </div>
+            </section>
+        `;
+
+        const renderContact = () => `
+            <div class="bg-slate-50 py-16 md:py-24">
+                <div class="w-full max-w-[1600px] mx-auto px-6">
+                    <div class="text-center mb-20 animate-on-scroll">
+                        <h1 class="text-4xl md:text-5xl font-black text-slate-900 mb-6">Contact & Global Inquiry</h1>
+                        <p class="text-slate-500 max-w-2xl mx-auto text-lg leading-relaxed">
+                            Get in touch with our export specialists. We typically respond to all inquiries within 24 hours.
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20 animate-on-scroll">
+                        <div class="bg-white p-10 rounded-3xl shadow-sm border border-slate-100 flex flex-col items-center text-center hover:-translate-y-2 transition-transform duration-300">
+                            <div class="w-16 h-16 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mb-6">
+                                <i data-lucide="map-pin" class="w-8 h-8"></i>
+                            </div>
+                            <h3 class="font-bold text-slate-900 mb-3 text-xl">Headquarters</h3>
+                            <p class="text-slate-500">
+                                123 Export Zone, GIDC Estate,<br />Ahmedabad, Gujarat 380015, India
+                            </p>
+                        </div>
+                        <div class="bg-white p-10 rounded-3xl shadow-sm border border-slate-100 flex flex-col items-center text-center hover:-translate-y-2 transition-transform duration-300">
+                            <div class="w-16 h-16 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mb-6">
+                                <i data-lucide="phone" class="w-8 h-8"></i>
+                            </div>
+                            <h3 class="font-bold text-slate-900 mb-3 text-xl">Phone Support</h3>
+                            <p class="text-slate-500">
+                                +91 98765 43210<br />+91 79 1234 5678
+                            </p>
+                        </div>
+                        <div class="bg-white p-10 rounded-3xl shadow-sm border border-slate-100 flex flex-col items-center text-center hover:-translate-y-2 transition-transform duration-300">
+                            <div class="w-16 h-16 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mb-6">
+                                <i data-lucide="mail" class="w-8 h-8"></i>
+                            </div>
+                            <h3 class="font-bold text-slate-900 mb-3 text-xl">Email Us</h3>
+                            <p class="text-slate-500">
+                                info@ahmedabad-exports.com<br />sales@ahmedabad-exports.com
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-5 gap-0 bg-white rounded-[2.5rem] shadow-xl overflow-hidden animate-on-scroll border border-slate-100">
+                        <div class="lg:col-span-3 p-10 lg:p-16">
+                            <h2 class="text-3xl font-bold text-slate-900 mb-8">Send us a Message</h2>
+                            <form id="contact-form" class="space-y-8">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                    <div>
+                                        <label class="block text-sm font-bold text-slate-700 mb-3">Full Name</label>
+                                        <input type="text" required class="w-full px-5 py-4 rounded-xl bg-slate-50 border border-slate-200 focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none text-slate-900" placeholder="John Doe" />
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-bold text-slate-700 mb-3">Company Name</label>
+                                        <input type="text" class="w-full px-5 py-4 rounded-xl bg-slate-50 border border-slate-200 focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none text-slate-900" placeholder="Global Trade Inc." />
+                                    </div>
+                                </div>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                    <div>
+                                        <label class="block text-sm font-bold text-slate-700 mb-3">Email Address</label>
+                                        <input type="email" required class="w-full px-5 py-4 rounded-xl bg-slate-50 border border-slate-200 focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none text-slate-900" placeholder="john@example.com" />
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-bold text-slate-700 mb-3">Phone Number</label>
+                                        <input type="tel" class="w-full px-5 py-4 rounded-xl bg-slate-50 border border-slate-200 focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none text-slate-900" placeholder="+1 (555) 000-0000" />
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-bold text-slate-700 mb-3">Inquiry Type</label>
+                                    <select class="w-full px-5 py-4 rounded-xl bg-slate-50 border border-slate-200 focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none text-slate-900">
+                                        <option>Product Inquiry</option>
+                                        <option>Partnership Proposal</option>
+                                        <option>Logistics Support</option>
+                                        <option>Other</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-bold text-slate-700 mb-3">Message</label>
+                                    <textarea rows="5" required class="w-full px-5 py-4 rounded-xl bg-slate-50 border border-slate-200 focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none text-slate-900 resize-none" placeholder="Tell us about your requirements..."></textarea>
+                                </div>
+                                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-5 rounded-xl transition-all shadow-lg shadow-blue-600/20 flex items-center justify-center gap-2 text-lg disabled:opacity-70 disabled:cursor-not-allowed">
+                                    Send Message <i data-lucide="send" class="w-5 h-5"></i>
+                                </button>
+                            </form>
+                        </div>
+
+                        <div class="lg:col-span-2 bg-slate-900 p-10 lg:p-16 text-white flex flex-col justify-between relative overflow-hidden">
+                            <div class="relative z-10">
+                                <h3 class="text-3xl font-bold mb-8">Global Reach</h3>
+                                <p class="text-slate-400 mb-10 leading-relaxed text-lg">
+                                    With a robust network of logistics partners and strategic hubs, we ensure your products reach any corner of the globe safely and on time.
+                                </p>
+                                <div class="space-y-8">
+                                    <div class="flex items-start gap-4">
+                                        <div class="bg-blue-600/20 p-3 rounded-xl">
+                                            <i data-lucide="clock" class="text-blue-400 w-6 h-6"></i>
+                                        </div>
+                                        <div>
+                                            <h4 class="font-bold mb-2 text-lg">Business Hours</h4>
+                                            <p class="text-slate-400">Mon - Sat: 9:00 AM - 7:00 PM (IST)</p>
+                                            <p class="text-slate-400">Sunday: Closed</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="relative z-10 mt-12 rounded-2xl overflow-hidden border border-slate-700 h-64">
+                                <img src="https://picsum.photos/seed/map/600/400" alt="Location Map" class="w-full h-full object-cover opacity-60 hover:opacity-100 transition-opacity duration-500" referrerpolicy="no-referrer" />
+                                <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                    <div class="bg-blue-600 text-white px-6 py-3 rounded-full shadow-2xl text-sm font-bold animate-bounce shadow-blue-600/50">
+                                        We are here!
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        /* --- 4. ROUTER & CONTROLLERS --- */
+        let currentPath = '';
+        let scrollHandler = null;
+
+        const routes = [
+            { path: '/', render: renderHome },
+            { path: '/products', render: renderProductsBase, init: initProductsLogic },
+            { path: '/product/:id', render: renderProductDetail, init: () => window.scrollTo(0, 0) },
+            { path: '/about', render: renderAbout, init: initTimelineScroll },
+            { path: '/quality', render: renderQuality },
+            { path: '/contact', render: renderContact, init: initContactLogic }
+        ];
+
+        function matchRoute(hash) {
+            const cleanHash = hash.split('?')[0];
+            for (const route of routes) {
+                if (route.path === cleanHash) return { route, params: {} };
+                if (route.path.includes(':')) {
+                    const routeParts = route.path.split('/');
+                    const hashParts = cleanHash.split('/');
+                    if (routeParts.length === hashParts.length) {
+                        let isMatch = true, params = {};
+                        for (let i = 0; i < routeParts.length; i++) {
+                            if (routeParts[i].startsWith(':')) {
+                                params[routeParts[i].substring(1)] = hashParts[i];
+                            } else if (routeParts[i] !== hashParts[i]) {
+                                isMatch = false; break;
+                            }
+                        }
+                        if (isMatch) return { route, params };
+                    }
+                }
+            }
+            return null;
+        }
+
+        async function router() {
+            const hash = window.location.hash.slice(1) || '/';
+            const cleanHash = hash.split('?')[0];
+            const root = document.getElementById('app-root');
+
+            // Optimistic rendering for query param changes inside the same view
+            if (currentPath === '/products' && cleanHash === '/products') {
+                updateProductsView();
+                return;
+            }
+
+            // Route Transition Out
+            root.style.opacity = '0';
+            await new Promise(r => setTimeout(r, 200));
+            window.scrollTo({ top: 0, behavior: 'instant' });
+
+            // Route matching
+            const match = matchRoute(hash);
+            if (match) {
+                root.innerHTML = match.route.render(match.params);
+            } else {
+                root.innerHTML = `<div class="text-center py-32"><h2 class="text-4xl font-black text-slate-900 mb-4">404</h2><p class="text-slate-500">Page Not Found</p><a href="#/" class="mt-6 inline-block text-blue-600 font-bold">Return Home</a></div>`;
+            }
+
+            currentPath = cleanHash;
+
+            // Route Transition In & Initializers
+            lucide.createIcons();
+
+            // Clean up previous global handlers
+            if (scrollHandler) { window.removeEventListener('scroll', scrollHandler); scrollHandler = null; }
+
+            if (match && match.route.init) match.route.init();
+
+            initAnimations();
+            updateNavState(hash);
+            closeMobileMenu();
+
+            root.style.opacity = '1';
+        }
+
+        /* --- 5. PAGE-SPECIFIC LOGIC --- */
+
+        // Product Logic
+        function updateProductsView() {
+            const hashParts = window.location.hash.split('?');
+            let cat = 'All Products';
+            if (hashParts.length > 1) {
+                const urlParams = new URLSearchParams(hashParts[1]);
+                if (urlParams.get('cat') && CATEGORIES.includes(urlParams.get('cat'))) {
+                    cat = urlParams.get('cat');
+                }
+            }
+            productsState.selectedCategory = cat;
+
+            const categoryList = document.getElementById('category-list');
+            const grid = document.getElementById('product-grid');
+            const noProducts = document.getElementById('no-products');
+
+            if (!categoryList || !grid) return;
+
+            // Render Sidebar
+            categoryList.innerHTML = CATEGORIES.map(c => `
+                <li>
+                    <button onclick="window.setCategory('${c}')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium transition-all ${productsState.selectedCategory === c ? 'bg-slate-900 text-white shadow-md' : 'text-slate-600 hover:bg-slate-100'}">${c}</button>
+                </li>
+            `).join('');
+
+            // Filter & Render Grid
+            const filtered = PRODUCTS.filter(p => {
+                const matchCat = productsState.selectedCategory === 'All Products' || p.category === productsState.selectedCategory;
+                const matchSearch = p.title.toLowerCase().includes(productsState.searchQuery.toLowerCase());
+                return matchCat && matchSearch;
+            });
+
+            if (filtered.length > 0) {
+                grid.innerHTML = filtered.map(product => `
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden hover:shadow-xl transition-all duration-300 group flex flex-col h-full animate-in">
+                        <div class="h-56 overflow-hidden relative bg-slate-100">
+                            <img src="${product.image}" alt="${product.title}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" referrerpolicy="no-referrer" />
+                            <div class="absolute top-4 right-4 bg-white/95 backdrop-blur-sm px-3 py-1.5 rounded-lg text-xs font-bold text-slate-700 shadow-sm border border-slate-100/50">
+                                ${product.category}
+                            </div>
+                        </div>
+                        <div class="p-6 flex flex-col flex-grow">
+                            <h3 class="font-bold text-slate-900 text-xl leading-tight mb-3 line-clamp-2">${product.title}</h3>
+                            <p class="text-slate-500 text-sm mb-6 line-clamp-2 flex-grow leading-relaxed">${product.description}</p>
+                            
+                            <div class="flex justify-between items-center text-xs text-slate-500 mb-5 pt-5 border-t border-slate-100 font-medium">
+                                <span class="flex items-center gap-1.5"><i data-lucide="package" class="w-4 h-4 text-blue-500"></i> Min: ${product.minOrder}</span>
+                                <span class="flex items-center gap-1 bg-yellow-50 px-2 py-1 rounded-md text-yellow-700"><i data-lucide="star" class="w-3.5 h-3.5 fill-yellow-500 text-yellow-500"></i> ${product.rating}</span>
+                            </div>
+                            <a href="#/product/${product.id}" class="w-full bg-slate-50 hover:bg-blue-600 text-slate-700 hover:text-white font-bold py-3 rounded-xl transition-colors flex items-center justify-center gap-2 border border-slate-200 hover:border-transparent">
+                                View Details <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                            </a>
+                        </div>
+                    </div>
+                `).join('');
+                noProducts.classList.add('hidden');
+                grid.classList.remove('hidden');
+                lucide.createIcons();
+            } else {
+                grid.classList.add('hidden');
+                noProducts.classList.remove('hidden');
+            }
+        }
+
+        window.setCategory = (cat) => {
+            if (cat === 'All Products') window.location.hash = '/products';
+            else window.location.hash = '/products?cat=' + encodeURIComponent(cat);
+        };
+
+        function initProductsLogic() {
+            const searchInput = document.getElementById('search-input');
+            const clearFiltersBtn = document.getElementById('clear-filters');
+
+            if (searchInput) {
+                searchInput.value = productsState.searchQuery;
+                searchInput.oninput = (e) => {
+                    productsState.searchQuery = e.target.value;
+                    updateProductsView();
+                };
+            }
+            if (clearFiltersBtn) {
+                clearFiltersBtn.onclick = () => {
+                    productsState.searchQuery = '';
+                    if (searchInput) searchInput.value = '';
+                    window.location.hash = '/products';
+                };
+            }
+            updateProductsView();
+        }
+
+        // Contact Logic
+        function initContactLogic() {
+            const form = document.getElementById('contact-form');
+            if (form) {
+                form.onsubmit = async (e) => {
+                    e.preventDefault();
+                    const btn = form.querySelector('button[type="submit"]');
+                    const originalContent = btn.innerHTML;
+
+                    btn.innerHTML = `<div class="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full"></div> Sending...`;
+                    btn.disabled = true;
+
+                    // Simulate API Delay
+                    await new Promise(res => setTimeout(res, 1500));
+
+                    showToast('Message sent successfully! Our team will contact you soon.', 'success');
+                    form.reset();
+                    btn.innerHTML = originalContent;
+                    btn.disabled = false;
+                };
+            }
+        }
+
+        // Timeline Logic
+        function initTimelineScroll() {
+            const timelineLine = document.getElementById('timeline-line');
+            if (timelineLine) {
+                scrollHandler = () => {
+                    const section = document.getElementById('timeline-section');
+                    if (!section) return;
+                    const rect = section.getBoundingClientRect();
+                    let progress = (window.innerHeight - rect.top) / (window.innerHeight + rect.height);
+                    timelineLine.style.transform = `scaleY(${Math.max(0, Math.min(1, progress))})`;
+                };
+                window.addEventListener('scroll', scrollHandler);
+                scrollHandler();
+            }
+        }
+
+        // Global UI Initializers
+        function initAnimations() {
+            const observer = new IntersectionObserver((entries, obs) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('animate-in');
+                        obs.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+            document.querySelectorAll('.animate-on-scroll, .fade-up-init, .fade-right-init, .fade-left-init').forEach(el => observer.observe(el));
+        }
+
+        function updateNavState(hash) {
+            const cleanPath = hash.split('?')[0];
+            document.querySelectorAll('#desktop-nav .nav-link').forEach(link => {
+                const linkPath = link.getAttribute('data-path');
+                if (linkPath === cleanPath || (linkPath === '/products' && cleanPath.startsWith('/product/'))) {
+                    link.classList.remove('text-slate-600', 'hover:text-blue-600');
+                    link.classList.add('text-blue-600');
+                } else {
+                    link.classList.add('text-slate-600', 'hover:text-blue-600');
+                    link.classList.remove('text-blue-600');
+                }
+            });
+        }
+
+        // Mobile Menu
+        const mobileMenu = document.getElementById('mobile-menu');
+        function toggleMobileMenu() {
+            if (mobileMenu.classList.contains('translate-x-0')) closeMobileMenu();
+            else {
+                mobileMenu.classList.remove('translate-x-full');
+                mobileMenu.classList.add('translate-x-0');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+        function closeMobileMenu() {
+            if (mobileMenu.classList.contains('translate-x-0')) {
+                mobileMenu.classList.remove('translate-x-0');
+                mobileMenu.classList.add('translate-x-full');
+                document.body.style.overflow = '';
+            }
+        }
+
+        document.getElementById('mobile-menu-btn').onclick = toggleMobileMenu;
+        document.getElementById('close-menu').onclick = closeMobileMenu;
+        document.querySelectorAll('#mobile-nav-links a, #mobile-quote-btn').forEach(l => l.onclick = closeMobileMenu);
+
+        // Back to Top functionality
+        const btt = document.getElementById('back-to-top');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 400) {
+                btt.classList.remove('opacity-0', 'translate-y-10', 'pointer-events-none');
+                btt.classList.add('opacity-100', 'translate-y-0');
+            } else {
+                btt.classList.add('opacity-0', 'translate-y-10', 'pointer-events-none');
+                btt.classList.remove('opacity-100', 'translate-y-0');
+            }
+        });
+        btt.onclick = () => window.scrollTo({ top: 0, behavior: 'smooth' });
+
+        // App Init
+        window.addEventListener('hashchange', router);
+        window.addEventListener('DOMContentLoaded', router);
+    </script>
+</body>
+
+</html>

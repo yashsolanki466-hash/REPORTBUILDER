@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title> Unigenome {{ project_id }}</title>
+    <title> Unigenome <%=  project_id  %></title>
 
     <!-- Dependencies -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -895,7 +895,7 @@
         <div id="progress-bar"></div>
     </div>
 
-    {% set static_snippets = static_content.get('snippets', {}) if static_content else {} %}
+    <% var static_snippets = static_content ? static_content['snippets'] || {} : {}; %>
 
     <div class="print-header">
         <div class="header-top">
@@ -906,10 +906,10 @@
                 Panjarapole, Ambawadi, Ahmedabad-380015, Gujarat<br>
                 Ph:+91-79-49006800 | WhatsApp: +91-6356005900 | Email: info@unigenome.in | Website: www.unigenome.in
             </div>
-            <img src="{{ logo_path }}" alt="Logo" />
+            <img src="<%=  logo_path  %>" alt="Logo" />
         </div>
         <div class="header-info-line">
-            NGS-{{ project_id }} | Date: {{ report_date }}
+            NGS-<%=  project_id  %> | Date: <%=  report_date  %>
         </div>
     </div>
 
@@ -966,7 +966,7 @@
         <!-- Cover Page -->
         <div class="cover-page">
             <div style="width: 100%;">
-                <img src="{{ logo_path }}" alt="Unigenome Logo" class="cover-logo">
+                <img src="<%=  logo_path  %>" alt="Unigenome Logo" class="cover-logo">
             </div>
 
             <div>
@@ -977,8 +977,8 @@
 
             <div class="submitted-to">
                 <p style="margin-bottom: 5px;">Submitted to:</p>
-                <div style="font-size: 22px; color: var(--primary-color);">{{ client_name }}</div>
-                <div style="font-size: 16px; color: #333;">{{ client_org }}</div>
+                <div style="font-size: 22px; color: var(--primary-color);"><%=  client_name  %></div>
+                <div style="font-size: 16px; color: #333;"><%=  client_org  %></div>
 
                 <div class="submitted-by">
                     <div style="font-weight: bold; margin-top: 18px;">Submitted by:</div>
@@ -993,7 +993,7 @@
 
             <div
                 style="width: 100%; border-top: 2px solid var(--primary-color); padding-top: 10px; margin-top: 40px; font-size: 10px; color: #666;">
-                Unigenome | Confidential | {{ project_id }} | {{ report_date }}
+                Unigenome | Confidential | <%=  project_id  %> | <%=  report_date  %>
             </div>
         </div>
 
@@ -1017,11 +1017,11 @@
 
         <!-- Print Footer (Repeating) -->
         <div class="print-footer">
-            Unigenome | Confidential | {{ project_id }}
+            Unigenome | Confidential | <%=  project_id  %>
         </div>
 
         <!-- Section 1 -->
-        {% if warnings and warnings|length > 0 %}
+        <% if (warnings && warnings.length > 0 ) { %>
         <div id="section-warnings" class="section">
             <h2>Input Validation Warnings</h2>
             <div class="table-wrapper">
@@ -1033,24 +1033,24 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for w in warnings %}
+                        <% warnings.forEach(function(w) { %>
                         <tr>
-                            <td>{{ w }}</td>
+                            <td><%=  w  %></td>
                         </tr>
-                        {% endfor %}
+                        <% }); %>
                     </tbody>
                 </table>
             </div>
         </div>
-        {% endif %}
+        <% } %>
 
         <div id="section-1" class="section">
             <h2>1 Project Details</h2>
             <p>This report details the whole transcriptome sequencing and bioinformatics analysis for the project
-                {{ project_id }}. Sequencing was carried out using high-throughput technology to provide deep coverage
+                <%=  project_id  %>. Sequencing was carried out using high-throughput technology to provide deep coverage
                 of the
                 transcriptome.</p>
-            {% if project_pi or application or no_of_samples %}
+            <% if (project_pi || application || no_of_samples ) { %>
             <div class="table-wrapper">
                 <div class="table-title">Project Metadata</div>
                 <table>
@@ -1061,28 +1061,28 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% if project_pi %}
+                        <% if (project_pi ) { %>
                         <tr>
                             <td>Project PI</td>
-                            <td>{{ project_pi }}</td>
+                            <td><%=  project_pi  %></td>
                         </tr>
-                        {% endif %}
-                        {% if application %}
+                        <% } %>
+                        <% if (application ) { %>
                         <tr>
                             <td>Application</td>
-                            <td>{{ application }}</td>
+                            <td><%=  application  %></td>
                         </tr>
-                        {% endif %}
-                        {% if no_of_samples %}
+                        <% } %>
+                        <% if (no_of_samples ) { %>
                         <tr>
                             <td>No. of Samples</td>
-                            <td>{{ no_of_samples }}</td>
+                            <td><%=  no_of_samples  %></td>
                         </tr>
-                        {% endif %}
+                        <% } %>
                     </tbody>
                 </table>
             </div>
-            {% endif %}
+            <% } %>
             <div class="table-wrapper">
                 <div class="table-title">Table 1.1: Project Specifications</div>
                 <table>
@@ -1109,7 +1109,7 @@
         <!-- Section 2 -->
         <div id="section-2" class="section">
             <h2>2 Sample Information</h2>
-            <p>A total of {{ sample_count }} samples were received for library preparation and sequencing. The samples
+            <p>A total of <%=  sample_count  %> samples were received for library preparation and sequencing. The samples
                 were collected
                 from plant root tissues and maintained under strict temperature controls during transport.</p>
             <div class="table-wrapper">
@@ -1126,14 +1126,14 @@
                     <tbody>
                         <tr>
                             <td>Plant Root</td>
-                            <td>{{ sample_count }}</td>
+                            <td><%=  sample_count  %></td>
                             <td>-20°C</td>
-                            <td>{{ sample_count }}</td>
+                            <td><%=  sample_count  %></td>
                         </tr>
                     </tbody>
                 </table>
             </div>
-            <p><strong>Sample Nomenclature:</strong> {{ samples | join(', ') }}</p>
+            <p><strong>Sample Nomenclature:</strong> <%=  samples .join(', ')  %></p>
         </div>
 
         <!-- Section 3 -->
@@ -1141,19 +1141,19 @@
             <h2>3 Methods</h2>
 
             <h3>3.1 Isolation and Quantitative analysis of RNA:</h3>
-            <p>{{ static_snippets.get('wet_lab', {}).get('rna_isolation_qc') or 'RNA samples were extracted from leaf
+            <p><%= static_snippets['wet_lab']?.['rna_isolation_qc'] || 'RNA samples were extracted from leaf
                 sample using PVP extraction method. RNA quantity was measured using Qubit® 4.0 fluorometer and quality
-                were analyzed by using 1% agarose gel.' }}</p>
+                were analyzed by using 1% agarose gel.'  %></p>
 
             <h3>3.2 Preparation of Library</h3>
-            <p>{{ static_snippets.get('wet_lab', {}).get('library_preparation') or 'The paired-end sequencing library
-                was prepared using KAPA mRNA HyperPrep Kit for Illumina. (CAT #KK8581). The library preparation process
+            <p><%=  static_snippets['wet_lab'] || {}['library_preparation'] || 'The paired-end sequencing library
+                was prepared using KAPA mRNA HyperPrep Kit for Illumina. (CAT #KK8581]. The library preparation process
                 was initiated with 500-1000 ng input. mRNA enrichment was performed as per user manual and mRNA was
                 subjected to fragmentation, first & second-strand cDNA synthesis, end-repair, 3´ adenylating, adapter
                 ligation, selective enrichment of adapter-ligated DNA fragments through PCR amplification, followed by
                 validation of Library on Agilent 4150 tape station. The final library was pooled with other-samples,
                 denatured & loaded on to flow cell. On the flow cell, cluster generation & sequencing was performed
-                using Illumina Novaseq X plus platform to generate 2×150bp paired-end (PE) read' }}</p>
+                using Illumina Novaseq X plus platform to generate 2×150bp paired-end (PE) read'  %></p>
 
             <h3>3.3 Quantification using Qubit 4.0 Fluorometer</h3>
             <div class="table-wrapper">
@@ -1170,22 +1170,22 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- Placeholder for Qubit Data: Assuming a static placeholder or passed data -->
+                        <!-- Placeholder for Qubit Data: Assuming a static placeholder || passed data -->
                         <!-- In a real scenario, this would loop over a 'qubit_data' list -->
-                        {% for q in qubit_data %}
+                        <% qubit_data.forEach(function(q) { %>
                         <tr>
-                            <td>{{ loop.index }}</td>
-                            <td>{{ q.sample_id }}</td>
-                            <td>{{ q.conc }}</td>
-                            <td>{{ q.vol }}</td>
-                            <td>{{ q.yield }}</td>
-                            <td>{{ q.remarks }}</td>
+                            <td><%=  index + 1  %></td>
+                            <td><%=  q.sample_id  %></td>
+                            <td><%=  q.conc  %></td>
+                            <td><%=  q.vol  %></td>
+                            <td><%=  q.yield  %></td>
+                            <td><%=  q.remarks  %></td>
                         </tr>
-                        {% else %}
+                        <% } else { %>
                         <tr>
                             <td colspan="6">No Qubit data available</td>
                         </tr>
-                        {% endfor %}
+                        <% }); %>
                     </tbody>
                 </table>
             </div>
@@ -1215,26 +1215,26 @@
             </div>
 
             <h4>4.1 Wet Lab Inferences</h4>
-            <!-- Assuming static text or needs dynamic generation based on average sizes -->
-            <p>The average sizes of the generated libraries were determined to be {{ library_sizes | join(', ') }}
-                respectively for the {{ sample_count }} samples. All libraries met the concentration and size
+            <!-- Assuming static text || needs dynamic generation based on average sizes -->
+            <p>The average sizes of the generated libraries were determined to be <%=  library_sizes .join(', ')  %>
+                respectively for the <%=  sample_count  %> samples. All libraries met the concentration and size
                 requirements for high-quality sequencing on the Novaseq X Plus platform.</p>
         </div>
 
         <!-- Section 5 -->
         <div id="section-5" class="section">
             <h2>5 Bioinformatics Analysis</h2>
-            <p>{{ static_snippets.get('bioinformatics', {}).get('analysis_intro') or 'Bioinformatics analysis includes
-                read filtering, mapping, assembly, differential expression, and functional annotation.' }}</p>
+            <p><%=  static_snippets['bioinformatics'] || {}['analysis_intro'] || 'Bioinformatics analysis includes
+                read filtering, mapping, assembly, differential expression, and functional annotation.'  %></p>
 
-            {% if workflow_figure_src %}
+            <% if (workflow_figure_src ) { %>
             <div class="figure">
-                <img src="{{ workflow_figure_src }}" alt="Bioinformatics workflow" />
+                <img src="<%=  workflow_figure_src  %>" alt="Bioinformatics workflow" />
                 <p class="caption">Figure 6: Bioinformatics Analysis Workflow</p>
             </div>
-            {% endif %}
+            <% } %>
             <h3>5.1 Bioinformatics Workflow</h3>
-            <p>{{ static_snippets.get('bioinformatics', {}).get('workflow_narrative') or 'Raw data was filtered to
+            <p><%=  static_snippets['bioinformatics'] || {}['workflow_narrative') || 'Raw data was filtered to
                 remove adapters and low-quality bases. Clean reads thus produced were used for analysis. Reference
                 guided transcript assembly was performed for samples first by mapping clean reads on reference genome
                 using STAR (v2.7.10a) aligner and then performing transcript assembly by StringTie (v 2.2.1). A
@@ -1244,7 +1244,7 @@
                 transcript were taken as input for differential expression analysis using edgeR package. Gene Ontology
                 and pathway analysis of the significantly differentially expressed transcripts were performed using
                 Blast2go cli and KEGG-KAAS server respectively. Overall bioinformatics workflow is graphically
-                represented in figure above and software version along with its use in table below.' }}</p>
+                represented in figure above and software version along with its use in table below.'  %></p>
 
             <h3>5.2 Detail of Software used for analysis</h3>
             <div class="table-wrapper">
@@ -1258,17 +1258,17 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% set wf_table = static_snippets.get('workflow', {}).get('software_table', {}) %}
-                        {% set wf_rows = wf_table.get('rows', []) if wf_table else [] %}
-                        {% if wf_rows and wf_rows|length > 0 %}
-                        {% for r in wf_rows %}
+                        <% var wf_table = static_snippets['workflow'] || {}['software_table'] || {} ; %>
+                        <% var wf_rows = wf_table ? wf_table['rows'] || [] : []; %>
+                        <% if (wf_rows && wf_rows.length > 0 ) { %>
+                        <% wf_rows.forEach(function(r) { %>
                         <tr>
-                            <td>{{ r[0] }}</td>
-                            <td>{{ r[1] }}</td>
-                            <td>{{ r[2] }}</td>
+                            <td><%=  r[0]  %></td>
+                            <td><%=  r[1]  %></td>
+                            <td><%=  r[2]  %></td>
                         </tr>
-                        {% endfor %}
-                        {% else %}
+                        <% }); %>
+                        <% } else { %>
                         <tr>
                             <td>Trim Galore</td>
                             <td>0.6.4</td>
@@ -1320,7 +1320,7 @@
                             <td>4.12.6</td>
                             <td>Over-representation (or enrichment) analysis</td>
                         </tr>
-                        {% endif %}
+                        <% } %>
                     </tbody>
                 </table>
             </div>
@@ -1329,8 +1329,8 @@
         <!-- Section 6 -->
         <div id="section-6" class="section">
             <h2>6 Data Statistics</h2>
-            <p>{{ static_snippets.get('data_stats', {}).get('illumina_intro') or 'Next-generation sequencing statistics
-                for raw data generated on the Novaseq platform are provided in the table below.' }}</p>
+            <p><%=  static_snippets['data_stats'] || {}['illumina_intro') || 'Next-generation sequencing statistics
+                for raw data generated on the Novaseq platform are provided in the table below.'  %></p>
             <div class="table-wrapper">
                 <div class="table-title">Table 6.1: Sequencing Data Statistics</div>
                 <table>
@@ -1345,16 +1345,16 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for s in sequencing_stats %}
+                        <% sequencing_stats.forEach(function(s) { %>
                         <tr>
-                            <td>{{ s.sample }}</td>
-                            <td class="mono">{{ s.total_reads_r1 }}</td>
-                            <td class="mono">{{ s.total_reads_r2 }}</td>
-                            <td class="mono">{{ s.total_reads }}</td>
-                            <td class="mono">{{ s.total_bases }}</td>
-                            <td class="font-bold">{{ s.data_gb }}</td>
+                            <td><%=  s.sample  %></td>
+                            <td class="mono"><%=  s.total_reads_r1  %></td>
+                            <td class="mono"><%=  s.total_reads_r2  %></td>
+                            <td class="mono"><%=  s.total_reads  %></td>
+                            <td class="mono"><%=  s.total_bases  %></td>
+                            <td class="font-bold"><%=  s.data_gb  %></td>
                         </tr>
-                        {% endfor %}
+                        <% }); %>
                     </tbody>
                 </table>
             </div>
@@ -1363,10 +1363,10 @@
         <!-- Section 7 -->
         <div id="section-7" class="section">
             <h2>7 Reference Genome</h2>
-            <p>{{ static_snippets.get('reference', {}).get('genome_source') or 'The reference genome of ' +
-                reference_organism + ' was used for alignment and annotation.' }}</p>
-            <p>{{ static_snippets.get('reference', {}).get('gff_annotation') or 'The corresponding GFF file contains
-                locus and structural information regarding ' + total_genes + ' genes.' }}</p>
+            <p><%=  static_snippets['reference'] || {}['genome_source') || 'The reference genome of ' +
+                reference_organism + ' was used for alignment and annotation.'  %></p>
+            <p><%=  static_snippets.get('reference'] || {}['gff_annotation') || 'The corresponding GFF file contains
+                locus and structural information regarding ' + total_genes + ' genes.'  %></p>
             <div class="table-wrapper">
                 <div class="table-title">Table 7.1: Reference Genome Statistics</div>
                 <table>
@@ -1379,23 +1379,23 @@
                     <tbody>
                         <tr>
                             <td>Total Chromosomes/Scaffolds</td>
-                            <td>{{ ref_stats.total_scaffolds }}</td>
+                            <td><%=  ref_stats.total_scaffolds  %></td>
                         </tr>
                         <tr>
                             <td>Total Genome Length (bp)</td>
-                            <td>{{ ref_stats.genome_length }}</td>
+                            <td><%=  ref_stats.genome_length  %></td>
                         </tr>
                         <tr>
                             <td>Mean Scaffold Size</td>
-                            <td>{{ ref_stats.mean_scaffold_size }}</td>
+                            <td><%=  ref_stats.mean_scaffold_size  %></td>
                         </tr>
                         <tr>
                             <td>Max Scaffold Size (bp)</td>
-                            <td>{{ ref_stats.max_scaffold_size }}</td>
+                            <td><%=  ref_stats.max_scaffold_size  %></td>
                         </tr>
                         <tr>
                             <td>Total Genes Annotated</td>
-                            <td>{{ total_genes }}</td>
+                            <td><%=  total_genes  %></td>
                         </tr>
                     </tbody>
                 </table>
@@ -1405,9 +1405,9 @@
         <!-- Section 8 -->
         <div id="section-8" class="section">
             <h2>8 Mapping to Reference</h2>
-            <p>{{ static_snippets.get('mapping', {}).get('star_methodology') or 'Alignment to the reference genome
+            <p><%=  static_snippets.get('mapping'] || {}['star_methodology') || 'Alignment to the reference genome
                 allows the identification of reads originating from specific loci. Mapping results show high percentages
-                of uniquely mapped reads for most samples.' }}</p>
+                of uniquely mapped reads for most samples.'  %></p>
             <div class="table-wrapper">
                 <div class="table-title">Table 8.1: Mapping Statistics</div>
                 <table>
@@ -1422,16 +1422,16 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for m in mapping_stats %}
+                        <% mapping_stats.forEach(function(m) { %>
                         <tr>
-                            <td>{{ m.sample_name }}</td>
-                            <td class="mono">{{ m.total_reads }}</td>
-                            <td class="mono">{{ m.mapped_reads }}</td>
-                            <td>{{ m.percent_mapped }}</td>
-                            <td class="mono">{{ m.unique_reads }}</td>
-                            <td>{{ m.percent_unique }}</td>
+                            <td><%=  m.sample_name  %></td>
+                            <td class="mono"><%=  m.total_reads  %></td>
+                            <td class="mono"><%=  m.mapped_reads  %></td>
+                            <td><%=  m.percent_mapped  %></td>
+                            <td class="mono"><%=  m.unique_reads  %></td>
+                            <td><%=  m.percent_unique  %></td>
                         </tr>
-                        {% endfor %}
+                        <% }]; %>
                     </tbody>
                 </table>
             </div>
@@ -1440,21 +1440,21 @@
         <!-- Section 9 -->
         <div id="section-9" class="section">
             <h2>9 Transcript Assembly</h2>
-            <p>{{ static_snippets.get('assembly', {}).get('stringtie_methodology') or 'StringTie assembles transcripts
+            <p><%=  static_snippets.get('assembly'] || {}.get('stringtie_methodology'] || 'StringTie assembles transcripts
                 from RNA-seq reads that have been aligned to the genome, first grouping the reads into distinct gene
-                loci and then assembling each locus into as many isoforms as are needed to explain the data.' }}</p>
+                loci and then assembling each locus into as many isoforms as are needed to explain the data.'  %></p>
 
-            <p>{{ static_snippets.get('assembly', {}).get('stringtie_merge') or 'After assembling each sample, the full
+            <p><%=  static_snippets['assembly'] || {}['stringtie_merge'] || 'After assembling each sample, the full
                 set of assemblies is passed to StringTie\'s merge function, which merges together all the gene
                 structures found in any of the samples. This step is required because transcripts in some of the samples
-                might only be partially covered by reads.' }}</p>
+                might only be partially covered by reads.'  %></p>
 
-            {% if stringtie_merge_figure_src %}
+            <% if (stringtie_merge_figure_src ) { %>
             <div class="figure">
-                <img src="{{ stringtie_merge_figure_src }}" alt="StringTie merge illustration" />
-                <p class="caption">{{ static_snippets.get('assembly', {}).get('stringtie_merge_caption') or '' }}</p>
+                <img src="<%=  stringtie_merge_figure_src  %>" alt="StringTie merge illustration" />
+                <p class="caption"><%=  static_snippets['assembly'] || {}['stringtie_merge_caption') || ''  %></p>
             </div>
-            {% endif %}
+            <% } %>
 
             <div class="table-wrapper">
                 <div class="table-title">Table 9.1: Assembly Statistics</div>
@@ -1468,79 +1468,79 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for a in assembly_stats %}
+                        <% assembly_stats.forEach(function(a) { %>
                         <tr>
-                            <td>{{ a.sample }}</td>
-                            <td class="mono">{{ a.num_transcripts }}</td>
-                            <td class="mono">{{ a.total_bp }}</td>
-                            <td>{{ a.mean_size }}</td>
+                            <td><%=  a.sample  %></td>
+                            <td class="mono"><%=  a.num_transcripts  %></td>
+                            <td class="mono"><%=  a.total_bp  %></td>
+                            <td><%=  a.mean_size  %></td>
                         </tr>
-                        {% endfor %}
+                        <% }); %>
                     </tbody>
                 </table>
             </div>
 
             <h3>9.1 Comparison of assembled transcripts with reference transcripts</h3>
-            <p>{{ static_snippets.get('assembly', {}).get('gffcompare_methodology') or 'For comparison of assembled
+            <p><%=  static_snippets['assembly'] || {}.get('gffcompare_methodology'] || 'For comparison of assembled
                 transcripts with reference transcripts, Gffcompare utility was run taking the reference GTF and the
                 string-tie merged GTF file. This produces an output file, which adds to each transcript a "class code"
                 and the name of the transcript from the reference annotation file to check how the predicted transcripts
-                relate to an annotation file.' }}</p>
+                relate to an annotation file.'  %></p>
 
-            {% if gffcompare_codes_src %}
+            <% if (gffcompare_codes_src ) { %>
             <div class="figure">
-                <img src="{{ gffcompare_codes_src }}" alt="Gffcompare class codes" />
+                <img src="<%=  gffcompare_codes_src  %>" alt="Gffcompare class codes" />
                 <p class="caption">Figure 9.1: Different class codes and their descriptions (<a
                         href="https://ccb.jhu.edu/software/stringtie/gffcompare.shtml"
                         target="_blank">https://ccb.jhu.edu/software/stringtie/gffcompare.shtml</a>)</p>
             </div>
-            {% endif %}
+            <% } %>
 
             <h3>9.2 Identification of novel isoform transcripts</h3>
-            <p>{{ static_snippets.get('assembly', {}).get('novel_isoforms') or 'To identify novel isoform transcripts
+            <p><%=  static_snippets['assembly'] || {}['novel_isoforms'] || 'To identify novel isoform transcripts
                 not present in the reference GTF file, gffcompare utility was run taking the reference GTF and the
                 string-tie merged GTF file. Class code "j" means that predicted transcript is a potential novel isoform
-                that shares at least one splice junction with a reference transcript.' }}</p>
+                that shares at least one splice junction with a reference transcript.'  %></p>
 
-            {% if isoforms_figure_src %}
+            <% if (isoforms_figure_src ) { %>
             <div class="figure">
-                <img src="{{ isoforms_figure_src }}" alt="Novel isoforms illustration" />
+                <img src="<%=  isoforms_figure_src  %>" alt="Novel isoforms illustration" />
                 <p class="caption">Novel isoforms (representative illustration)</p>
             </div>
-            {% endif %}
+            <% } %>
         </div>
 
         <!-- Section 10 -->
         <div id="section-10" class="section">
             <h2>10 Differential Expression</h2>
-            <p>{{ static_snippets.get('dge', {}).get('intro') or '' }}</p>
+            <p><%=  static_snippets['dge'] || {}['intro') || ''  %></p>
 
             <h3>Comparison information</h3>
             <div class="table-wrapper">
                 <div class="table-title">Table 10.1: Comparison information</div>
-                {% set dge_cmp = dge_comparison_table if dge_comparison_table else static_snippets.get('dge', {}).get('comparison_info_table', {}) %}
-                {% set dge_cmp_rows = dge_cmp.get('rows', []) if dge_cmp else [] %}
+                <% var dge_cmp = dge_comparison_table || static_snippets['dge']?.['comparison_info_table'] || {}; %>
+                <% var dge_cmp_rows = dge_cmp ? dge_cmp['rows'] || [] : []; %>
                 <table>
                     <thead>
                         <tr>
-                            {% for h in dge_cmp.get('headers', []) %}
-                            <th>{{ h }}</th>
-                            {% endfor %}
+                            <% (dge_cmp['headers'] || []).forEach(function(h) { %>
+                            <th><%=  h  %></th>
+                            <% }); %>
                         </tr>
                     </thead>
                     <tbody>
-                        {% if dge_cmp_rows and dge_cmp_rows|length > 0 %}
-                        {% for r in dge_cmp_rows %}
+                        <% if (dge_cmp_rows && dge_cmp_rows.length > 0 ) { %>
+                        <% dge_cmp_rows.forEach(function(r) { %>
                         <tr>
-                            <td>{{ r[0] }}</td>
-                            <td>{{ r[1] }}</td>
+                            <td><%=  r[0]  %></td>
+                            <td><%=  r[1]  %></td>
                         </tr>
-                        {% endfor %}
-                        {% else %}
+                        <% }); %>
+                        <% } else { %>
                         <tr>
                             <td colspan="2">Comparison table unavailable</td>
                         </tr>
-                        {% endif %}
+                        <% } %>
                     </tbody>
                 </table>
             </div>
@@ -1548,87 +1548,87 @@
             <h3>Group wise sample information</h3>
             <div class="table-wrapper">
                 <div class="table-title">Table 10.2: Sample description</div>
-                {% set dge_grp = dge_group_table if dge_group_table else static_snippets.get('dge', {}).get('group_sample_table', {}) %}
-                {% set dge_grp_rows = dge_grp.get('rows', []) if dge_grp else [] %}
+                <% var dge_grp = dge_group_table || static_snippets['dge']?.['group_sample_table'] || {}; %>
+                <% var dge_grp_rows = dge_grp ? dge_grp['rows'] || [] : []; %>
                 <table>
                     <thead>
                         <tr>
-                            {% for h in dge_grp.get('headers', []) %}
-                            <th>{{ h }}</th>
-                            {% endfor %}
+                            <% (dge_grp['headers'] || []).forEach(function(h) { %>
+                            <th><%=  h  %></th>
+                            <% }); %>
                         </tr>
                     </thead>
                     <tbody>
-                        {% if dge_grp_rows and dge_grp_rows|length > 0 %}
-                        {% for r in dge_grp_rows %}
+                        <% if (dge_grp_rows && dge_grp_rows.length > 0 ) { %>
+                        <% dge_grp_rows.forEach(function(r) { %>
                         <tr>
-                            <td>{{ r[0] }}</td>
-                            <td>{{ r[1] }}</td>
+                            <td><%=  r[0]  %></td>
+                            <td><%=  r[1]  %></td>
                         </tr>
-                        {% endfor %}
-                        {% else %}
+                        <% }); %>
+                        <% } else { %>
                         <tr>
                             <td colspan="2">Group table unavailable</td>
                         </tr>
-                        {% endif %}
+                        <% } %>
                     </tbody>
                 </table>
             </div>
 
-            <p>{{ static_snippets.get('dge', {}).get('deseq2_intro') or '' }}</p>
+            <p><%=  static_snippets['dge'] || {}['deseq2_intro') || ''  %></p>
             <div class="table-wrapper">
                 <div class="table-title">Table 10.3: Column description of DESeq2 output</div>
-                {% set dge_cols = static_snippets.get('dge', {}).get('deseq2_columns_table', {}) %}
-                {% set dge_cols_rows = dge_cols.get('rows', []) if dge_cols else [] %}
-                {% if dge_cols_rows and dge_cols_rows|length > 0 %}
+                <% var dge_cols = static_snippets['dge'] || {}['deseq2_columns_table'] || {} ; %>
+                <% var dge_cols_rows = dge_cols ? dge_cols['rows'] || [] : []; %>
+                <% if (dge_cols_rows && dge_cols_rows.length > 0 ) { %>
                 <table>
                     <thead>
                         <tr>
-                            {% for h in dge_cols.get('headers', []) %}
-                            <th>{{ h }}</th>
-                            {% endfor %}
+                            <% (dge_cols['headers'] || []).forEach(function(h) { %>
+                            <th><%=  h  %></th>
+                            <% }); %>
                         </tr>
                     </thead>
                     <tbody>
-                        {% for r in dge_cols_rows %}
+                        <% dge_cols_rows.forEach(function(r) { %>
                         <tr>
-                            <td>{{ r[0] }}</td>
-                            <td>{{ r[1] }}</td>
+                            <td><%=  r[0]  %></td>
+                            <td><%=  r[1]  %></td>
                         </tr>
-                        {% endfor %}
+                        <% }); %>
                     </tbody>
                 </table>
-                {% endif %}
+                <% } %>
             </div>
 
-            <p>{{ static_snippets.get('dge', {}).get('criteria_intro') or '' }}</p>
+            <p><%=  static_snippets['dge'] || {}['criteria_intro') || ''  %></p>
             <div class="table-wrapper">
                 <div class="table-title">Table 10.4: Criteria used to identify upregulated and downregulated genes and
                     assigning the significance</div>
-                {% set dge_crit = static_snippets.get('dge', {}).get('criteria_table', {}) %}
-                {% set dge_crit_rows = dge_crit.get('rows', []) if dge_crit else [] %}
-                {% if dge_crit_rows and dge_crit_rows|length > 0 %}
+                <% var dge_crit = static_snippets['dge'] || {}['criteria_table'] || {} ; %>
+                <% var dge_crit_rows = dge_crit ? dge_crit['rows'] || [] : []; %>
+                <% if (dge_crit_rows && dge_crit_rows.length > 0 ) { %>
                 <table>
                     <thead>
                         <tr>
-                            {% for h in dge_crit.get('headers', []) %}
-                            <th>{{ h }}</th>
-                            {% endfor %}
+                            <% (dge_crit['headers'] || []).forEach(function(h) { %>
+                            <th><%=  h  %></th>
+                            <% }); %>
                         </tr>
                     </thead>
                     <tbody>
-                        {% for r in dge_crit_rows %}
+                        <% dge_crit_rows.forEach(function(r) { %>
                         <tr>
-                            <td>{{ r[0] }}</td>
-                            <td>{{ r[1] }}</td>
+                            <td><%=  r[0]  %></td>
+                            <td><%=  r[1]  %></td>
                         </tr>
-                        {% endfor %}
+                        <% }); %>
                     </tbody>
                 </table>
-                {% endif %}
+                <% } %>
             </div>
 
-            <p>{{ static_snippets.get('dge', {}).get('stats_note') or '' }}</p>
+            <p><%=  static_snippets['dge'] || {}['stats_note') || ''  %></p>
             <div class="table-wrapper">
                 <div class="table-title">Table 10.5: Differential gene expression statistics</div>
                 <table>
@@ -1642,53 +1642,53 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for d in diff_expr_stats %}
+                        <% diff_expr_stats.forEach(function(d) { %>
                         <tr>
-                            <td>{{ d.comparison }}</td>
-                            <td>{{ d.total_degs }}</td>
-                            <td>{{ d.sig_down }}</td>
-                            <td>{{ d.sig_up }}</td>
-                            <td class="font-bold">{{ d.total_sig }}</td>
+                            <td><%=  d.comparison  %></td>
+                            <td><%=  d.total_degs  %></td>
+                            <td><%=  d.sig_down  %></td>
+                            <td><%=  d.sig_up  %></td>
+                            <td class="font-bold"><%=  d.total_sig  %></td>
                         </tr>
-                        {% endfor %}
+                        <% }); %>
                     </tbody>
                 </table>
             </div>
 
-            <p>{{ static_snippets.get('dge', {}).get('annotation_note') or '' }}</p>
+            <p><%=  static_snippets['dge'] || {}['annotation_note') || ''  %></p>
 
-            {% if dge_figures and dge_figures|length > 0 %}
+            <% if (dge_figures && dge_figures.length > 0 ) { %>
             <h3>10.1 MA Plot for differentially expressed genes</h3>
-            <p>{{ static_snippets.get('dge', {}).get('ma_plot_text') or '' }}</p>
+            <p><%=  static_snippets.get('dge'] || {}['ma_plot_text') || ''  %></p>
 
             <h3>10.2 Volcano plot for differentially expressed genes</h3>
-            <p>{{ static_snippets.get('dge', {}).get('volcano_plot_text') or '' }}</p>
+            <p><%=  static_snippets.get('dge'] || {}.get('volcano_plot_text') || ''  %></p>
 
             <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 16px;">Select a comparison to view
                 interactive MA and Volcano plots.</p>
 
             <!-- Comparison Selector -->
             <div class="comp-toggles" style="margin-bottom: 20px; display: flex; flex-wrap: wrap; gap: 8px;">
-                {% for fig in dge_figures %}
-                <button class="chart-btn comp-btn {% if loop.first %}active{% endif %}"
-                    onclick="showComparison('{{ fig.comparison }}')" data-comparison="{{ fig.comparison }}"
+                <% dge_figures.forEach(function(fig) { %>
+                <button class="chart-btn comp-btn <% if (loop.first ) { %>active<% } %>"
+                    onclick="showComparison('<%=  fig.comparison  %>')" data-comparison="<%=  fig.comparison  %>"
                     style="padding: 8px 16px; border: 1px solid var(--border-light); background: #fff; color: var(--text-main); border-radius: 4px; cursor: pointer; font-size: 12px;">
-                    {{ fig.comparison }}
+                    <%=  fig.comparison  %>
                 </button>
-                {% endfor %}
+                <% }); %>
             </div>
 
             <!-- Plots Container -->
-            {% for fig in dge_figures %}
-            <div id="plot-{{ fig.comparison }}" class="comparison-plots {% if not loop.first %}hidden{% endif %}"
+            <% dge_figures.forEach(function(fig) { %>
+            <div id="plot-<%=  fig.comparison  %>" class="comparison-plots <% if (not loop.first ) { %>hidden<% } %>"
                 style="margin-bottom: 30px;">
 
-                {% if fig.plot_data_json %}
-                <script type="application/json" id="plotdata-{{ fig.comparison }}">{{ fig.plot_data_json }}</script>
-                {% endif %}
+                <% if (fig.plot_data_json ) { %>
+                <script type="application/json" id="plotdata-<%=  fig.comparison  %>"><%=  fig.plot_data_json  %></script>
+                <% } %>
 
                 <h4 style="color: var(--primary); margin-bottom: 16px; font-size: 14px;">
-                    Comparison: {{ fig.comparison }}
+                    Comparison: <%=  fig.comparison  %>
                 </h4>
 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
@@ -1699,25 +1699,25 @@
                                     display: flex; justify-content: space-between; align-items: center;">
                             <span style="font-weight: 600; font-size: 12px;">MA Plot</span>
                             <div style="display: flex; gap: 6px;">
-                                <button class="chart-btn" onclick="expandPlot('ma-{{ fig.comparison }}')" title="Expand"
+                                <button class="chart-btn" onclick="expandPlot('ma-<%=  fig.comparison  %>')" title="Expand"
                                     style="padding: 4px 8px; font-size: 10px; background: #fff; border: 1px solid #ddd;">⛶</button>
-                                <a href="{{ fig.ma_volcano_pdf_src }}" target="_blank" class="chart-btn"
+                                <a href="<%=  fig.ma_volcano_pdf_src  %>" target="_blank" class="chart-btn"
                                     title="Download PDF"
                                     style="padding: 4px 8px; font-size: 10px; background: #fff; border: 1px solid #ddd; text-decoration: none;">⬇</a>
                             </div>
                         </div>
                         <div style="height: 350px; padding: 15px;">
-                            {% if fig.ma_plot_data %}
-                            <canvas id="ma-{{ fig.comparison }}" class="ma-plot-canvas"></canvas>
-                            {% else %}
+                            <% if (fig.ma_plot_data ) { %>
+                            <canvas id="ma-<%=  fig.comparison  %>" class="ma-plot-canvas"></canvas>
+                            <% } else { %>
                             <div style="display: flex; align-items: center; justify-content: center; height: 100%; 
                                         background: #f8f9fa; border-radius: 4px;">
-                                <a href="{{ fig.ma_volcano_pdf_src }}" target="_blank" class="pdf-link" style="padding: 12px 24px; background: var(--primary); color: white; 
+                                <a href="<%=  fig.ma_volcano_pdf_src  %>" target="_blank" class="pdf-link" style="padding: 12px 24px; background: var(--primary); color: white; 
                                           text-decoration: none; border-radius: 4px; font-size: 13px;">
                                     View MA Plot (PDF)
                                 </a>
                             </div>
-                            {% endif %}
+                            <% } %>
                         </div>
                     </div>
 
@@ -1728,50 +1728,50 @@
                                     display: flex; justify-content: space-between; align-items: center;">
                             <span style="font-weight: 600; font-size: 12px;">Volcano Plot</span>
                             <div style="display: flex; gap: 6px;">
-                                <button class="chart-btn" onclick="expandPlot('volcano-{{ fig.comparison }}')"
+                                <button class="chart-btn" onclick="expandPlot('volcano-<%=  fig.comparison  %>')"
                                     title="Expand"
                                     style="padding: 4px 8px; font-size: 10px; background: #fff; border: 1px solid #ddd;">⛶</button>
-                                <a href="{{ fig.ma_volcano_pdf_src }}" target="_blank" class="chart-btn"
+                                <a href="<%=  fig.ma_volcano_pdf_src  %>" target="_blank" class="chart-btn"
                                     title="Download PDF"
                                     style="padding: 4px 8px; font-size: 10px; background: #fff; border: 1px solid #ddd; text-decoration: none;">⬇</a>
                             </div>
                         </div>
                         <div style="height: 350px; padding: 15px;">
-                            {% if fig.volcano_plot_data %}
-                            <canvas id="volcano-{{ fig.comparison }}" class="volcano-plot-canvas"></canvas>
-                            {% else %}
+                            <% if (fig.volcano_plot_data ) { %>
+                            <canvas id="volcano-<%=  fig.comparison  %>" class="volcano-plot-canvas"></canvas>
+                            <% } else { %>
                             <div style="display: flex; align-items: center; justify-content: center; height: 100%; 
                                         background: #f8f9fa; border-radius: 4px;">
-                                <a href="{{ fig.ma_volcano_pdf_src }}" target="_blank" class="pdf-link" style="padding: 12px 24px; background: var(--primary); color: white; 
+                                <a href="<%=  fig.ma_volcano_pdf_src  %>" target="_blank" class="pdf-link" style="padding: 12px 24px; background: var(--primary); color: white; 
                                           text-decoration: none; border-radius: 4px; font-size: 13px;">
                                     View Volcano Plot (PDF)
                                 </a>
                             </div>
-                            {% endif %}
+                            <% } %>
                         </div>
                     </div>
                 </div>
 
                 <!-- Heatmap -->
-                {% if fig.heatmap_png_src %}
+                <% if (fig.heatmap_png_src ) { %>
                 <div class="figure" style="margin-top: 20px;">
                     <div style="border: 1px solid var(--border-light); border-radius: 4px; overflow: hidden;">
                         <div
-                            style="padding: 10px 15px; background: #f8f9fa; border-bottom: 1px solid var(--border-light);">
-                            <span style="font-weight: 600; font-size: 12px;">Expression Heatmap - {{ fig.comparison
-                                }}</span>
+                            style="padding: 10px 15px; background: #f8f9fa; border-bottom: 1px solid var(--border-light];">
+                            <span style="font-weight: 600; font-size: 12px;">Expression Heatmap - <%=  fig.comparison
+                                 %></span>
                         </div>
                         <div style="padding: 15px;">
-                            <img src="{{ fig.heatmap_png_src }}" alt="{{ fig.comparison }} heatmap"
+                            <img src="<%=  fig.heatmap_png_src  %>" alt="<%=  fig.comparison  %> heatmap"
                                 style="max-width: 100%; height: auto;" />
                         </div>
                     </div>
-                    <p class="caption">Heatmap of significantly differentially expressed genes for {{ fig.comparison }}
+                    <p class="caption">Heatmap of significantly differentially expressed genes for <%=  fig.comparison  %>
                     </p>
                 </div>
-                {% endif %}
+                <% } %>
             </div>
-            {% endfor %}
+            <% }]; %>
 
             <script>
                 const __dgeCharts = { ma: {}, volcano: {} };
@@ -1876,7 +1876,7 @@
                     }
                 })();
             </script>
-            {% endif %}
+            <% } %>
         </div>
 
         <!-- Section 11 -->
@@ -1899,13 +1899,13 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for p in pathway_stats %}
+                        <% pathway_stats.forEach(function(p) { %>
                         <tr>
-                            <td>{{ p.level1 }}</td>
-                            <td>{{ p.level2 }}</td>
-                            <td>{{ p.count }}</td>
+                            <td><%=  p.level1  %></td>
+                            <td><%=  p.level2  %></td>
+                            <td><%=  p.count  %></td>
                         </tr>
-                        {% endfor %}
+                        <% }); %>
                     </tbody>
                 </table>
             </div>
@@ -1925,68 +1925,68 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for g in go_distribution %}
+                        <% go_distribution.forEach(function(g) { %>
                         <tr>
-                            <td>{{ g.ontology }}</td>
-                            <td>{{ g.term }}</td>
-                            <td>{{ g.count }}</td>
+                            <td><%=  g.ontology  %></td>
+                            <td><%=  g.term  %></td>
+                            <td><%=  g.count  %></td>
                         </tr>
-                        {% endfor %}
+                        <% }); %>
                     </tbody>
                 </table>
             </div>
 
-            {% if func_assets and func_assets.kegg_pathway_image_src %}
+            <% if (func_assets && func_assets.kegg_pathway_image_src ) { %>
             <div class="figure">
-                <img src="{{ func_assets.kegg_pathway_image_src }}" alt="KEGG pathway" />
+                <img src="<%=  func_assets.kegg_pathway_image_src  %>" alt="KEGG pathway" />
                 <p class="caption">Representative KEGG pathway image</p>
             </div>
-            {% endif %}
+            <% } %>
 
-            {% if pathway_ex_figure_src and (not func_assets or not func_assets.kegg_pathway_image_src) %}
+            <% if (pathway_ex_figure_src && (!func_assets || !func_assets.kegg_pathway_image_src) ) { %>
             <div class="figure">
-                <img src="{{ pathway_ex_figure_src }}" alt="KEGG pathway example" />
+                <img src="<%=  pathway_ex_figure_src  %>" alt="KEGG pathway example" />
                 <p class="caption">Representative pathway example</p>
             </div>
-            {% endif %}
+            <% } %>
 
-            {% if func_assets and func_assets.kegg_results_preview and func_assets.kegg_results_preview|length > 0 %}
+            <% if (func_assets && func_assets.kegg_results_preview && func_assets.kegg_results_preview.length > 0 ) { %>
             <h3>KEGG Enrichment (preview)</h3>
-            {% if func_assets.kegg_results_xlsx %}
+            <% if (func_assets.kegg_results_xlsx ) { %>
             <div class="figure">
-                <a class="pdf-link" href="{{ func_assets.kegg_results_xlsx }}" target="_blank"
+                <a class="pdf-link" href="<%=  func_assets.kegg_results_xlsx  %>" target="_blank"
                     rel="noopener noreferrer">Open KEGG enrichment results (XLSX)</a>
             </div>
-            {% endif %}
+            <% } %>
             <div class="table-wrapper">
                 <div class="table-title">Top enriched KEGG pathways (first 10 rows)</div>
                 <table>
                     <thead>
                         <tr>
-                            {% for col in func_assets.kegg_results_preview[0].keys() %}
-                            <th>{{ col }}</th>
-                            {% endfor %}
+                            <% Object.keys(func_assets.kegg_results_preview[0] || {}).forEach(function(col) { %>
+                            <th><%=  col  %></th>
+                            <% }); %>
                         </tr>
                     </thead>
                     <tbody>
-                        {% for row in func_assets.kegg_results_preview %}
+                        <% func_assets.kegg_results_preview.forEach(function(row) { %>
                         <tr>
-                            {% for col in func_assets.kegg_results_preview[0].keys() %}
-                            <td>{{ row[col] }}</td>
-                            {% endfor %}
+                            <% Object.keys(func_assets.kegg_results_preview[0] || {}).forEach(function(col) { %>
+                            <td><%=  row[col]  %></td>
+                            <% }); %>
                         </tr>
-                        {% endfor %}
+                        <% }); %>
                     </tbody>
                 </table>
             </div>
-            {% endif %}
+            <% } %>
 
-            {% if func_assets and func_assets.enrichment_image_src %}
+            <% if (func_assets && func_assets.enrichment_image_src ) { %>
             <div class="figure">
-                <img src="{{ func_assets.enrichment_image_src }}" alt="Enrichment plot" />
+                <img src="<%=  func_assets.enrichment_image_src  %>" alt="Enrichment plot" />
                 <p class="caption">Representative enrichment plot</p>
             </div>
-            {% endif %}
+            <% } %>
         </div>
 
         <!-- Section 12 Deliverables -->
@@ -2006,14 +2006,14 @@
             <h3>Project Directory Structure</h3>
             <div class="tree-container"
                 style="background: #f8f9fa; border: 1px solid #ddd; border-radius: 4px; padding: 15px; font-family: 'Courier New', monospace; font-size: 10pt; line-height: 1.4; white-space: pre-wrap; overflow-x: auto;">
-                {{ deliverables_tree }}
+                <%=  deliverables_tree  %>
             </div>
         </div>
 
     </div>
 
-    <script type="application/json" id="library-sizes-json">{{ library_sizes | tojson }}</script>
-    <script type="application/json" id="samples-json">{{ samples | tojson }}</script>
+    <script type="application/json" id="library-sizes-json"><%=  library_sizes | tojson  %></script>
+    <script type="application/json" id="samples-json"><%=  samples | tojson  %></script>
     <script>
         // Data passed from Python
         const librarySizes = JSON.parse(document.getElementById('library-sizes-json').textContent);

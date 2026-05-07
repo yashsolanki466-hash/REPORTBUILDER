@@ -32,6 +32,10 @@
             -webkit-print-color-adjust: exact;
         }
 
+        .section {
+            scroll-margin-top: 20px;
+        }
+
         /* Fixed TOC Sidebar Style (Screen Only) */
         #TOC {
             position: fixed;
@@ -100,7 +104,7 @@
         }
 
         .cover-title {
-            font-size: 36px;
+            font-size: 34px;
             font-weight: 800;
             color: #000;
             margin-bottom: 20px;
@@ -108,7 +112,7 @@
         }
 
         .cover-subtitle {
-            font-size: 24px;
+            font-size: 22px;
             font-weight: 600;
             color: #000;
             margin-bottom: 40px;
@@ -119,6 +123,32 @@
             color: var(--primary-color);
             font-weight: bold;
             margin-bottom: 60px;
+        }
+
+        .submitted-by {
+            margin-top: 25px;
+            color: #333;
+            font-size: 12px;
+            line-height: 1.4;
+        }
+
+        .toc-page {
+            page-break-after: always;
+            display: none;
+        }
+
+        .toc-title {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--secondary-color);
+            margin-bottom: 14px;
+        }
+
+        .toc-list {
+            padding-left: 18px;
+            margin: 0;
+            font-size: 12.5px;
+            line-height: 1.55;
         }
 
         .submitted-to {
@@ -231,6 +261,26 @@
             page-break-inside: avoid;
         }
 
+        .figure img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .pdf-link {
+            display: inline-block;
+            padding: 8px 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            color: var(--secondary-color);
+            text-decoration: none;
+            background: #fafafa;
+            font-size: 12px;
+        }
+
+        .pdf-link:hover {
+            background: #f0f0f0;
+        }
+
         .caption {
             font-size: 11px;
             color: var(--secondary-color);
@@ -304,18 +354,15 @@
             @page {
                 size: A4;
                 margin: 20mm 15mm 20mm 15mm;
-
-                @bottom-center {
-                    content: "Page " counter(page) " of " counter(pages);
-                    font-size: 9px;
-                    color: #999;
-                }
             }
 
             body {
                 background-color: #fff;
                 font-size: 10.5pt;
                 /* Slightly scaled for print */
+                margin: 0;
+                padding-top: 55px;
+                padding-bottom: 40px;
             }
 
             #TOC {
@@ -333,6 +380,16 @@
                 page-break-before: always;
                 margin-top: 0;
                 padding-top: 20px;
+            }
+
+            .toc-page {
+                display: block;
+            }
+
+            .table-wrapper,
+            table,
+            .figure {
+                break-inside: avoid;
             }
 
             /* Avoid breaking after h2/h3 */
@@ -394,11 +451,8 @@
 
     <div class="main-container">
 
-        <!-- Print Header (Repeating) -->
-        <div class="print-header">
-            <img src="assets/logo.png" alt="Logo" class="print-header-logo">
-            <div class="print-header-text">UNIGENOME - FINAL ANALYSIS REPORT</div>
-        </div>
+       
+       
 
         <!-- Cover Page -->
         <div class="cover-page">
@@ -407,21 +461,48 @@
             </div>
 
             <div>
-                <div class="cover-title">Final Analysis Report</div>
+                <div class="cover-title">Final Report of</div>
                 <div class="cover-subtitle">Whole Transcriptome Sequencing<br>& Analysis</div>
                 <div class="cover-details">On Illumina Novaseq X Plus Platform</div>
             </div>
 
             <div class="submitted-to">
                 <p style="margin-bottom: 5px;">Submitted to:</p>
-                <div style="font-size: 22px; color: var(--primary-color);">Client Name</div>
-                <div style="font-size: 16px; color: #333;">Client Organization</div>
+                <div style="font-size: 22px; color: var(--primary-color);">Dr Madhurjit Singh Rathore</div>
+                <div style="font-size: 16px; color: #333;">RVSKVV Gwalior, India</div>
+
+                <div class="submitted-by">
+                    <div style="font-weight: bold; margin-top: 18px;">Submitted by:</div>
+                    <div style="font-weight: 700;">Unigenome</div>
+                    <div>A life sciences division of Unipath Specialty Laboratory Ltd.</div>
+                    <div>3rd Floor, PASL House | Beside Sahjanand College | Panjara pol, Ambawadi,</div>
+                    <div>Ahmedabad – 380015 | Gujarat, India</div>
+                    <div>Tel :- +91-79-66197701</div>
+                    <div>genomics@unipath.in | www.unigenome.in</div>
+                </div>
             </div>
 
             <div
                 style="width: 100%; border-top: 2px solid var(--primary-color); padding-top: 10px; margin-top: 40px; font-size: 10px; color: #666;">
                 Unigenome | Confidential | 240540 | 19-02-2026
             </div>
+        </div>
+
+        <div class="toc-page" id="section-toc-print">
+            <div class="toc-title">Table of Contents</div>
+            <ol class="toc-list">
+                <li>Project Details</li>
+                <li>Sample Details</li>
+                <li>Methods</li>
+                <li>Quantity and quality check (QC) of library on Agilent Tape Station 4150</li>
+                <li>Bioinformatics Analysis</li>
+                <li>Data statistics</li>
+                <li>Reference genome information</li>
+                <li>Mapping to reference genome & Transcript assembly</li>
+                <li>Differential expression analysis</li>
+                <li>Functional annotation</li>
+                <li>Deliverables</li>
+            </ol>
         </div>
 
         <!-- Print Footer (Repeating) -->
@@ -453,57 +534,45 @@
         </div>
         
 
-        
-        <div id="section-provenance" class="section">
-            <h2>Data Provenance</h2>
-            <div class="table-wrapper">
-                <div class="table-title">Files used for computations in this report</div>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Component</th>
-                            <th>File</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        
-                        <tr>
-                            <td>raw_stats</td>
-                            <td style="word-break: break-all;">Deliverables_Dummy/01_Raw_Data/Rawstats.xlsx</td>
-                        </tr>
-                        
-                        <tr>
-                            <td>reference_fasta</td>
-                            <td style="word-break: break-all;">Deliverables_Dummy/02_reference_genome_and_gff/pearl_millet_v1.1.fa</td>
-                        </tr>
-                        
-                        <tr>
-                            <td>reference_gff</td>
-                            <td style="word-break: break-all;">Deliverables_Dummy/02_reference_genome_and_gff/PM.genechr.trans.gff</td>
-                        </tr>
-                        
-                        <tr>
-                            <td>mapping</td>
-                            <td style="word-break: break-all;">Deliverables_Dummy/01_Raw_Data/Mapping.xlsx</td>
-                        </tr>
-                        
-                        <tr>
-                            <td>pathways</td>
-                            <td style="word-break: break-all;"></td>
-                        </tr>
-                        
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        
-
         <div id="section-1" class="section">
             <h2>1 Project Details</h2>
             <p>This report details the whole transcriptome sequencing and bioinformatics analysis for the project
                 240540. Sequencing was carried out using high-throughput technology to provide deep coverage
                 of the
                 transcriptome.</p>
+            
+            <div class="table-wrapper">
+                <div class="table-title">Project Metadata</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Field</th>
+                            <th>Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                        <tr>
+                            <td>Project PI</td>
+                            <td>Dr Madhurjit Singh Rathore</td>
+                        </tr>
+                        
+                        
+                        <tr>
+                            <td>Application</td>
+                            <td>WTA</td>
+                        </tr>
+                        
+                        
+                        <tr>
+                            <td>No. of Samples</td>
+                            <td>4</td>
+                        </tr>
+                        
+                    </tbody>
+                </table>
+            </div>
+            
             <div class="table-wrapper">
                 <div class="table-title">Table 1.1: Project Specifications</div>
                 <table>
@@ -635,7 +704,10 @@
         <!-- Section 5 -->
         <div id="section-5" class="section">
             <h2>5 Bioinformatics Analysis</h2>
+            <p>Bioinformatics analysis includes read filtering, mapping, assembly, differential expression, and
+                functional annotation.</p>
 
+            
             <h3>5.1 Bioinformatics Workflow</h3>
             <p>Raw data was filtered to remove adapters and low-quality bases. Clean reads thus produced were used for
                 analysis. Reference guided transcript assembly was performed for samples first by mapping clean reads on
@@ -770,7 +842,7 @@
         <!-- Section 7 -->
         <div id="section-7" class="section">
             <h2>7 Reference Genome</h2>
-            <p>The reference genome of <strong>Organism Name</strong> was used for alignment and
+            <p>The reference genome of <strong>Pearl Millet (GCF_000499845.2)</strong> was used for alignment and
                 annotation. The corresponding GFF file contains locus and structural information regarding 0 genes.
             </p>
             <div class="table-wrapper">
@@ -984,6 +1056,46 @@
                 <p class="caption">Figure 9.1: Summary of Significantly Upregulated and Downregulated genes per
                     comparison.</p>
             </div>
+
+            
+            
+            
+            <h3>Comparison: Comparison1</h3>
+
+            
+            <div class="figure">
+                <a class="pdf-link" href="Deliverables_Dummy/05_differential_expression_analysis/Comparison1_MA_and_Volcano.pdf" target="_blank" rel="noopener noreferrer">Open MA & Volcano Plot (PDF)</a>
+                <p class="caption">MA and Volcano plots for Comparison1</p>
+            </div>
+            
+
+            
+            <div class="figure">
+                <img src="Deliverables_Dummy/05_differential_expression_analysis/Comparison1_Heatmap.png" alt="Comparison1 heatmap" />
+                <p class="caption">Heatmap for significantly differentially expressed genes (Comparison1)</p>
+            </div>
+            
+            
+            
+            
+            <h3>Comparison: Comparison2</h3>
+
+            
+            <div class="figure">
+                <a class="pdf-link" href="Deliverables_Dummy/05_differential_expression_analysis/Comparison2_MA_and_Volcano.pdf" target="_blank" rel="noopener noreferrer">Open MA & Volcano Plot (PDF)</a>
+                <p class="caption">MA and Volcano plots for Comparison2</p>
+            </div>
+            
+
+            
+            <div class="figure">
+                <img src="Deliverables_Dummy/05_differential_expression_analysis/Comparison2_Heatmap.png" alt="Comparison2 heatmap" />
+                <p class="caption">Heatmap for significantly differentially expressed genes (Comparison2)</p>
+            </div>
+            
+            
+            
+            
         </div>
 
         <!-- Section 10 -->

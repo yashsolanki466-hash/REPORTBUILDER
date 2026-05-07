@@ -24,11 +24,63 @@ Since the system Python environment is managed, it is recommended to use a virtu
 
 ## Usage
 
+### Generate report
+
 Run the script using the python executable from the virtual environment:
 
 ```bash
-.venv/bin/python generate_report.py --input /path/to/project_directory --output final_report.html
+.venv/bin/python generate_report.py --input <project_dir> --output <output_html>
 ```
+
+### Per-project `metadata.json`
+
+To avoid hardcoding project details, you can place a `metadata.json` file in the root of each project folder.
+
+Example:
+
+```json
+{
+  "project_id": "240540",
+  "pi_name": "Dr Madhurjit Singh Rathore",
+  "application": "WTA",
+  "genome": "pearl_millet_v1.1",
+  "client_name": "Client Name",
+  "client_org": "Client Organization",
+  "reference_organism": "Solanum lycopersicum (GCF_036512215.1)",
+  "logo_path": "assets/logo.png"
+}
+```
+
+**Notes**
+
+- If present, `metadata.json` is used as the primary source for `project_id`, PI, application, etc.
+- CLI arguments still override metadata (e.g. `--logo-path`, `--client-name`).
+- If you don’t pass `--output` (or leave it as the default `report.html`), the report is written to the project root as:
+  `<project_dir>/<project_id>_report.html`
+
+### Batch generation
+
+Generate reports for multiple project folders under a single root directory:
+
+```bash
+.venv/bin/python batch_generate_reports.py --root /path/to/results_root
+```
+
+Optional flags:
+
+- `--max-depth 3` to scan deeper
+- `--strict` to fail on missing required inputs
+- `--dry-run` to preview the commands without running
+
+### Watcher (polling)
+
+Continuously monitor a root directory and generate a report once a project folder contains `Readme.txt`:
+
+```bash
+.venv/bin/python watch_reports.py --root /path/to/results_root --poll-seconds 30
+```
+
+This is a polling-based watcher (no OS-specific dependencies). It triggers report generation once per project folder.
 
 ### Arguments
 

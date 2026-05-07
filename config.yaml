@@ -1,0 +1,38 @@
+# Configuration for NGS Report Automation Pipeline
+
+# Column mapping for various bioinformatics tools (STAR, edgeR, etc.)
+column_mapping:
+  raw_stats:
+    sample_col: ["Sample", "SampleID", "Sample Name"]
+    reads_col: ["Total Reads(R1+R2)", "Total Reads", "ReadCount", "(R1+R2)"]
+    bases_col: ["Total Bases (R1+R2)", "Total Bases", "BaseCount"]
+    gb_col: ["Total Data(GB)", "Total Data", "Data(GB)"]
+    q30_col: ["Q30", "Q30_Percent", "%Q30"]
+
+  mapping_stats:
+    sample_col: ["Sample", "Sample Name"]
+    total_reads_col: ["Total Reads"]
+    mapped_reads_col: ["No. of Mapped reads", "Mapped Reads"]
+    pct_mapped_col: ["% of mapped reads", "Percent Mapped"]
+    unique_reads_col: ["uniquely mapped reads", "Unique Reads"]
+    pct_unique_col: ["% uniquely mapped reads", "% of uniquely mapped reads", "Percent Unique"]
+
+  dge_stats:
+    fc_col: ["logfc", "log2fc", "log2foldchange", "logfoldchange", "lfc"]
+    p_col: ["padj", "adjp", "adjpval", "fdr", "qvalue", "qval", "pvalue", "pval"]
+
+  pathway_stats:
+    level1_col: ["level1", "level1category", "category", "class", "keggclass"]
+    level2_col: ["level2", "level2subcategory", "subcategory", "pathway", "keggpathway"]
+    count_col: ["count", "counts", "gene", "genes", "gene_count", "genecount"]
+
+# Quality Control thresholds
+qc_thresholds:
+  mapping_rate: 70.0 # Percentage
+  q30_rate: 80.0    # Percentage
+  min_reads: 5000000 # Minimum number of reads
+
+# Notification settings (mock for now)
+notifications:
+  enabled: false
+  webhook_url: ""

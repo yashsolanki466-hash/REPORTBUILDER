@@ -1,0 +1,44 @@
+export interface ProjectData {
+    project_id: string;
+    report_date: string;
+    client_name: string;
+    client_org: string;
+    project_pi: string;
+    application: string;
+    no_of_samples: string;
+    sample_count: number;
+    samples: string[];
+    qubit_data: any[];
+    library_sizes: number[];
+    sequencing_stats: any[];
+    reference_organism: string;
+    total_genes: number;
+    ref_stats: any;
+    mapping_stats: any[];
+    total_transcripts: number;
+    mean_transcript_size: number;
+    assembly_stats: any[];
+    diff_expr_stats: any[];
+    dge_chart_labels: string[];
+    dge_chart_up: number[];
+    dge_chart_down: number[];
+    pathway_stats: any[];
+    go_distribution: any[];
+    pathway_image_src: string;
+    dge_figures: any[];
+    dge_comparison_table: any;
+    dge_group_table: any;
+    func_assets: any;
+    deliverables_tree: string;
+    gffcompare_codes_src: string;
+    workflow_figure_src: string;
+    stringtie_merge_figure_src: string;
+    isoforms_figure_src: string;
+    pathway_ex_figure_src: string;
+    logo_path: string;
+    warnings: string[];
+    static_content: any;
+    static_snippets: any;
+}
+export declare function parseProjectData(inputDir: string, metadataOverride?: any): Promise<ProjectData>;
+//# sourceMappingURL=dataParser.d.ts.map

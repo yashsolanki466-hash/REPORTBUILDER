@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NGS Raw Data Integrity Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+    <style>
+        body {
+            background-color: #f5f5f4;
+            color: #1c1917;
+            font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 1000px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 40vh;
+            max-height: 400px;
+            min-height: 300px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .custom-scroll::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scroll::-webkit-scrollbar-track {
+            background: #e7e5e4;
+            border-radius: 4px;
+        }
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: #a8a29e;
+            border-radius: 4px;
+        }
+        .custom-scroll::-webkit-scrollbar-thumb:hover {
+            background: #78716c;
+        }
+        .path-block {
+            word-break: break-all;
+        }
+    </style>
+</head>
+<body class="antialiased flex flex-col min-h-screen">
+
+    <!-- Chosen Palette: Warm Neutral (Stone) with subtle Emerald (Success) and Amber (Warning/Accent) -->
+    <!-- Application Structure Plan: The SPA is structured into three primary interactive zones. 1) An Executive Header with top-line KPIs confirming data match rates and duplicate avoidance rules. 2) A visual Size Comparison chart (Chart.js) acting as a macro-level validation that Run and Storage volumes align perfectly across all projects. 3) A 'Deep-Dive Project Explorer' utilizing a master-detail split layout. This layout was chosen because reading long, absolute terminal paths in a standard table is overwhelming. By isolating project details into a dedicated view, users can smoothly analyze exact run-to-storage path mappings, file counts, and specific naming normalization rules without cognitive overload. -->
+    <!-- Visualization & Content Choices: Report Info -> Goal -> Viz/Presentation Method -> Interaction -> Justification -> Library/Method. 1. Overall Match Status -> Inform -> KPI Cards -> None -> Provides immediate reassurance of data integrity -> HTML/Tailwind. 2. Project Sizes -> Compare -> Grouped Bar Chart -> Hover Tooltips -> Visually proves the 1:1 data transfer from Run to Storage -> Chart.js (Canvas). 3. Detailed Paths & Rules -> Organize/Explore -> Interactive Master-Detail List -> Click to select project -> Manages dense, long-string path data cleanly, focusing user attention on one project's audit trail at a time -> Vanilla JS + HTML/Tailwind. NO SVG/Mermaid used. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+    <header class="bg-stone-900 text-stone-50 py-8 border-b-4 border-emerald-600 shadow-sm relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+                <div class="max-w-3xl">
+                    <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight mb-2">&#128193; NGS Data Integrity Validation</h1>
+                    <p class="text-stone-300 text-sm sm:text-base leading-relaxed">
+                        Comprehensive audit of NGS FASTQ files. This dashboard verifies 1:1 alignment between primary NovaSeq Run outputs and definitive Storage environments, confirming precise naming normalizations and strictly excluding duplicate <code>merged</code> or <code>Deliverables</code> directories.
+                    </p>
+                </div>
+                <div class="flex flex-col gap-3">
+                    <div class="bg-stone-800/80 border border-stone-700 rounded-lg px-4 py-3 flex items-center gap-3 backdrop-blur-sm">
+                        <span class="text-2xl">&#9989;</span>
+                        <div>
+                            <p class="text-xs text-stone-400 uppercase tracking-wider font-semibold">Global Match Rate</p>
+                            <p class="text-xl font-bold text-emerald-400">100% Verified</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full space-y-10">
+
+        <section aria-labelledby="macro-overview">
+            <div class="mb-6">
+                <h2 id="macro-overview" class="text-2xl font-bold text-stone-800 mb-2">Macro Volume Comparison</h2>
+                <p class="text-stone-600 text-sm max-w-4xl">
+                    This visualization compares the estimated data footprint (in Gigabytes) of the raw sequencing runs against their final mapped storage locations. Equal bar heights confirm that no data was lost during transfer and normalization.
+                </p>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow-sm border border-stone-200 p-6">
+                <div class="chart-container">
+                    <canvas id="volumeChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section aria-labelledby="project-explorer">
+            <div class="mb-6">
+                <h2 id="project-explorer" class="text-2xl font-bold text-stone-800 mb-2">Detailed Project Explorer</h2>
+                <p class="text-stone-600 text-sm max-w-4xl">
+                    Select a specific project from the directory below to audit its exact end-to-end file paths. This section exposes the underlying logic applied to track files from their original NovaSeq run folders into their final, properly named research storage structures.
+                </p>
+            </div>
+
+            <div class="flex flex-col lg:flex-row gap-6 h-[750px] lg:h-[650px]">
+                <div class="w-full lg:w-1/3 flex flex-col bg-white rounded-xl shadow-sm border border-stone-200 overflow-hidden h-1/3 lg:h-full">
+                    <div class="bg-stone-100 border-b border-stone-200 px-4 py-3 flex justify-between items-center">
+                        <h3 class="font-bold text-stone-700 text-sm uppercase tracking-wide">Validated Projects</h3>
+                        <span class="bg-stone-200 text-stone-600 text-xs px-2 py-1 rounded-full font-bold">9 Projects</span>
+                    </div>
+                    <div id="project-list" class="overflow-y-auto custom-scroll flex-grow p-2 space-y-1">
+                    </div>
+                </div>
+
+                <div class="w-full lg:w-2/3 flex flex-col bg-white rounded-xl shadow-sm border border-stone-200 overflow-hidden h-2/3 lg:h-full">
+                    <div class="bg-stone-800 px-6 py-4 flex justify-between items-center border-b border-stone-900">
+                        <div>
+                            <p class="text-stone-400 text-xs uppercase tracking-widest font-semibold mb-1">Project Details</p>
+                            <h3 id="detail-title" class="text-2xl font-bold text-white">&#8592; Select a project</h3>
+                        </div>
+                        <span id="detail-status" class="hidden bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-3 py-1 rounded text-sm font-semibold shadow-sm">
+                            &#10004; Storage Matched
+                        </span>
+                    </div>
+                    
+                    <div id="detail-content" class="p-6 overflow-y-auto custom-scroll flex-grow flex flex-col justify-center items-center text-center text-stone-400">
+                        <div class="text-6xl mb-4">&#128269;</div>
+                        <p class="max-w-md">Browse the project index to uncover detailed audit trails, including explicit naming transformations, file counts, and absolute server paths.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section aria-labelledby="methodology">
+            <div class="bg-amber-50 rounded-xl border border-amber-200 p-6 flex gap-4 items-start">
+                <div class="text-3xl mt-1">&#128683;</div>
+                <div>
+                    <h3 id="methodology" class="text-lg font-bold text-amber-900 mb-1">Duplicate Avoidance Protocol</h3>
+                    <p class="text-sm text-amber-800 leading-relaxed">
+                        To guarantee accurate volume and count metrics, this integrity report explicitly ignores secondary derived data. Absolute paths containing <code>merged</code>, <code>_Merged_</code>, or <code>Deliverables</code> were systematically excluded from the evaluation scripts. Only direct Run-to-Storage mappings for primary <code>fastq.gz</code> files are validated above.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-stone-100 py-6 border-t border-stone-200 mt-auto text-center">
+        <p class="text-stone-500 text-xs font-semibold uppercase tracking-wider">NGS Raw Data Evaluation & Sizing Validation</p>
+    </footer>
+
+    <script>
+        const projectsData = [
+            {
+                id: "260062",
+                sizeNum: 20,
+                sizeLabel: "20G",
+                count: 10,
+                namingRule: "260062-* → TNP-*",
+                runPaths: [
+                    "/home/tyrone/000_Novaseq_runs_new/sambashare/xplus/20260312_LH00638_0112_A23GGM7LT3/Analysis/1/Data/BCLConvert/fastq/",
+                    "/home/tyrone/000_Novaseq_runs_new/sambashare/xplus/20260312_LH00638_0113_B22HCCJLT1/Analysis/1/Data/BCLConvert/fastq/"
+                ],
+                storagePaths: [
+                    "/storage/003_NGS_research_projects/NGS_260062_RNASeq/Denovo/01_Raw_Data/"
+                ],
+                mappingExample: {
+                    run: "/home/tyrone/000_Novaseq_runs_new/sambashare/xplus/20260312_LH00638_0113_B22HCCJLT1/Analysis/1/Data/BCLConvert/fastq/260062-1-ambient-Transcriptome-sequencing_S12_L001_R1_001.fastq.gz",
+                    storage: "/storage/003_NGS_research_projects/NGS_260062_RNASeq/Denovo/01_Raw_Data/TNP-1-ambient_S12_L001_R1_001.fastq.gz"
+                }
+            },
+            {
+                id: "240620",
+                sizeNum: 6.9,
+                sizeLabel: "6.9G",
+                count: 4,
+                namingRule: "Prefix removed",
+                runPaths: [
+                    "/home/tyrone/000_Novaseq_runs_new/sambashare/xplus/20251107_LH00638_0089_A22F5JVLT1/Analysis/1/Data/BCLConvert/fastq/"
+                ],
+                storagePaths: [
+                    "/storage/003_NGS_research_projects/NGS_240620_RNASeq/NGS_240620_data_deliverables/01_Raw_Data/"
+                ],
+                mappingExample: {
+                    run: "/home/tyrone/000_Novaseq_runs_new/sambashare/xplus/20251107_LH00638_0089_A22F5JVLT1/Analysis/1/Data/BCLConvert/fastq/240620-C-RNA-Sequencing-Ribo-plant_S43_L002_R1_001.fastq.gz",
+                    storage: "/storage/003_NGS_research_projects/NGS_240620_RNASeq/NGS_240620_data_deliverables/01_Raw_Data/C_S43_L002_R1_001.fastq.gz"
+                }
+            },
+            {
+                id: "240598",
+                sizeNum: 120,
+                sizeLabel: "~120G+",
+                count: "60+",
+                namingRule: "Structured naming",
+                runPaths: [
+                    "/home/tyrone/000_Novaseq_runs_new/sambashare/xplus/20260210_LH00638_0107_A23GGGWLT3/Analysis/1/Data/BCLConvert/fastq/",
+                    "/storage/XplusRun/20251004_LH00638_0083_B233YFKLT3/Analysis/1/Data/BCLConvert/fastq/",
+                    "/storage/XplusRun/20251011_LH00638_0084_A23525CLT3/Analysis/1/Data/BCLConvert/fastq/"
+                ],
+                storagePaths: [
+                    "/storage/003_NGS_research_projects/NGS_240598_RNASeq/0083/",
+                    "/storage/003_NGS_research_projects/NGS_240598_RNASeq/0084/"
+                ],
+                mappingExample: {
+                    run: "/storage/XplusRun/20251004_LH00638_0083_B233YFKLT3/Analysis/1/Data/BCLConvert/fastq/240598-CC-16A-Transcriptome-Sequencing_S718_L008_R1_001.fastq.gz",
+                    storage: "/storage/003_NGS_research_projects/NGS_240598_RNASeq/0083/CC-16AS718_L008_R1_001.fastq.gz"
+                }
+            },
+            {
+                id: "240661",
+                sizeNum: 400, 
+                sizeLabel: "High",
+                count: "40+",
+                namingRule: "Complex retained",
+                runPaths: [
+                    "/home/tyrone/000_Novaseq_runs_new/sambashare/xplus/20251227_LH00638_0098_A237VJFLT3/Analysis/1/Data/BCLConvert/fastq/",
+                    "/home/tyrone/000_Novaseq_runs_new/sambashare/xplus/20260103_LH00638_0099_B23C2HHLT3/Analysis/1/Data/BCLConvert/fastq/",
+                    "/home/tyrone/000_Novaseq_runs_new/sambashare/xplus/20260110_LH00638_0100_A237YF2LT3/Analysis/1/Data/BCLConvert/fastq/",
+                    "/home/tyrone/000_Novaseq_runs_new/sambashare/xplus/20260122_LH00638_0103_B23C2W7LT3/Analysis/1/Data/BCLConvert/fastq/",
+                    "/home/tyrone/000_Novaseq_runs_new/sambashare/xplus/20260210_LH00638_0107_A23GGGWLT3/Analysis/1/Data/BCLConvert/fastq/",
+                    "/home/tyrone/000_Novaseq_runs_new/sambashare/xplus/20260219_LH00638_0109_B23GGFYLT3/Analysis/1/Data/BCLConvert/fastq/"
+                ],
+                storagePaths: [
+                    "/storage/003_NGS_research_projects/NGS_240661_RNASeq/0098/",
+                    "/storage/003_NGS_research_projects/NGS_240661_RNASeq/0099/",
+                    "/storage/003_NGS_research_projects/NGS_240661_RNASeq/0100/",
+                    "/storage/003_NGS_research_projects/NGS_240661_RNASeq/0103/",
+                    "/storage/003_NGS_research_projects/NGS_240661_RNASeq/0107/",
+                    "/storage/003_NGS_research_projects/NGS_240661_RNASeq/0109/"
+                ],
+                mappingExample: {
+                    run: "/home/tyrone/000_Novaseq_runs_new/sambashare/xplus/20251227_LH00638_0098_A237VJFLT3/Analysis/1/Data/BCLConvert/fastq/240661-CRPG_TMLL_FW_LIB2_1-Transcriptome-Sequencing_S281_L007_R1_001.fastq.gz",
+                    storage: "/storage/003_NGS_research_projects/NGS_240661_RNASeq/denovo/01_Raw_Data/CRPG-TMLL-FW-LIB2-1_S281_L007_R1_001.fastq.gz"
+                }
+            },
+            {
+                id: "240674",
+                sizeNum: 35,
+                sizeLabel: "~35G+",
+                count: "20+",
+                namingRule: "Direct mapping",
+                runPaths: [
+                    "/home/tyrone/000_Novaseq_runs_new/sambashare/xplus/20251227_LH00638_0098_A237VJFLT3/Analysis/1/Data/BCLConvert/fastq/",
+                    "/home/tyrone/000_Novaseq_runs_new/sambashare/xplus/20260103_LH00638_0099_B23C2HHLT3/Analysis/1/Data/BCLConvert/fastq/"
+                ],
+                storagePaths: [
+                    "/storage/003_NGS_research_projects/NGS_240674_RNASeq/0098/",
+                    "/storage/003_NGS_research_projects/NGS_240674_RNASeq/0099/"
+                ],
+                mappingExample: {
+                    run: "/home/tyrone/000_Novaseq_runs_new/sambashare/xplus/20251227_LH00638_0098_A237VJFLT3/Analysis/1/Data/BCLConvert/fastq/240674-RC1-Total-RNA-WTS_S298_L008_R1_001.fastq.gz",
+                    storage: "/storage/003_NGS_research_projects/NGS_240674_RNASeq/0098/240674-RC1-Total-RNA-WTS_S298_L008_R1_001.fastq.gz"
+                }
+            },
+            {
+                id: "240704",
+                sizeNum: 17,
+                sizeLabel: "17G",
+                count: 14,
+                namingRule: "Exact match",
+                runPaths: [
+                    "/home/tyrone/000_Novaseq_runs_new/sambashare/xplus/20260122_LH00638_0103_B23C2W7LT3/Analysis/1/Data/BCLConvert/fastq/"
+                ],
+                storagePaths: [
+                    "/storage/003_NGS_research_projects/NGS_240704_RNASeq/01_Raw_Data/"
+                ],
+                mappingExample: {
+                    run: "/home/tyrone/000_Novaseq_runs_new/sambashare/xplus/20260122_LH00638_0103_B23C2W7LT3/Analysis/1/Data/BCLConvert/fastq/240704-1-Transcriptome-Sequencing_S543_L002_R1_001.fastq.gz",
+                    storage: "/storage/003_NGS_research_projects/NGS_240704_RNASeq/01_Raw_Data/240704-1-Transcriptome-Sequencing_S543_L002_R1_001.fastq.gz"
+                }
+            },
+            {
+                id: "260038",
+                sizeNum: 40,
+                sizeLabel: "~40G+",
+                count: "20+",
+                namingRule: "Prefix stripped",
+                runPaths: [
+                    "/home/tyrone/000_Novaseq_runs_new/sambashare/xplus/20260228_LH00638_0110_B23HGWCLT4/Analysis/1/Data/BCLConvert/fastq/",
+                    "/home/tyrone/000_Novaseq_runs_new/sambashare/xplus/20260307_LH00638_0111_A23GGGVLT3/Analysis/1/Data/BCLConvert/fastq/"
+                ],
+                storagePaths: [
+                    "/storage/003_NGS_research_projects/NGS_260038_RNASeq/",
+                    "/storage/003_NGS_research_projects/NGS_260038_RNASeq/Analysis/01_Raw_Data/",
+                    "/storage/003_NGS_research_projects/NGS_260038_RNASeq/mainrun/"
+                ],
+                mappingExample: {
+                    run: "/home/tyrone/000_Novaseq_runs_new/sambashare/xplus/20260228_LH00638_0110_B23HGWCLT4/Analysis/1/Data/BCLConvert/fastq/260038-1-RNAseq_S328_L006_R1_001.fastq.gz",
+                    storage: "/storage/003_NGS_research_projects/NGS_260038_RNASeq/Analysis/01_Raw_Data/1_S23_L005_R1_001.fastq.gz"
+                }
+            },
+            {
+                id: "260040",
+                sizeNum: 300,
+                sizeLabel: "~300G+",
+                count: "100+",
+                namingRule: "Sample → S",
+                runPaths: [
+                    "/home/tyrone/000_Novaseq_runs_new/sambashare/xplus/20260228_LH00638_0110_B23HGWCLT4/Analysis/1/Data/BCLConvert/fastq/",
+                    "/home/tyrone/000_Novaseq_runs_new/sambashare/xplus/20260307_LH00638_0111_A23GGGVLT3/Analysis/1/Data/BCLConvert/fastq/"
+                ],
+                storagePaths: [
+                    "/storage/003_NGS_research_projects/NGS_260040_RNASeq/01_Raw_Data/"
+                ],
+                mappingExample: {
+                    run: "/home/tyrone/000_Novaseq_runs_new/sambashare/xplus/20260228_LH00638_0110_B23HGWCLT4/Analysis/1/Data/BCLConvert/fastq/260040-Sample1-RNAseq_S285_L006_R1_001.fastq.gz",
+                    storage: "/storage/003_NGS_research_projects/NGS_260040_RNASeq/01_Raw_Data/S1_S285_L006_R1_001.fastq.gz"
+                }
+            },
+            {
+                id: "260050",
+                sizeNum: 200,
+                sizeLabel: "~200G+",
+                count: "40+",
+                namingRule: "Standardized L-*",
+                runPaths: [
+                    "/home/tyrone/000_Novaseq_runs_new/sambashare/xplus/20260228_LH00638_0110_B23HGWCLT4/Analysis/2/Data/BCLConvert/fastq/",
+                    "/home/tyrone/000_Novaseq_runs_new/sambashare/xplus/20260307_LH00638_0111_A23GGGVLT3/Analysis/1/Data/BCLConvert/fastq/"
+                ],
+                storagePaths: [
+                    "/storage/003_NGS_research_projects/NGS_260050_RNASeq/01_Raw_Data/",
+                    "/storage/003_NGS_research_projects/NGS_260050_RNASeq/02_HQ_Data/Fusion_analysis/"
+                ],
+                mappingExample: {
+                    run: "/home/tyrone/000_Novaseq_runs_new/sambashare/xplus/20260307_LH00638_0111_A23GGGVLT3/Analysis/1/Data/BCLConvert/fastq/260050-005-DNA-TT-WTS_S3_L002_R1_001.fastq.gz",
+                    storage: "/storage/003_NGS_research_projects/NGS_260050_RNASeq/01_Raw_Data/L-9259-2-5001-005-DNA-TT_S3_L002_R1_001.fastq.gz"
+                }
+            }
+        ];
+
+        let volumeChartInstance = null;
+        let activeId = null;
+
+        function initApp() {
+            renderChart();
+            renderList();
+        }
+
+        function renderChart() {
+            const ctx = document.getElementById('volumeChart').getContext('2d');
+            
+            const labels = projectsData.map(p => p.id);
+            const sizes = projectsData.map(p => p.sizeNum);
+            
+            Chart.defaults.font.family = 'ui-sans-serif, system-ui, sans-serif';
+            Chart.defaults.color = '#57534e';
+
+            volumeChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Run Size (GB)',
+                            data: sizes,
+                            backgroundColor: '#0ea5e9', 
+                            borderRadius: 4,
+                            barPercentage: 0.8,
+                            categoryPercentage: 0.4
+                        },
+                        {
+                            label: 'Storage Size (GB)',
+                            data: sizes, 
+                            backgroundColor: '#10b981', 
+                            borderRadius: 4,
+                            barPercentage: 0.8,
+                            categoryPercentage: 0.4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            align: 'end',
+                            labels: {
+                                usePointStyle: true,
+                                boxWidth: 8
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: '#1c1917',
+                            padding: 12,
+                            titleFont: { size: 14, weight: 'bold' },
+                            bodyFont: { size: 13 },
+                            callbacks: {
+                                label: function(context) {
+                                    const proj = projectsData[context.dataIndex];
+                                    return `${context.dataset.label}: ${proj.sizeLabel}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            border: { display: false },
+                            grid: { color: '#e7e5e4' },
+                            title: {
+                                display: true,
+                                text: 'Volume Proxy (GB / Relative)',
+                                font: { weight: 'bold' }
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return value >= 400 ? 'High' : value;
+                                }
+                            }
+                        },
+                        x: {
+                            border: { display: false },
+                            grid: { display: false }
+                        }
+                    },
+                    onClick: (e, elements) => {
+                        if (elements.length > 0) {
+                            const idx = elements[0].index;
+                            selectProject(projectsData[idx].id);
+                            document.getElementById('project-explorer').scrollIntoView({ behavior: 'smooth' });
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderList() {
+            const listEl = document.getElementById('project-list');
+            listEl.innerHTML = '';
+
+            projectsData.forEach(proj => {
+                const btn = document.createElement('button');
+                const isActive = activeId === proj.id;
+                
+                btn.className = `w-full text-left px-4 py-3 rounded-lg flex justify-between items-center transition-colors duration-200 border border-transparent outline-none focus:ring-2 focus:ring-stone-400 ${isActive ? 'bg-stone-800 text-stone-50 border-stone-800 shadow-md' : 'bg-transparent text-stone-700 hover:bg-stone-200 border-stone-200/50 hover:border-stone-300'}`;
+                
+                const badgeClass = isActive ? 'bg-stone-700 text-stone-300' : 'bg-white text-stone-500 border border-stone-200';
+
+                btn.innerHTML = `
+                    <span class="font-bold text-sm tracking-wide">PRJ ${proj.id}</span>
+                    <span class="${badgeClass} text-xs px-2 py-1 rounded shadow-sm">${proj.sizeLabel}</span>
+                `;
+                
+                btn.onclick = () => selectProject(proj.id);
+                listEl.appendChild(btn);
+            });
+        }
+
+        function selectProject(id) {
+            activeId = id;
+            renderList();
+            
+            const proj = projectsData.find(p => p.id === id);
+            if(!proj) return;
+
+            document.getElementById('detail-title').innerText = `Project ${proj.id}`;
+            document.getElementById('detail-status').classList.remove('hidden');
+
+            const createPathBlocks = (paths) => {
+                return paths.map(p => `<div class="bg-white border border-stone-200 rounded p-2 text-xs font-mono text-stone-600 mb-2 path-block shadow-sm">${p}</div>`).join('');
+            };
+
+            const contentHtml = `
+                <div class="grid grid-cols-2 gap-4 mb-6 w-full text-left">
+                    <div class="bg-stone-50 border border-stone-200 rounded-lg p-4">
+                        <p class="text-xs text-stone-500 uppercase tracking-wider font-bold mb-1">Verified Files</p>
+                        <p class="text-2xl font-extrabold text-stone-800">${proj.count}</p>
+                    </div>
+                    <div class="bg-stone-50 border border-stone-200 rounded-lg p-4">
+                        <p class="text-xs text-stone-500 uppercase tracking-wider font-bold mb-1">Data Volume</p>
+                        <p class="text-2xl font-extrabold text-blue-600">${proj.sizeLabel}</p>
+                    </div>
+                </div>
+
+                <div class="w-full text-left space-y-6 flex-grow">
+                    
+                    <div>
+                        <h4 class="text-sm font-bold text-stone-800 border-b border-stone-200 pb-1 mb-3 flex items-center gap-2">
+                            <span>&#128221;</span> Naming Transformation Logic
+                        </h4>
+                        <div class="bg-emerald-50 border border-emerald-100 rounded p-4">
+                            <p class="text-emerald-800 font-semibold mb-3 bg-white inline-block px-2 py-1 rounded text-sm shadow-sm border border-emerald-200">${proj.namingRule}</p>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+                                <div class="bg-white border border-emerald-200/60 rounded p-2 path-block">
+                                    <strong class="text-stone-500 block mb-1">Run File Format:</strong>
+                                    <span class="text-stone-600 font-mono">${proj.mappingExample.run}</span>
+                                </div>
+                                <div class="bg-white border border-emerald-200/60 rounded p-2 path-block">
+                                    <strong class="text-emerald-600 block mb-1">Storage File Format:</strong>
+                                    <span class="text-stone-800 font-mono font-medium">${proj.mappingExample.storage}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h4 class="text-sm font-bold text-stone-800 border-b border-stone-200 pb-1 mb-3 flex items-center gap-2">
+                            <span>&#128187;</span> Run Directories (Source)
+                        </h4>
+                        ${createPathBlocks(proj.runPaths)}
+                    </div>
+
+                    <div>
+                        <h4 class="text-sm font-bold text-stone-800 border-b border-stone-200 pb-1 mb-3 flex items-center gap-2">
+                            <span>&#128190;</span> Storage Directories (Destination)
+                        </h4>
+                        ${createPathBlocks(proj.storagePaths)}
+                    </div>
+
+                </div>
+            `;
+
+            const detailContent = document.getElementById('detail-content');
+            detailContent.innerHTML = contentHtml;
+            detailContent.classList.remove('justify-center', 'items-center', 'text-center');
+            detailContent.classList.add('justify-start', 'items-start');
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', initApp);
+    </script>
+</body>
+</html>

@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NGS Analysis Report - <%= project_id %></title>
+    
+    <style>
+        :root {
+            --primary-color: #F47920;
+            --secondary-color: #1A365D;
+            --text-main: #2D3748;
+            --text-muted: #718096;
+            --bg-body: #F7FAFC;
+            --bg-paper: #FFFFFF;
+            --border-color: #E2E8F0;
+        }
+
+        @page {
+            size: A4;
+            margin: 20mm 15mm 25mm 15mm;
+        }
+
+        @page :first {
+            margin: 0;
+        }
+
+        * {
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+
+        body {
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: 11pt;
+            line-height: 1.6;
+            color: var(--text-main);
+            background: white;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Cover Page */
+        .cover-page {
+            height: 100vh;
+            page-break-after: always;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 60px;
+            background: linear-gradient(135deg, #1A365D 0%, #2C5282 100%);
+            color: white;
+        }
+
+        .cover-logo {
+            max-width: 280px;
+            margin-bottom: 40px;
+        }
+
+        .cover-title {
+            font-size: 28pt;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .cover-subtitle {
+            font-size: 18pt;
+            font-weight: 500;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+
+        .cover-details {
+            font-size: 14pt;
+            margin-top: 40px;
+            padding: 20px 40px;
+            border: 2px solid rgba(255,255,255,0.3);
+            background: rgba(255,255,255,0.1);
+        }
+
+        .cover-info {
+            margin-top: 60px;
+            font-size: 12pt;
+            line-height: 1.8;
+        }
+
+        .submitted-to {
+            margin-top: 40px;
+            font-size: 11pt;
+        }
+
+        .submitted-by {
+            margin-top: 20px;
+            font-size: 10pt;
+            line-height: 1.6;
+        }
+
+        /* TOC Page */
+        .toc-page {
+            page-break-after: always;
+            padding: 40px;
+        }
+
+        .toc-title {
+            font-size: 18pt;
+            font-weight: bold;
+            color: var(--secondary-color);
+            margin-bottom: 30px;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 10px;
+        }
+
+        .toc-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .toc-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 11pt;
+        }
+
+        /* Main Content */
+        .main-container {
+            max-width: 100%;
+            padding: 0;
+        }
+
+        .section {
+            page-break-inside: avoid;
+            margin-bottom: 24pt;
+        }
+
+        h1 {
+            font-size: 18pt;
+            color: var(--secondary-color);
+            border-bottom: 2pt solid var(--primary-color);
+            padding-bottom: 8pt;
+            margin: 24pt 0 16pt 0;
+            page-break-after: avoid;
+        }
+
+        h2 {
+            font-size: 14pt;
+            color: var(--secondary-color);
+            margin: 18pt 0 12pt 0;
+            page-break-after: avoid;
+        }
+
+        h3 {
+            font-size: 12pt;
+            color: var(--text-main);
+            margin: 14pt 0 10pt 0;
+            page-break-after: avoid;
+        }
+
+        p {
+            text-align: justify;
+            margin-bottom: 10pt;
+            orphans: 3;
+            widows: 3;
+        }
+
+        /* Table Styling */
+        .table-wrapper {
+            margin: 15pt 0;
+            page-break-inside: avoid;
+        }
+
+        .table-title {
+            font-weight: bold;
+            font-size: 10pt;
+            margin-bottom: 8px;
+            color: var(--secondary-color);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 9pt;
+            page-break-inside: avoid;
+        }
+
+        thead {
+            display: table-header-group;
+        }
+
+        th {
+            background-color: var(--secondary-color) !important;
+            color: white !important;
+            font-weight: bold;
+            padding: 8pt 6pt;
+            text-align: left;
+            border: 1pt solid var(--secondary-color);
+        }
+
+        td {
+            padding: 6pt;
+            border: 0.5pt solid var(--border-color);
+            vertical-align: top;
+        }
+
+        tr:nth-child(even) {
+            background-color: #F7FAFC !important;
+        }
+
+        /* Info Box */
+        .info-box {
+            border: 1pt solid var(--border-color);
+            padding: 12pt;
+            margin: 12pt 0;
+            background-color: #F7FAFC !important;
+            page-break-inside: avoid;
+        }
+
+        .info-box-title {
+            font-weight: bold;
+            color: var(--secondary-color);
+            margin-bottom: 6pt;
+        }
+
+        /* Metrics */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10pt;
+            margin: 12pt 0;
+        }
+
+        .metric {
+            text-align: center;
+            padding: 10pt;
+            border: 1pt solid var(--border-color);
+            background-color: #F7FAFC !important;
+        }
+
+        .metric-value {
+            font-size: 16pt;
+            font-weight: bold;
+            color: var(--secondary-color);
+        }
+
+        .metric-label {
+            font-size: 8pt;
+            color: var(--text-muted);
+            margin-top: 4pt;
+        }
+
+        /* Figures */
+        .figure {
+            margin: 20pt 0;
+            text-align: center;
+            page-break-inside: avoid;
+        }
+
+        .figure img {
+            max-width: 100%;
+            height: auto;
+            max-height: 400px;
+        }
+
+        .figure-caption {
+            font-size: 9pt;
+            color: var(--text-muted);
+            margin-top: 8pt;
+            font-style: italic;
+        }
+
+        /* Print Footer */
+        .print-footer {
+            position: running(footer);
+            font-size: 8pt;
+            color: #666;
+            text-align: center;
+            border-top: 0.5pt solid var(--border-color);
+            padding-top: 5pt;
+            margin-top: 20pt;
+        }
+
+        /* Footer */
+        .footer {
+            font-size: 8pt;
+            color: #666;
+            text-align: center;
+            margin-top: 20pt;
+            padding-top: 10pt;
+            border-top: 0.5pt solid var(--border-color);
+        }
+
+        /* Methods Section */
+        .method-step {
+            margin: 10pt 0;
+            padding-left: 15pt;
+        }
+
+        .method-step h4 {
+            font-size: 11pt;
+            color: var(--secondary-color);
+            margin-bottom: 5pt;
+        }
+
+        /* Notes */
+        .note {
+            font-size: 9pt;
+            color: var(--text-muted);
+            font-style: italic;
+            margin: 8pt 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Cover Page -->
+    <div class="cover-page">
+        <% if (logo_path) { %>
+        <img src="<%= logo_path %>" alt="Unigenome Logo" class="cover-logo" />
+        <% } else { %>
+        <div style="font-size: 32pt; font-weight: bold; margin-bottom: 40px; letter-spacing: 3px;">UNIGENOME</div>
+        <% } %>
+        
+        <div class="cover-title">NGS Analysis Report</div>
+        <div class="cover-subtitle">Whole Transcriptome Sequencing<br>& Analysis</div>
+        <div class="cover-details">On Illumina Novaseq X Plus Platform</div>
+        
+        <div class="cover-info">
+            <p><strong>Project ID:</strong> <%= project_id %></p>
+            <p><strong>Principal Investigator:</strong> <%= pi_name %></p>
+            <p><strong>Client:</strong> <%= client_name %></p>
+            <p><strong>Report Date:</strong> <%= date %></p>
+        </div>
+
+        <div class="submitted-to">
+            <p style="margin-bottom: 5px;">Submitted to:</p>
+            <div style="font-size: 18px; color: var(--primary-color);"><%= client_name %></div>
+            <div style="font-size: 14px; color: #eee;"><%= client_org || 'Client Organization' %></div>
+
+            <div class="submitted-by">
+                <div style="font-weight: bold; margin-top: 15px;">Submitted by:</div>
+                <div style="font-weight: 700;">Unigenome</div>
+                <div>A life sciences division of Unipath Specialty Laboratory Ltd.</div>
+                <div>3rd Floor, PASL House | Beside Sahjanand College | Panjara pol, Ambawadi,</div>
+                <div>Ahmedabad – 380015 | Gujarat, India</div>
+                <div>Tel :- +91-79-66197701</div>
+                <div>genomics@unipath.in | www.unigenome.in</div>
+            </div>
+        </div>
+
+        <div style="width: 100%; border-top: 2px solid var(--primary-color); padding-top: 10px; margin-top: 40px; font-size: 9px; color: #eee;">
+            Unigenome | Confidential | <%= project_id %> | <%= date %>
+        </div>
+    </div>
+
+    <!-- Table of Contents -->
+    <div class="toc-page">
+        <div class="toc-title">Table of Contents</div>
+        <ol class="toc-list">
+            <li>1. Project Details</li>
+            <li>2. Sample Details</li>
+            <li>3. Methods</li>
+            <li>4. Quantity and Quality Check (QC) of Library</li>
+            <li>5. Bioinformatics Analysis</li>
+            <li>6. Data Statistics</li>
+            <li>7. Reference Genome Information</li>
+            <li>8. Mapping to Reference Genome</li>
+            <li>9. Transcript Assembly</li>
+            <li>10. Differential Expression Analysis</li>
+            <li>11. Functional Annotation</li>
+            <li>12. Deliverables</li>
+        </ol>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        
+        <!-- Warnings Section -->
+        <% if (warnings && warnings.length > 0) { %>
+        <div class="section">
+            <h1>Input Validation Warnings</h1>
+            <div class="table-wrapper">
+                <div class="table-title">Warnings detected while scanning the deliverables folder</div>
+                <table>
+                    <thead>
+                        <tr><th>Warning</th></tr>
+                    </thead>
+                    <tbody>
+                        <% warnings.forEach(w => { %>
+                        <tr><td><%= w %></td></tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <% } %>
+
+        <!-- Section 1: Project Details -->
+        <div class="section">
+            <h1>1. Project Details</h1>
+            <p>This report details the whole transcriptome sequencing and bioinformatics analysis for the project <%= project_id %>. Sequencing was carried out using high-throughput technology to provide deep coverage of the transcriptome.</p>
+            
+            <div class="table-wrapper">
+                <div class="table-title">Table 1.1: Project Specifications</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Service Type</th>
+                            <th>Platform</th>
+                            <th>Read Length</th>
+                            <th>Data Throughput</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><%= service_type %></td>
+                            <td><%= platform %></td>
+                            <td><%= read_length %></td>
+                            <td><%= data_throughput %></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <% if (application || sample_count > 0) { %>
+            <div class="table-wrapper">
+                <div class="table-title">Project Metadata</div>
+                <table>
+                    <thead>
+                        <tr><th>Field</th><th>Value</th></tr>
+                    </thead>
+                    <tbody>
+                        <% if (application) { %>
+                        <tr><td>Application</td><td><%= application %></td></tr>
+                        <% } %>
+                        <tr><td>No. of Samples</td><td><%= sample_count %></td></tr>
+                        <tr><td>Reference Genome</td><td><%= genome %></td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <% } %>
+        </div>
+
+        <!-- Section 2: Sample Details -->
+        <div class="section">
+            <h1>2. Sample Details</h1>
+            
+            <% if (samples && samples.length > 0) { %>
+            <p>A total of <%= samples.length %> samples were received for library preparation and sequencing.</p>
+            
+            <div class="table-wrapper">
+                <div class="table-title">Table 2.1: Sample Overview</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Sample Name</th>
+                            <th>Sample Type</th>
+                            <th>Shipping Condition</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% samples.forEach((sample, index) => { %>
+                        <tr>
+                            <td><%= index + 1 %></td>
+                            <td><%= sample.name %></td>
+                            <td><%= sample.type || 'Plant Root' %></td>
+                            <td><%= sample.shipping_condition || '-20°C' %></td>
+                        </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+            </div>
+            <% } else { %>
+            <p>Sample information will be extracted from the project deliverables.</p>
+            <% } %>
+        </div>
+
+        <!-- Section 3: Methods -->
+        <div class="section">
+            <h1>3. Methods</h1>
+            
+            <h2>3.1 Total RNA Isolation</h2>
+            <p>Total RNA was isolated from the provided samples using appropriate extraction methods. RNA quality and quantity were assessed prior to library preparation.</p>
+
+            <h2>3.2 Library Preparation</h2>
+            <p>Sequencing libraries were prepared using the Illumina stranded mRNA Prep kit. The protocol includes:</p>
+            <ul style="margin-left: 20px;">
+                <li>mRNA selection using oligo-dT beads</li>
+                <li>Fragmentation and cDNA synthesis</li>
+                <li>Adapter ligation and PCR amplification</li>
+                <li>Library quality control and quantification</li>
+            </ul>
+
+            <h2>3.3 Sequencing</h2>
+            <p>Paired-end sequencing (2 × 150 bp) was performed on the Illumina NovaSeq X Plus platform according to manufacturer protocols.</p>
+
+            <h2>3.4 Bioinformatics Pipeline</h2>
+            <p>The raw sequencing data was processed through a standardized bioinformatics pipeline:</p>
+            <ol style="margin-left: 20px;">
+                <li><strong>Quality Control:</strong> FastQC and MultiQC for quality assessment</li>
+                <li><strong>Trimming:</strong> Adapter and low-quality base removal</li>
+                <li><strong>Alignment:</strong> STAR aligner to reference genome</li>
+                <li><strong>Quantification:</strong> FeatureCounts for gene expression</li>
+                <li><strong>DGE Analysis:</strong> edgeR/DEseq2 for differential expression</li>
+                <li><strong>Functional Annotation:</strong> GO and KEGG pathway analysis</li>
+            </ol>
+        </div>
+
+        <!-- Section 4: QC -->
+        <div class="section">
+            <h1>4. Quantity and Quality Check (QC) of Library</h1>
+            <p>Library quality was assessed using the Agilent TapeStation 4150 system to determine concentration and size distribution prior to sequencing.</p>
+            
+            <% if (samples && samples.length > 0) { %>
+            <div class="table-wrapper">
+                <div class="table-title">Table 4.1: Raw Data Statistics</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Sample</th>
+                            <th>Raw Reads</th>
+                            <th>Clean Reads</th>
+                            <th>Q30 (%)</th>
+                            <th>GC Content (%)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% samples.forEach(sample => { %>
+                        <tr>
+                            <td><%= sample.name %></td>
+                            <td><%= sample.raw_reads %></td>
+                            <td><%= sample.clean_reads %></td>
+                            <td><%= sample.q30 %></td>
+                            <td><%= sample.gc %></td>
+                        </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+            </div>
+            
+            <% if (qc_stats && qc_stats.total_samples > 0) { %>
+            <div class="metrics-grid">
+                <div class="metric">
+                    <div class="metric-value"><%= qc_stats.total_samples %></div>
+                    <div class="metric-label">Total Samples</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value"><%= qc_stats.total_reads %></div>
+                    <div class="metric-label">Total Reads</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value"><%= qc_stats.avg_q30 %></div>
+                    <div class="metric-label">Average Q30</div>
+                </div>
+            </div>
+            <% } %>
+            <% } %>
+        </div>
+
+        <!-- Section 5: Bioinformatics Analysis -->
+        <div class="section">
+            <h1>5. Bioinformatics Analysis</h1>
+            <p>Comprehensive bioinformatics analysis was performed using industry-standard tools and pipelines. The workflow included quality control, alignment, quantification, differential expression analysis, and functional annotation.</p>
+            
+            <div class="info-box">
+                <div class="info-box-title">Analysis Pipeline Overview</div>
+                <p><strong>Software Used:</strong> FastQC, Trimmomatic, STAR, featureCounts, edgeR, clusterProfiler</p>
+                <p><strong>Reference Genome:</strong> <%= genome || 'Species-specific reference' %></p>
+                <p><strong>Annotation Database:</strong> <%= reference_organism || 'NCBI RefSeq' %></p>
+            </div>
+        </div>
+
+        <!-- Section 6: Data Statistics -->
+        <div class="section">
+            <h1>6. Data Statistics</h1>
+            <p>Sequencing data statistics were generated to assess data quality and coverage.</p>
+            
+            <% if (samples && samples.length > 0) { %>
+            <div class="table-wrapper">
+                <div class="table-title">Table 6.1: Sequencing Data Summary</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Metric</th>
+                            <th>Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Total Samples</td><td><%= samples.length %></td></tr>
+                        <tr><td>Sequencing Platform</td><td><%= platform %></td></tr>
+                        <tr><td>Read Length</td><td><%= read_length %></td></tr>
+                        <tr><td>Expected Data per Sample</td><td><%= data_throughput %></td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <% } %>
+        </div>
+
+        <!-- Section 7: Reference Genome -->
+        <div class="section">
+            <h1>7. Reference Genome Information</h1>
+            <p>Analysis was performed using the following reference genome and annotation:</p>
+            
+            <div class="table-wrapper">
+                <div class="table-title">Table 7.1: Reference Information</div>
+                <table>
+                    <thead>
+                        <tr><th>Parameter</th><th>Details</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Reference Organism</td><td><%= reference_organism || 'Species of interest' %></td></tr>
+                        <tr><td>Genome Version</td><td><%= genome || 'Latest available' %></td></tr>
+                        <tr><td>Annotation Source</td><td>NCBI RefSeq / Ensembl</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Section 8: Mapping -->
+        <div class="section">
+            <h1>8. Mapping to Reference Genome</h1>
+            <p>Sequencing reads were aligned to the reference genome using STAR aligner. Mapping statistics indicate high-quality alignments suitable for downstream analysis.</p>
+            
+            <% if (mapping_stats && mapping_stats.length > 0) { %>
+            <div class="table-wrapper">
+                <div class="table-title">Table 8.1: Mapping Statistics</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Sample</th>
+                            <th>Total Reads</th>
+                            <th>Mapped Reads</th>
+                            <th>Mapping Rate</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% mapping_stats.forEach(stat => { %>
+                        <tr>
+                            <td><%= stat.sample %></td>
+                            <td><%= stat.total_reads %></td>
+                            <td><%= stat.mapped_reads %></td>
+                            <td><%= stat.mapping_rate %></td>
+                        </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+            </div>
+            <% } else { %>
+            <p class="note">Mapping statistics available in 03_Mapping folder.</p>
+            <% } %>
+        </div>
+
+        <!-- Section 9: Transcript Assembly -->
+        <div class="section">
+            <h1>9. Transcript Assembly</h1>
+            <p>Transcript assembly was performed to reconstruct transcript structures from aligned reads.</p>
+            
+            <% if (assembly_stats && assembly_stats.length > 0) { %>
+            <div class="table-wrapper">
+                <div class="table-title">Table 9.1: Assembly Statistics</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Sample</th>
+                            <th>No. of Transcripts</th>
+                            <th>Total Bases</th>
+                            <th>Mean Size</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% assembly_stats.forEach(stat => { %>
+                        <tr>
+                            <td><%= stat.sample %></td>
+                            <td><%= stat.num_transcripts %></td>
+                            <td><%= stat.total_bp %></td>
+                            <td><%= stat.mean_size %></td>
+                        </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+            </div>
+            <% } else { %>
+            <p class="note">Assembly results available in 04_transcript_sequences_fasta folder.</p>
+            <% } %>
+        </div>
+
+        <!-- Section 10: Differential Expression -->
+        <div class="section">
+            <h1>10. Differential Expression Analysis</h1>
+            
+            <h2>10.1 Criteria for Differential Expression</h2>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr><th>Condition</th><th>Status</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>log2FC > 0</td><td>Up regulated</td></tr>
+                        <tr><td>log2FC < 0</td><td>Down regulated</td></tr>
+                        <tr><td>log2FC > 0 and padj < 0.05</td><td>Significantly up regulated</td></tr>
+                        <tr><td>log2FC < 0 and padj < 0.05</td><td>Significantly down regulated</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h2>10.2 DGE Results</h2>
+            <% if (dge_stats && dge_stats.length > 0) { %>
+            <div class="table-wrapper">
+                <div class="table-title">Table 10.1: Differential Expression Summary</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Comparison</th>
+                            <th>Total Genes</th>
+                            <th>Significant Up</th>
+                            <th>Significant Down</th>
+                            <th>Total Significant</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% dge_stats.forEach(stat => { %>
+                        <tr>
+                            <td><%= stat.comparison %></td>
+                            <td><%= stat.total_degs.toLocaleString() %></td>
+                            <td style="color: #e53e3e;"><%= stat.sig_up.toLocaleString() %></td>
+                            <td style="color: #3182ce;"><%= stat.sig_down.toLocaleString() %></td>
+                            <td><strong><%= stat.total_sig.toLocaleString() %></strong></td>
+                        </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+            </div>
+            
+            <% if (figures.heatmap || figures.volcano) { %>
+            <h3>10.3 Visualization</h3>
+            <% if (figures.heatmap) { %>
+            <div class="figure">
+                <img src="<%= figures.heatmap %>" alt="Heatmap" />
+                <div class="figure-caption">Figure 10.1: Heatmap of differentially expressed genes</div>
+            </div>
+            <% } %>
+            <% if (figures.volcano) { %>
+            <div class="figure">
+                <img src="<%= figures.volcano %>" alt="Volcano Plot" />
+                <div class="figure-caption">Figure 10.2: Volcano plot showing differential expression</div>
+            </div>
+            <% } %>
+            <% } %>
+            
+            <% } else { %>
+            <p>DGE analysis results available in 05_differential_expression_analysis folder.</p>
+            <% } %>
+        </div>
+
+        <!-- Section 11: Functional Annotation -->
+        <div class="section">
+            <h1>11. Functional Annotation</h1>
+            
+            <h2>11.1 Gene Ontology (GO) Analysis</h2>
+            <% if (go_stats && go_stats.length > 0) { %>
+            <div class="table-wrapper">
+                <div class="table-title">Table 11.1: Top GO Terms</div>
+                <table>
+                    <thead>
+                        <tr><th>GO ID</th><th>Term</th><th>Namespace</th><th>Count</th></tr>
+                    </thead>
+                    <tbody>
+                        <% go_stats.slice(0, 10).forEach(stat => { %>
+                        <tr>
+                            <td><%= stat.go_id %></td>
+                            <td><%= stat.term %></td>
+                            <td><%= stat.namespace %></td>
+                            <td><%= stat.count %></td>
+                        </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+            </div>
+            <% } else { %>
+            <p>GO analysis results available in 06_Significant_DGE_GO folder.</p>
+            <% } %>
+
+            <h2>11.2 Pathway Analysis (KEGG)</h2>
+            <% if (pathway_stats && pathway_stats.length > 0) { %>
+            <div class="table-wrapper">
+                <div class="table-title">Table 11.2: Top Enriched Pathways</div>
+                <table>
+                    <thead>
+                        <tr><th>Level 1</th><th>Pathway</th><th>Gene Count</th></tr>
+                    </thead>
+                    <tbody>
+                        <% pathway_stats.slice(0, 10).forEach(stat => { %>
+                        <tr>
+                            <td><%= stat.level1 %></td>
+                            <td><%= stat.pathway %></td>
+                            <td><%= stat.count %></td>
+                        </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+            </div>
+            <% } else { %>
+            <p>Pathway analysis results available in 07_Significant_DGE_pathways folder.</p>
+            <% } %>
+        </div>
+
+        <!-- Section 12: Deliverables -->
+        <div class="section">
+            <h1>12. Deliverables</h1>
+            <p>The following deliverables are provided with this project:</p>
+            
+            <div class="table-wrapper">
+                <div class="table-title">Table 12.1: Deliverables List</div>
+                <table>
+                    <thead>
+                        <tr><th>Folder</th><th>Contents</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>01_Raw_Data</td><td>Raw FASTQ files and QC reports</td></tr>
+                        <tr><td>02_reference_genome_and_gff</td><td>Reference genome and annotation files</td></tr>
+                        <tr><td>03_transcript_assembly_gtf</td><td>Transcript assembly GTF files</td></tr>
+                        <tr><td>04_transcript_sequences_fasta</td><td>Transcript sequences in FASTA format</td></tr>
+                        <tr><td>05_differential_expression_analysis</td><td>DGE results and visualizations</td></tr>
+                        <tr><td>06_Significant_DGE_GO</td><td>GO enrichment analysis results</td></tr>
+                        <tr><td>07_Significant_DGE_pathways</td><td>KEGG pathway analysis results</td></tr>
+                        <tr><td>08_Significant_DGE_Enrichment</td><td>Additional enrichment analysis</td></tr>
+                        <tr><td>09_PCA_plot</td><td>PCA visualization</td></tr>
+                        <tr><td>10_PCOA_plot</td><td>PCoA visualization</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="info-box">
+                <div class="info-box-title">Notes</div>
+                <p>All data files are provided in standard formats compatible with common bioinformatics tools. Raw data files are provided in FASTQ format. Analysis results are provided in Excel, PDF, and image formats as appropriate.</p>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>NGS Analysis Report | <%= project_id %> | Page <span class="pageNumber"></span></p>
+            <p style="font-size: 7pt; margin-top: 5pt;">Generated by Unigenome NGS Report System | Confidential</p>
+        </div>
+    </div>
+</body>
+</html>

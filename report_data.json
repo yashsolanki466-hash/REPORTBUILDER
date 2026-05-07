@@ -1,0 +1,36 @@
+{
+    "project": {
+        "project_id": "240540",
+        "pi": "Dr Madhurjit Singh Rathore",
+        "application": "WTA",
+        "samples": "4"
+    },
+    "samples": [],
+    "reference": {
+        "genome_fasta": null,
+        "genome_gff": "240540/02_reference_genome_and_gff/PM.genechr.trans.gff"
+    },
+    "assembly": {
+        "transcripts": 66758,
+        "total_length": 92931869,
+        "mean_length": 1392
+    },
+    "dge": {
+        "total": 27819,
+        "upregulated": 0,
+        "downregulated": 0
+    },
+    "go": {
+        "terms": 0
+    },
+    "kegg": {
+        "pathways": 0,
+        "images": 0
+    },
+    "enrichment": {
+        "go_files": 4,
+        "kegg_files": 4
+    },
+    "pca": [],
+    "pcoa": []
+}
