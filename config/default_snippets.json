@@ -1,0 +1,1030 @@
+{
+  "source": {
+    "file": "/home/yash-solanki/Downloads/report-builder/constants.ts",
+    "generated_at": "2026-02-26T13:20:25.800324+00:00"
+  },
+  "snippets": {
+    "wet_lab": {
+      "rna_isolation_qc": "Total RNA was extracted using the QIAGEN RNeasy mini kit. The quantity was measured using Qubit® 4.0 Fluorometer, and RNA integrity (RIN) was assessed via Agilent 4150 TapeStation to ensure high-quality input material (RIN > 7.0).",
+      "library_preparation": "Sequencing libraries were prepared using the NEBNext® Ultra™ RNA Library Prep Kit. Ribosomal RNA was depleted using the KAPA RNA HyperPrep Kit with RiboErase (HMR) to maximize the coverage of coding and non-coding transcripts."
+    },
+    "mapping": {
+      "methodology": "Indexing of the reference genome was carried out using STAR genomeGenerate mode option. Then the input reads, in FASTQ format, along with the indexed reference genome generated in previous step was given to the STAR aligner. The analysis begins by mapping HQ reads against the reference genome to identify the positions from where the reads originated. This mapping information allows us to collect subsets of the reads corresponding to each gene, and then to assemble and quantify transcripts represented by those reads. Hence, the high-quality reads were mapped to reference genome using STAR aligner to create alignment in BAM format for each sample with default parameters. The mapping statistics are provided in the table below:",
+      "star_methodology": "Indexing of the reference genome was carried out using STAR genomeGenerate mode option. Then the input reads, in FASTQ format, along with the indexed reference genome generated in previous step was given to the STAR aligner. The analysis begins by mapping HQ reads against the reference genome to identify the positions from where the reads originated. This mapping information allows us to collect subsets of the reads corresponding to each gene, and then to assemble and quantify transcripts represented by those reads. Hence, the high-quality reads were mapped to reference genome using STAR aligner to create alignment in BAM format for each sample with default parameters. The mapping statistics are provided in the table below:"
+    },
+    "reference": {
+      "genome_info": "Based on information received from client, the reference genome of Homo sapiens (human) (GCF_000001405.40) and its corresponding GFF file was downloaded from NCBI. Source Link",
+      "gff_info": "The reference GFF file contains genome annotation. It includes information (locus and description) regarding genes and proteins. The fasta sequence of the reference genome along with the corresponding GFF file is provided with the deliverables in the folder named \"02_reference_genome_and_gff\" for client's reference.",
+      "genome_source": "The reference genome of Solanum lycopersicum (tomato) and its corresponding GFF was downloaded from NCBI (https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/036/512/215/GCF_036512215.1_SLM_r2.1/).",
+      "gff_annotation": "The reference GFF file contains genome annotation. It includes information (locus and description) regarding genes and proteins. There are a total of 40021 genes and 44391 mRNAs as per the GFF file of NCBI reference genome. The fasta sequence of the reference genome along with the corresponding GFF file is provided with the deliverables in the folder named '02_reference_genome_and_gff' for client's reference."
+    },
+    "assembly": {
+      "stringtie_methodology_1": "StringTie assembles transcripts from RNA-seq reads that have been aligned to the genome, first grouping the reads into distinct gene loci and then assembling each locus into as many isoforms as are needed to explain the data. Following this, StringTie simultaneously assembles and quantify the final transcripts by using network flow algorithm and starting from most highly abundant transcripts. The reference genome GFF annotation files, containing exon structures of \"known\" genes, are then used to annotate the assembled transcripts and quantify the expression of known genes as well derive clues if a novel transcript has been found in the sample.",
+      "stringtie_methodology_2": "After assembling each sample, the full set of assemblies is passed to StringTie’s merge function, which merges together all the gene structures found in any of the samples. This step is required because transcripts in some of the samples might only be partially covered by reads, and as a consequence only partial versions of them will be assembled in the initial StringTie run. The merge step creates a set of transcripts that is consistent across all samples, so that the transcripts can be compared in subsequent steps.",
+      "output_notes": "The output consists of assembled gene/transcript GTF file for all samples and another GTF file resulting from the merge step as described above. These files have been provided along with the deliverables in the folder named \"03_transcript_assembly_gtf\". In addition, the transcript sequences derived from these individual assembly is provided in folder \"04_transcript_sequences_fasta\".",
+      "gffcompare_method": "For comparison of assembled transcripts with reference transcripts, Gffcompare utility was run taking the reference GTF and the string-tie merged GTF file. This produces an output file, which adds to each transcript a \"class code\" and the name of the transcript from the reference annotation file to check how the predicted transcripts relate to an annotation file.",
+      "mstrg_note": "",
+      "stringtie_methodology": "StringTie assembles transcripts from RNA-seq reads that have been aligned to the genome, first grouping the reads into distinct gene loci and then assembling each locus into as many isoforms as are needed to explain the data. Following this, StringTie simultaneously assembles and quantify the final transcripts by using network flow algorithm and starting from most highly abundant transcripts. The reference genome GFF annotation files, containing exon structures of 'known' genes, are then used to annotate the assembled transcripts and quantify the expression of known genes as well derive clues if a novel transcript has been found in the sample.",
+      "stringtie_merge": "After assembling each sample, the full set of assemblies is passed to StringTie's merge function, which merges together all the gene structures found in any of the samples. This step is required because transcripts in some of the samples might only be partially covered by reads, and as a consequence only partial versions of them will be assembled in the initial StringTie run. The merge step creates a set of transcripts that is consistent across all samples, so that the transcripts can be compared in subsequent steps in figure below:",
+      "stringtie_merge_caption": "Explanation of merging transcript assemblies using StringTie’s merge function. In this example, four partial assemblies from four different samples are merged into two transcripts A and B. Samples 1 and 2 are both consistent with the reference annotation, which is used here to merge and extend them to create transcript A. Samples 3 and 4 are consistent with each other but not with the annotation, and these are merged to create transcript B. Please note that the 4 samples shown here are for example purpose only (Ref: Micheal P et al., 2016).",
+      "gffcompare_methodology": "For comparison of assembled transcripts with reference transcripts, Gffcompare utility was run taking the reference GTF and the string-tie merged GTF file. This produces an output file, which adds to each transcript a 'class code' and the name of the transcript from the reference annotation file to check how the predicted transcripts relate to an annotation file. Meaning of each class code is depicted in figure below:",
+      "novel_isoforms": "To identify novel isoform transcripts not present in the reference GTF file, gffcompare utility was ran taking the reference GTF and the string-tie merged GTF file. This produces an output file, which adds to each transcript a 'class code' and the name of the transcript from the reference annotation file to check how the predicted transcripts relate to an annotation file. Class code 'j' means that predicted transcript is a potential novel isoform that shares at least one splice junction with a reference transcript. A total of 8,934 novel isoforms with the class code 'j' were extracted and are provided with the deliverables in a file named novel.isoforms.gtf in the folder '03_transcript_assembly_gtf'. A brief description of the column names in the GTF file is provided in the same folder in the file named ReadMe.txt."
+    },
+    "dge": {
+      "intro": "Abundances of the transcripts in all samples were estimated using StringTie with the help of merged transcripts generated from merge stringtie step. A python program (prepDE.py) was used to extract the read count information directly from the files generated by StringTie. For differential expression analysis, sample comparison was made according to grouping information provided by client:",
+      "comparison_info_table": {
+        "headers": [
+          "Comparison",
+          "Description"
+        ],
+        "rows": [
+          [
+            "ST v/s SC",
+            "Comparison 1 [ST (ST1+ST2) Vs SC (SC1+SC2)]"
+          ],
+          [
+            "RC v/s SC",
+            "Comparison 2 [RC (RC1+RC2) Vs SC (SC1+SC2)]"
+          ],
+          [
+            "RT v/s SC",
+            "Comparison 3 [RT (RT1+RT2) Vs SC (SC1+SC2)]"
+          ],
+          [
+            "RT v/s ST",
+            "Comparison 4 [RT (RT1+RT2) Vs ST (ST1+ST2)]"
+          ],
+          [
+            "RC v/s ST",
+            "Comparison 5 [RC (RC1+RC2) Vs ST (ST1+ST2)]"
+          ],
+          [
+            "RT v/s RC",
+            "Comparison 6 [RT (RT1+RT2) Vs RC (RC1+RC2)]"
+          ]
+        ]
+      },
+      "group_sample_table": {
+        "headers": [
+          "Group Name",
+          "Sample Name"
+        ],
+        "rows": [
+          [
+            "SC",
+            "SC1"
+          ],
+          [
+            "SC",
+            "SC2"
+          ],
+          [
+            "ST",
+            "ST1"
+          ],
+          [
+            "ST",
+            "ST2"
+          ],
+          [
+            "RC",
+            "RC1"
+          ],
+          [
+            "RC",
+            "RC2"
+          ],
+          [
+            "RT",
+            "RT1"
+          ],
+          [
+            "RT",
+            "RT2"
+          ]
+        ]
+      },
+      "deseq2_intro": "Differential gene expression was inferred between samples by applying the R package DESeq2. It is bioconductor package based on negative binomial distribution method. The analysis provides tabular result along with the normalized i.e. \"baseMean\" for each involved sample. The description of selected result columns has been given in below mentioned table:",
+      "deseq2_columns_table": {
+        "headers": [
+          "Column Name",
+          "Description"
+        ],
+        "rows": [
+          [
+            "",
+            "Feature identifier"
+          ],
+          [
+            "baseMean",
+            "The average of the normalized count values, dividing by size factors, taken over all samples"
+          ],
+          [
+            "log2FoldChange",
+            "The effect size estimate. This value indicates how much the gene or transcript's expression seems to have changed between the comparison and control groups. This value is reported on a logarithmic scale to base 2."
+          ],
+          [
+            "lfcSE",
+            "The standard error estimate for the log2 fold change estimate."
+          ],
+          [
+            "stat",
+            "The value of the test statistic for the gene or transcript."
+          ],
+          [
+            "pvalue",
+            "P-value of the test for the gene or transcript."
+          ],
+          [
+            "padj",
+            "Adjusted P-value for multiple testing for the gene or transcript."
+          ]
+        ]
+      },
+      "criteria_intro": "The criterion used to identify upregulated and downregulated transcripts along with the significance is provided in the below table:",
+      "criteria_table": {
+        "headers": [
+          "Condition",
+          "Status"
+        ],
+        "rows": [
+          [
+            "log2FoldChange > 0",
+            "Up regulated"
+          ],
+          [
+            "log2FoldChange < 0",
+            "Down regulated"
+          ],
+          [
+            "log2FoldChange > 0 and padj <0.05",
+            "Significantly up regulated"
+          ],
+          [
+            "log2FoldChange < 0 and padj <0.05",
+            "Significantly down regulated"
+          ]
+        ]
+      },
+      "stats_note": "Differential expression analysis statistics is provided in table below and the data deliverable are given in the folder \"05_differential_expression_analysis\" which contains the Differential gene expression (DGE) analysis results.",
+      "annotation_note": "Annotation for differentially expressed transcripts was obatined based on blastX result by similarity search against NCBI’s NR database in order to obtain gene ontology analysis using blast2GO.",
+      "ma_plot_text": "The plot visualizes the differences between measurements taken in two samples, by transforming the data onto M (log ratio) and A (mean average) scales, then plotting these values. For illustration purpose, MA plot for Comparison1 has been depicted below:",
+      "ma_plot_caption": "Figure 10.1: MA plot showing differentially expressed transcripts in Comparison-1. On X-axis normalized counts for all the samples and on Y-axis log2foldchange are plotted. Points colored are with red if the q-value is less than 0.05 and black if the q-value is greater than 0.05.",
+      "ma_plot_note": "Note: MA plot for only one comparison has been shown above, however plots for all other combinations have been provided as a part of data deliverables \"05_differential_expression_analysis\".",
+      "volcano_plot_text": "The \"volcano plot\" arranges expressed genes along dimensions of biological as well as statistical significance. For illustration purpose, Volcano plot for Comparison1 has been depicted below:",
+      "volcano_plot_caption": "Figure 10.2: Volcano plot showing differentially expressed transcripts in Comparison-1. X-axis represents the log2fold change values and Y-axis represents log10 of q-value (FDR corrected p-value. Points are colored red if the q-value is less than 0.05 and black if the q-value is greater than 0.05.",
+      "volcano_plot_note": "Note: Volcano plot for only one comparison has been shown above, however plots for all other combinations has been provided as a part of data deliverables \"05_differential_expression_analysis\"."
+    },
+    "go": {
+      "intro": "The Gene Ontology project provides controlled vocabularies of defined terms representing gene product properties. These cover three domains: Cellular Component, the parts of a cell or its extracellular environment; Molecular Function, the elemental activities of a gene product at the molecular level, such as binding or catalysis; and Biological Process, operations or sets of molecular events with a defined beginning and end, pertinent to the functioning of integrated living units: cells, tissues, organs, and organisms. GO was assigned to significant differentially expressed transcripts using Blast2go cli. Single gene can be assigned with multiple GO categories and hence multiple GO terms. The GO domain distribution is shown in table below:",
+      "distribution_table": {
+        "headers": [
+          "Sample Name",
+          "Significant DGE",
+          "# Seq with GO",
+          "Biological Process",
+          "Cellular Component",
+          "Molecular Function"
+        ],
+        "rows": [
+          [
+            "Comparison1",
+            "1357",
+            "498",
+            "398",
+            "351",
+            "412"
+          ],
+          [
+            "Comparison2",
+            "4616",
+            "1492",
+            "1178",
+            "1022",
+            "1189"
+          ],
+          [
+            "Comparison3",
+            "5601",
+            "1910",
+            "1475",
+            "1311",
+            "1534"
+          ],
+          [
+            "Comparison4",
+            "4916",
+            "1551",
+            "1194",
+            "1036",
+            "1214"
+          ],
+          [
+            "Comparison5",
+            "5331",
+            "1805",
+            "1410",
+            "1229",
+            "1433"
+          ],
+          [
+            "Comparison6",
+            "2793",
+            "1215",
+            "982",
+            "879",
+            "981"
+          ]
+        ]
+      },
+      "deliverables_note": "Assigned Gene Ontology are also provided in deliverables \"06_Significant_DGE_GO\"."
+    },
+    "workflow": {
+      "software_table": {
+        "headers": [
+          "Software",
+          "Version",
+          "Application"
+        ],
+        "rows": [
+          [
+            "Trim Galore",
+            "0.6.4",
+            "Adapter and low-quality data removal"
+          ],
+          [
+            "STAR",
+            "2.7.10",
+            "Mapping of reads to reference genome"
+          ],
+          [
+            "Stringtie",
+            "2.2.1",
+            "Reference based assembly"
+          ],
+          [
+            "gffcompare",
+            "0.12.6",
+            "Comparing reference genome gff with merged gff"
+          ],
+          [
+            "gffread",
+            "0.12.7",
+            "Fetching fasta sequences from gff"
+          ],
+          [
+            "Blastx",
+            "2.30.0+",
+            "Similarity search against NCBI NR"
+          ],
+          [
+            "Blast2go cli",
+            "1.5",
+            "GO mapping and annotation"
+          ],
+          [
+            "edgeR",
+            "3.6.2",
+            "Differential expression analysis"
+          ],
+          [
+            "KEGG KAAS",
+            "Webserver",
+            "Pathway analysis"
+          ],
+          [
+            "clusterProfiler",
+            "4.12.6",
+            "Over-representation analysis"
+          ]
+        ]
+      }
+    },
+    "bioinformatics": {
+      "analysis_intro": "",
+      "workflow_narrative": "Workflow overview: Raw data was filtered to remove adapters and low-quality bases. Clean reads thus produced were used for analysis. Reference guided transcript assembly was performed for samples first by mapping clean reads on reference genome using STAR (v2.7.10a) aligner and then performing transcript assembly by StringTie (v 2.2.1). A consensus set of transcripts was obtained using SringTie merge function which merges together all the gene structures found in any of the samples. Transcript abundance was then estimated for individual sample using merged transcript consensus again using StringTie and read counts thus obtained for each transcript were taken as input for differential expression analysis using DESeq2 package. Gene Ontology and pathway analysis of the significantly differentially expressed transcripts were performed using Blast2go cli and KEGG-KAAS server respectively. Overall bioinformatics workflow is graphically represented in figure above and software version along with its use in table below."
+    },
+    "data_stats": {
+      "intro": "",
+      "illumina_intro": "The next generation sequencing for these samples were performed on the Illumina Novaseq X plus platform. Statistics of raw data is shown in Table below:"
+    }
+  },
+  "sections": {
+    "overview": {
+      "title": "1. Whole Transcriptome Analysis",
+      "subtitle": "",
+      "text_blocks": [],
+      "tables": []
+    },
+    "wet-lab": {
+      "title": "2. Wet Lab Analysis",
+      "subtitle": "Quality control and library preparation methods",
+      "text_blocks": [
+        {
+          "tag": "p",
+          "text": "Quality control and library preparation methods"
+        },
+        {
+          "tag": "p",
+          "text": "Total RNA was extracted using the QIAGEN RNeasy mini kit. The quantity was measured using Qubit® 4.0 Fluorometer, and RNA integrity (RIN) was assessed via Agilent 4150 TapeStation to ensure high-quality input material (RIN > 7.0)."
+        },
+        {
+          "tag": "p",
+          "text": "Sequencing libraries were prepared using the NEBNext® Ultra™ RNA Library Prep Kit. Ribosomal RNA was depleted using the KAPA RNA HyperPrep Kit with RiboErase (HMR) to maximize the coverage of coding and non-coding transcripts."
+        },
+        {
+          "tag": "h4",
+          "text": "1. RNA Isolation & QC"
+        },
+        {
+          "tag": "h4",
+          "text": "2. Library Preparation"
+        }
+      ],
+      "tables": []
+    },
+    "workflow": {
+      "title": "3. Bioinformatics Workflow",
+      "subtitle": "Interactive pipeline visualization and software details",
+      "text_blocks": [
+        {
+          "tag": "p",
+          "text": "Interactive pipeline visualization and software details"
+        }
+      ],
+      "tables": [
+        {
+          "headers": [
+            "Software",
+            "Version",
+            "Application"
+          ],
+          "rows": [
+            [
+              "Trim Galore",
+              "0.6.4",
+              "Adapter and low-quality data removal"
+            ],
+            [
+              "STAR",
+              "2.7.10",
+              "Mapping of reads to reference genome"
+            ],
+            [
+              "Stringtie",
+              "2.2.1",
+              "Reference based assembly"
+            ],
+            [
+              "gffcompare",
+              "0.12.6",
+              "Comparing reference genome gff with merged gff"
+            ],
+            [
+              "gffread",
+              "0.12.7",
+              "Fetching fasta sequences from gff"
+            ],
+            [
+              "Blastx",
+              "2.30.0+",
+              "Similarity search against NCBI NR"
+            ],
+            [
+              "Blast2go cli",
+              "1.5",
+              "GO mapping and annotation"
+            ],
+            [
+              "edgeR",
+              "3.6.2",
+              "Differential expression analysis"
+            ],
+            [
+              "KEGG KAAS",
+              "Webserver",
+              "Pathway analysis"
+            ],
+            [
+              "clusterProfiler",
+              "4.12.6",
+              "Over-representation analysis"
+            ]
+          ]
+        }
+      ]
+    },
+    "data": {
+      "title": "4. Data Statistics & QC",
+      "subtitle": "Raw data metrics and reference genome information",
+      "text_blocks": [
+        {
+          "tag": "p",
+          "text": "Raw data metrics and reference genome information"
+        }
+      ],
+      "tables": [
+        {
+          "headers": [
+            "File Name",
+            "Format",
+            "Total Reads",
+            "Total Bases",
+            "GC Content",
+            "Q30 %"
+          ],
+          "rows": []
+        }
+      ]
+    },
+    "mapping": {
+      "title": "5. Mapping Statistics",
+      "subtitle": "STAR alignment results and StringTie assembly statistics",
+      "text_blocks": [
+        {
+          "tag": "p",
+          "text": "STAR alignment results and StringTie assembly statistics"
+        },
+        {
+          "tag": "p",
+          "text": "Indexing of the reference genome was carried out using STAR genomeGenerate mode option. Then the input reads, in FASTQ format, along with the indexed reference genome generated in previous step was given to the STAR aligner. The analysis begins by mapping HQ reads against the reference genome to identify the positions from where the reads originated. This mapping information allows us to collect subsets of the reads corresponding to each gene, and then to assemble and quantify transcripts represented by those reads. Hence, the high-quality reads were mapped to reference genome using STAR aligner to create alignment in BAM format for each sample with default parameters. The mapping statistics are provided in the table below:"
+        }
+      ],
+      "tables": [
+        {
+          "headers": [
+            "Sample Name",
+            "Total Reads",
+            "Mapped Reads",
+            "% Mapped",
+            "Unique Reads",
+            "% Unique"
+          ],
+          "rows": []
+        }
+      ]
+    },
+    "reference": {
+      "title": "6. Reference Genome & GFF",
+      "subtitle": "Details of the reference genome and annotation file used",
+      "text_blocks": [
+        {
+          "tag": "p",
+          "text": "Details of the reference genome and annotation file used"
+        },
+        {
+          "tag": "p",
+          "text": "Based on information received from client, the reference genome of Homo sapiens (human) (GCF_000001405.40) and its corresponding GFF file was downloaded from NCBI. Source Link"
+        },
+        {
+          "tag": "p",
+          "text": "The reference GFF file contains genome annotation. It includes information (locus and description) regarding genes and proteins. The fasta sequence of the reference genome along with the corresponding GFF file is provided with the deliverables in the folder named \"02_reference_genome_and_gff\" for client's reference."
+        },
+        {
+          "tag": "h4",
+          "text": "Table 2: Reference genome stats"
+        },
+        {
+          "tag": "h4",
+          "text": "Table 3: Detail Information of GFF file"
+        }
+      ],
+      "tables": [
+        {
+          "headers": [
+            "Description",
+            "Stats"
+          ],
+          "rows": [
+            [
+              "Total Chromosomes/Scaffolds",
+              "705"
+            ],
+            [
+              "Total genome length (bp)",
+              "3,298,430,636"
+            ],
+            [
+              "Mean chromosome/scaffold size",
+              "4,678,625"
+            ],
+            [
+              "Max chromosome/scaffold size (bp)",
+              "248,956,422"
+            ],
+            [
+              "Min chromosome/scaffolds size (bp)",
+              "970"
+            ]
+          ]
+        },
+        {
+          "headers": [
+            "Genome elements",
+            "# Sequences"
+          ],
+          "rows": [
+            [
+              "mRNA",
+              "144,447"
+            ],
+            [
+              "CDS",
+              "1,836,136"
+            ],
+            [
+              "exon",
+              "2,301,289"
+            ],
+            [
+              "gene",
+              "47,876"
+            ]
+          ]
+        }
+      ]
+    },
+    "assembly": {
+      "title": "7. Transcript Assembly",
+      "subtitle": "StringTie assembly and merging process results",
+      "text_blocks": [
+        {
+          "tag": "p",
+          "text": "StringTie assembly and merging process results"
+        },
+        {
+          "tag": "p",
+          "text": "StringTie assembles transcripts from RNA-seq reads that have been aligned to the genome, first grouping the reads into distinct gene loci and then assembling each locus into as many isoforms as are needed to explain the data. Following this, StringTie simultaneously assembles and quantify the final transcripts by using network flow algorithm and starting from most highly abundant transcripts. The reference genome GFF annotation files, containing exon structures of \"known\" genes, are then used to annotate the assembled transcripts and quantify the expression of known genes as well derive clues if a novel transcript has been found in the sample."
+        },
+        {
+          "tag": "p",
+          "text": "After assembling each sample, the full set of assemblies is passed to StringTie’s merge function, which merges together all the gene structures found in any of the samples. This step is required because transcripts in some of the samples might only be partially covered by reads, and as a consequence only partial versions of them will be assembled in the initial StringTie run. The merge step creates a set of transcripts that is consistent across all samples, so that the transcripts can be compared in subsequent steps."
+        },
+        {
+          "tag": "p",
+          "text": "Figure 11: Explanation of merging transcript assemblies using StringTie’s merge function. (Ref: Micheal P et al., 2016)."
+        },
+        {
+          "tag": "p",
+          "text": "The output consists of assembled gene/transcript GTF file for all samples and another GTF file resulting from the merge step as described above. These files have been provided along with the deliverables in the folder named \"03_transcript_assembly_gtf\". In addition, the transcript sequences derived from these individual assembly is provided in folder \"04_transcript_sequences_fasta\"."
+        },
+        {
+          "tag": "p",
+          "text": "Note: “MSTRG\" in output files generated from stringtie stands for \"Merged StringTie Transcripts,\" followed by a unique number. This identifier is created by StringTie merged step to label transcript isoforms that were not previously annotated in the reference genome used."
+        },
+        {
+          "tag": "p",
+          "text": "For comparison of assembled transcripts with reference transcripts, Gffcompare utility was run taking the reference GTF and the string-tie merged GTF file. This produces an output file, which adds to each transcript a \"class code\" and the name of the transcript from the reference annotation file to check how the predicted transcripts relate to an annotation file."
+        },
+        {
+          "tag": "p",
+          "text": "Detailed mapping relationship between assembled transcripts (blue) and reference transcripts (black)."
+        },
+        {
+          "tag": "p",
+          "text": "Exonic overlap on the opposite strand i Fully contained within a reference intron u Unknown, intergenic (no overlap) Reference Source: https://ccb.jhu.edu/software/stringtie/gffcompare.shtml"
+        },
+        {
+          "tag": "p",
+          "text": "To identify novel isoform transcripts not present in the reference GTF file, gffcompare utility was ran taking the reference GTF and the string-tie merged GTF file."
+        },
+        {
+          "tag": "p",
+          "text": "Class code \"j\" means that the predicted transcript is a potential novel isoform that shares at least one splice junction with a reference transcript."
+        },
+        {
+          "tag": "p",
+          "text": "A total of novel isoforms with the class code \"j\" were extracted and are provided with the deliverables in a file named novel.isoforms.gtf in the folder \"03_transcript_assembly_gff\"."
+        },
+        {
+          "tag": "p",
+          "text": "* A brief description of the column names in the GTF file is provided in the same folder in the file named ReadMe.txt."
+        },
+        {
+          "tag": "h4",
+          "text": "Figure 12: Gffcompare Class Codes & Visual Descriptions"
+        }
+      ],
+      "tables": [
+        {
+          "headers": [
+            "Sample Name",
+            "# assembled transcripts",
+            "Total assembled (bp)",
+            "Mean transcript size (bp)",
+            "Max transcript size (bp)"
+          ],
+          "rows": [
+            [
+              "merged.fasta",
+              "6,53,846",
+              "9,830,199,883",
+              "1,503",
+              "155,532"
+            ],
+            [
+              "ICGA-BC-NT-125",
+              "4,84,292",
+              "3,552,472,280",
+              "733.5",
+              "155,532"
+            ],
+            [
+              "ICGA-BC-NT-126",
+              "3,09,175",
+              "6,103,864,499",
+              "1,974.20",
+              "155,532"
+            ],
+            [
+              "ICGA-BC-NT-127",
+              "3,04,981",
+              "5,983,561,143",
+              "1,961.90",
+              "155,532"
+            ],
+            [
+              "ICGA-BC-NT-129",
+              "3,21,143",
+              "6,165,359,962",
+              "1,919.80",
+              "155,532"
+            ],
+            [
+              "ICGA-BC-TT-125",
+              "4,16,107",
+              "4,176,511,182",
+              "1,003.70",
+              "155,532"
+            ],
+            [
+              "ICGA-BC-TT-126",
+              "2,55,210",
+              "5,641,163,378",
+              "2,210.40",
+              "155,532"
+            ],
+            [
+              "ICGA-BC-TT-127",
+              "2,82,706",
+              "5,090,917,59",
+              "1,800.80",
+              "155,532"
+            ],
+            [
+              "ICGA-BC-TT-129",
+              "2,69,530",
+              "5,779,757,01",
+              "2,144.40",
+              "155,532"
+            ]
+          ]
+        }
+      ]
+    },
+    "dge": {
+      "title": "8. Differential Expression Analysis",
+      "subtitle": "Abundance estimation and significance testing",
+      "text_blocks": [
+        {
+          "tag": "p",
+          "text": "Abundance estimation and significance testing"
+        },
+        {
+          "tag": "p",
+          "text": "Abundances of the transcripts in all samples were estimated using StringTie with the help of merged transcripts generated from merge stringtie step. A python program (prepDE.py) was used to extract the read count information directly from the files generated by StringTie. For differential expression analysis, sample comparison was made according to grouping information provided by client."
+        },
+        {
+          "tag": "p",
+          "text": "Table 6: Sample description and comparisons details."
+        },
+        {
+          "tag": "p",
+          "text": "Differential gene expression was inferred between samples by applying the R package edgeR. It is a Bioconductor package based on negative binomial distribution method. The analysis provides tabular result along with the normalized i.e., Counts Per Million mapped reads (CPM) for each involved sample."
+        },
+        {
+          "tag": "p",
+          "text": "Note: We recommend a minimum of triplicates per group in RNA-Seq experiments. However, as there are no replicates in some studies, we performed DEG analysis using edgeR, which is capable of producing reasonable results in single-sample comparisons."
+        },
+        {
+          "tag": "p",
+          "text": "Select a comparison..."
+        },
+        {
+          "tag": "p",
+          "text": "Interactive heatmap showing expression patterns of the top 30 most significant genes. Colors indicate relative expression."
+        },
+        {
+          "tag": "p",
+          "text": "Showing top 100 most significant genes sorted by FDR. Full results are available in the 05_Differential_Expression folder."
+        },
+        {
+          "tag": "h4",
+          "text": "Group wise sample information"
+        },
+        {
+          "tag": "h4",
+          "text": "Table 7: Column description of edgeR output"
+        },
+        {
+          "tag": "h4",
+          "text": "Table 8: Criteria used to identify regulated genes"
+        }
+      ],
+      "tables": [
+        {
+          "headers": [
+            "Comparison",
+            "Description"
+          ],
+          "rows": [
+            [
+              "Comparison 1",
+              "TT-125 (ICGA-BC-TT-125) Vs NT-125 (ICGA-BC-NT-125)"
+            ],
+            [
+              "Comparison 2",
+              "TT-126 (ICGA-BC-TT-126) Vs NT-126 (ICGA-BC-NT-126)"
+            ],
+            [
+              "Comparison 3",
+              "TT-127 (ICGA-BC-TT-127) Vs NT-127 (ICGA-BC-NT-127)"
+            ],
+            [
+              "Comparison 4",
+              "TT-129 (ICGA-BC-TT-129) Vs NT-129 (ICGA-BC-NT-129)"
+            ],
+            [
+              "Comparison 5",
+              "TT (All) Vs NT (All) Combined Analysis"
+            ]
+          ]
+        },
+        {
+          "headers": [
+            "Column Name",
+            "Feature Identifier"
+          ],
+          "rows": [
+            [
+              "logFC",
+              "log2FoldChange: the logarithm (base 2) of the fold change (Test/Control)"
+            ],
+            [
+              "logCPM",
+              "Log10 of CPM value"
+            ],
+            [
+              "pval",
+              "pvalue for the statistical significance of this change"
+            ],
+            [
+              "FDR",
+              "FDR adjusted pvalue (q-value)"
+            ]
+          ]
+        },
+        {
+          "headers": [
+            "Condition",
+            "Status"
+          ],
+          "rows": [
+            [
+              "log2FC > 0",
+              "Up regulated"
+            ],
+            [
+              "log2FC < 0",
+              "Down regulated"
+            ],
+            [
+              "log2FC > 1 and FDR < 0.05",
+              "Significantly up regulated"
+            ],
+            [
+              "log2FC < -1 and FDR < 0.05",
+              "Significantly down regulated"
+            ]
+          ]
+        },
+        {
+          "headers": [
+            "Comparison",
+            "Total DEGs",
+            "Down Reg.",
+            "Up Reg.",
+            "Sig. Down FDR",
+            "Sig. Up FDR",
+            "Total Significant"
+          ],
+          "rows": []
+        },
+        {
+          "headers": [
+            "Gene/Transcript ID",
+            "Log2FC",
+            "LogCPM",
+            "FDR",
+            "Significance"
+          ],
+          "rows": []
+        }
+      ]
+    },
+    "functional": {
+      "title": "9. Functional & Enrichment Analysis",
+      "subtitle": "Interpretation of significant differential expression",
+      "text_blocks": [
+        {
+          "tag": "p",
+          "text": "Interpretation of significant differential expression"
+        },
+        {
+          "tag": "p",
+          "text": "The Gene Ontology project provides controlled vocabularies of defined terms representing gene product properties. These cover three domains: Cellular Component, the parts of a cell or its extracellular environment; Molecular Function, the elemental activities of a gene product at the molecular level, such as binding or catalysis; and Biological Process, operations or sets of molecular events with a defined beginning and end, pertinent to the functioning of integrated living units: cells, tissues, organs, and organisms. GO was assigned to significant differentially expressed transcripts using Blast2go cli. Single gene can be assigned with multiple GO categories and hence multiple GO terms. The GO domain distribution is shown in table below:"
+        },
+        {
+          "tag": "p",
+          "text": "Assigned Gene Ontology are also provided in deliverables \"06_Significant_DGE_GO\"."
+        },
+        {
+          "tag": "p",
+          "text": "Ortholog assignment and mapping of Significant differentially expressed transcripts to the biological pathways were performed using KEGG automatic annotation server (KAAS). Significant differentially expressed transcripts were compared against the KEGG database using BLASTX with threshold bit-score value of 60 (default). Pathway analysis was performed using all differentially expressed transcripts. The mapped transcripts represented metabolic pathways of major biomolecules such as carbohydrates, lipids, nucleotides, amino acids, glycans, etc. The mapped transcripts also represented the genes involved in metabolism, genetic information processing, and environmental information processing, cellular processes and organismal systems. Detail of the transcripts following in particular pathway along with the pathway images is given in data deliverables entitled \"07_Significant_DGE_pathways\"."
+        },
+        {
+          "tag": "p",
+          "text": "Pathway statistics for the selected comparison are displayed below. Complete statistics and images for all other combinations have been provided as part of data deliverables \"07_Significant_DGE_pathways\"."
+        },
+        {
+          "tag": "p",
+          "text": "The following image illustrates a representative KEGG pathway map (Glycolysis / Gluconeogenesis), demonstrating how significant differentially expressed genes are integrated into biochemical pathway visualizations."
+        },
+        {
+          "tag": "p",
+          "text": "Figure 16: Simplified map illustration of a representative KEGG pathway."
+        }
+      ],
+      "tables": [
+        {
+          "headers": [
+            "Sample Name",
+            "Significant DGE",
+            "# Seq with GO",
+            "Biological Process",
+            "Cellular Component",
+            "Molecular Function"
+          ],
+          "rows": [
+            [
+              "Comparison1",
+              "1,261",
+              "504",
+              "445",
+              "463",
+              "450"
+            ],
+            [
+              "Comparison2",
+              "5,147",
+              "2,291",
+              "2,041",
+              "2,127",
+              "2,091"
+            ],
+            [
+              "Comparison3",
+              "7,601",
+              "3,008",
+              "2,644",
+              "2,774",
+              "2,677"
+            ],
+            [
+              "Comparison4",
+              "4,695",
+              "2,137",
+              "1,877",
+              "1,975",
+              "1,929"
+            ],
+            [
+              "Comparison5",
+              "188",
+              "70",
+              "62",
+              "67",
+              "62"
+            ]
+          ]
+        },
+        {
+          "headers": [
+            "Category",
+            "Count",
+            "Description"
+          ],
+          "rows": []
+        },
+        {
+          "headers": [
+            "#Level 1",
+            "Level 2",
+            "Counts"
+          ],
+          "rows": []
+        }
+      ]
+    },
+    "enrichment": {
+      "title": "Over-representation Analysis",
+      "subtitle": "Functional enrichment using clusterProfiler",
+      "text_blocks": [
+        {
+          "tag": "p",
+          "text": "Functional enrichment using clusterProfiler"
+        },
+        {
+          "tag": "p",
+          "text": "Over-representation (enrichment) analysis is a statistical approach used to identify biological functions, pathways, or processes that are significantly over-represented among a given list of genes compared to a reference background. This helps in interpreting large-scale transcriptomic data by linking differentially expressed genes (DEGs) to specific molecular mechanisms and biological pathways."
+        },
+        {
+          "tag": "p",
+          "text": "Functional enrichment analysis was performed using the clusterProfiler R package to identify over-represented Gene Ontology (GO) terms and Kyoto Encyclopedia of Genes and Genomes (KEGG) pathways among the significantly differentially expressed genes (DEGs). The functions enrichGO and enrichKEGG were applied independently to both up-regulated and down-regulated gene sets."
+        },
+        {
+          "tag": "p",
+          "text": "Parameters: Multiple hypothesis testing correction was performed using the Benjamini–Hochberg (BH) method. GO and KEGG terms with pvalueCutoff = 0.05 and qvalueCutoff = 0.2 were considered statistically significant."
+        },
+        {
+          "tag": "p",
+          "text": "The results of the enrichment analyses were visualized using dot plots and bar plots, highlighting the most significantly enriched GO terms and KEGG pathways."
+        },
+        {
+          "tag": "p",
+          "text": "Note: Plots for only one comparison have been shown above, however plots for upregulated genes as well as all other combinations have been provided as a part of data deliverables \"08_Significant_DGE_Enrichment/\"."
+        },
+        {
+          "tag": "p",
+          "text": "⚠️ Exception Note:"
+        },
+        {
+          "tag": "p",
+          "text": "No enrichment was obtained for the following combinations: C5_up_KEGG."
+        },
+        {
+          "tag": "h4",
+          "text": "GO enrichment for up-regulated genes (Dot Plot)"
+        },
+        {
+          "tag": "h4",
+          "text": "GO enrichment for up-regulated genes (Bar Plot)"
+        },
+        {
+          "tag": "h4",
+          "text": "GO enrichment for down-regulated genes (Dot Plot)"
+        },
+        {
+          "tag": "h4",
+          "text": "GO enrichment for down-regulated genes (Bar Plot)"
+        },
+        {
+          "tag": "h4",
+          "text": "KEGG pathway enrichment for up-regulated genes (Dot Plot)"
+        },
+        {
+          "tag": "h4",
+          "text": "KEGG pathway enrichment for up-regulated genes (Bar Plot)"
+        },
+        {
+          "tag": "h4",
+          "text": "KEGG pathway enrichment for down-regulated genes (Dot Plot)"
+        },
+        {
+          "tag": "h4",
+          "text": "KEGG pathway enrichment for down-regulated genes (Bar Plot)"
+        }
+      ],
+      "tables": []
+    },
+    "deliverables": {
+      "title": "10. Deliverables",
+      "subtitle": "Structure of the output data package",
+      "text_blocks": [
+        {
+          "tag": "p",
+          "text": "Structure of the output data package"
+        },
+        {
+          "tag": "h4",
+          "text": "FTP Server Login"
+        },
+        {
+          "tag": "h4",
+          "text": "Available Files"
+        }
+      ],
+      "tables": []
+    }
+  }
+}

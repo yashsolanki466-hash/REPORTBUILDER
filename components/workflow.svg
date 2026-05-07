@@ -1,0 +1,180 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1020 1120" style="width: 100%; height: auto; display: block;">
+    <defs>
+        <marker id="arrow" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#000" />
+        </marker>
+    </defs>
+
+    <!-- ===================== PATHS (Connecting Lines) ===================== -->
+    <!-- RefGen to STAR -->
+    <path d="M 205 60 L 340 60 L 340 128" marker-end="url(#arrow)" fill="none" stroke="#000000" stroke-width="1.5px" />
+    <!-- Reads to STAR (joins the previous line) -->
+    <path d="M 475 60 L 340 60" fill="none" stroke="#000000" stroke-width="1.5px" />
+    
+    <!-- STAR to Align -->
+    <path d="M 425 160 L 475 160" marker-end="url(#arrow)" fill="none" stroke="#000000" stroke-width="1.5px" />
+    <!-- STAR to Stringtie 1 -->
+    <path d="M 340 192 L 340 228" marker-end="url(#arrow)" fill="none" stroke="#000000" stroke-width="1.5px" />
+    
+    <!-- Annot to Stringtie 1 -->
+    <path d="M 205 260 L 255 260" marker-end="url(#arrow)" fill="none" stroke="#000000" stroke-width="1.5px" />
+    <!-- Annot to Stringtie-Merge -->
+    <path d="M 120 292 L 120 360 L 255 360" marker-end="url(#arrow)" fill="none" stroke="#000000" stroke-width="1.5px" />
+    
+    <!-- Stringtie 1 to Assembled Transcripts -->
+    <path d="M 425 260 L 475 260" marker-end="url(#arrow)" fill="none" stroke="#000000" stroke-width="1.5px" />
+    <!-- Stringtie 1 to Stringtie-Merge -->
+    <path d="M 340 292 L 340 328" marker-end="url(#arrow)" fill="none" stroke="#000000" stroke-width="1.5px" />
+    
+    <!-- Stringtie-Merge to Merged Transcripts -->
+    <path d="M 425 360 L 475 360" marker-end="url(#arrow)" fill="none" stroke="#000000" stroke-width="1.5px" />
+    <!-- Stringtie-Merge downwards to gff-compare (left branch) -->
+    <path d="M 340 392 L 340 428" marker-end="url(#arrow)" fill="none" stroke="#000000" stroke-width="1.5px" />
+    <!-- Stringtie-Merge downwards to Stringtie 2 (right branch) -->
+    <path d="M 340 410 L 780 410 L 780 428" marker-end="url(#arrow)" fill="none" stroke="#000000" stroke-width="1.5px" />
+
+    <!-- gff-compare to Status -->
+    <path d="M 255 460 L 205 460" marker-end="url(#arrow)" fill="none" stroke="#000000" stroke-width="1.5px" />
+
+    <!-- Right Column Vertical Drops -->
+    <!-- Str2 to Individual Assembly -->
+    <path d="M 780 492 L 780 528" marker-end="url(#arrow)" fill="none" stroke="#000000" stroke-width="1.5px" />
+    <!-- Individual Assembly to prepDE.py -->
+    <path d="M 780 592 L 780 628" marker-end="url(#arrow)" fill="none" stroke="#000000" stroke-width="1.5px" />
+    <!-- prepDE.py to DESeq2 -->
+    <path d="M 780 692 L 780 728" marker-end="url(#arrow)" fill="none" stroke="#000000" stroke-width="1.5px" />
+    <!-- DESeq2 to DEGs -->
+    <path d="M 780 792 L 780 828" marker-end="url(#arrow)" fill="none" stroke="#000000" stroke-width="1.5px" />
+
+    <!-- DEGs Branching -->
+    <!-- Stem down -->
+    <path d="M 780 892 L 780 910" fill="none" stroke="#000000" stroke-width="1.5px" />
+    <!-- Branch left to Blast2GO -->
+    <path d="M 780 910 L 670 910 L 670 928" marker-end="url(#arrow)" fill="none" stroke="#000000" stroke-width="1.5px" />
+    <!-- Branch right to KEGG KAAS server -->
+    <path d="M 780 910 L 890 910 L 890 928" marker-end="url(#arrow)" fill="none" stroke="#000000" stroke-width="1.5px" />
+
+    <!-- Blast2GO to GO analysis -->
+    <path d="M 670 992 L 670 1028" marker-end="url(#arrow)" fill="none" stroke="#000000" stroke-width="1.5px" />
+    <!-- KEGG KAAS to KEGG pathways -->
+    <path d="M 890 992 L 890 1028" marker-end="url(#arrow)" fill="none" stroke="#000000" stroke-width="1.5px" />
+
+
+    <!-- ===================== NODES (Boxes & Text) ===================== -->
+    <!-- Col 1: Inputs & Status -->
+    <g transform="translate(35, 28)">
+        <rect width="170" height="64" rx="5" fill="#d5e8d4" stroke="#82b366" stroke-width="1.5px" />
+        <text x="85" y="37" font-family="Arial, Helvetica, sans-serif" font-size="13.5px" fill="#000" text-anchor="middle" font-weight="500">Reference Genome</text>
+    </g>
+
+    <g transform="translate(35, 228)">
+        <rect width="170" height="64" rx="5" fill="#d5e8d4" stroke="#82b366" stroke-width="1.5px" />
+        <text x="85" y="28" font-family="Arial, Helvetica, sans-serif" font-size="13.5px" fill="#000" text-anchor="middle" font-weight="500">Reference Genome</text>
+        <text x="85" y="46" font-family="Arial, Helvetica, sans-serif" font-size="13.5px" fill="#000" text-anchor="middle" font-weight="500">Annotation</text>
+    </g>
+
+    <g transform="translate(35, 428)">
+        <rect width="170" height="64" rx="5" fill="#ffe6cc" stroke="#d79b00" stroke-width="1.5px" />
+        <text x="85" y="21" font-family="Arial, Helvetica, sans-serif" font-size="13.5px" fill="#000" text-anchor="middle" font-weight="500">Transcripts status</text>
+        <text x="85" y="37" font-family="Arial, Helvetica, sans-serif" font-size="13.5px" fill="#000" text-anchor="middle" font-weight="500">compared to</text>
+        <text x="85" y="53" font-family="Arial, Helvetica, sans-serif" font-size="13.5px" fill="#000" text-anchor="middle" font-weight="500">reference genome</text>
+    </g>
+
+
+    <!-- Col 2: Processing core -->
+    <g transform="translate(255, 128)">
+        <rect width="170" height="64" rx="5" fill="#dae8fc" stroke="#6c8ebf" stroke-width="1.5px" />
+        <text x="85" y="37" font-family="Arial, Helvetica, sans-serif" font-size="13.5px" fill="#000" text-anchor="middle" font-weight="500">STAR</text>
+    </g>
+
+    <g transform="translate(255, 228)">
+        <rect width="170" height="64" rx="5" fill="#dae8fc" stroke="#6c8ebf" stroke-width="1.5px" />
+        <text x="85" y="37" font-family="Arial, Helvetica, sans-serif" font-size="13.5px" fill="#000" text-anchor="middle" font-weight="500">Stringtie</text>
+    </g>
+
+    <g transform="translate(255, 328)">
+        <rect width="170" height="64" rx="5" fill="#dae8fc" stroke="#6c8ebf" stroke-width="1.5px" />
+        <text x="85" y="37" font-family="Arial, Helvetica, sans-serif" font-size="13.5px" fill="#000" text-anchor="middle" font-weight="500">Stringtie-Merge</text>
+    </g>
+
+    <g transform="translate(255, 428)">
+        <rect width="170" height="64" rx="5" fill="#dae8fc" stroke="#6c8ebf" stroke-width="1.5px" />
+        <text x="85" y="37" font-family="Arial, Helvetica, sans-serif" font-size="13.5px" fill="#000" text-anchor="middle" font-weight="500">gff-compare</text>
+    </g>
+
+
+    <!-- Col 3: First outputs -->
+    <g transform="translate(475, 28)">
+        <rect width="170" height="64" rx="5" fill="#d5e8d4" stroke="#82b366" stroke-width="1.5px" />
+        <text x="85" y="28" font-family="Arial, Helvetica, sans-serif" font-size="13.5px" fill="#000" text-anchor="middle" font-weight="500">All samples</text>
+        <text x="85" y="46" font-family="Arial, Helvetica, sans-serif" font-size="13.5px" fill="#000" text-anchor="middle" font-weight="500">RNA Seq clean reads</text>
+    </g>
+
+    <g transform="translate(475, 128)">
+        <rect width="170" height="64" rx="5" fill="#ffe6cc" stroke="#d79b00" stroke-width="1.5px" />
+        <text x="85" y="37" font-family="Arial, Helvetica, sans-serif" font-size="13.5px" fill="#000" text-anchor="middle" font-weight="500">Reads Alignment</text>
+    </g>
+
+    <g transform="translate(475, 228)">
+        <rect width="170" height="64" rx="5" fill="#ffe6cc" stroke="#d79b00" stroke-width="1.5px" />
+        <text x="85" y="28" font-family="Arial, Helvetica, sans-serif" font-size="13.5px" fill="#000" text-anchor="middle" font-weight="500">Assembled</text>
+        <text x="85" y="46" font-family="Arial, Helvetica, sans-serif" font-size="13.5px" fill="#000" text-anchor="middle" font-weight="500">Transcripts</text>
+    </g>
+
+    <g transform="translate(475, 328)">
+        <rect width="170" height="64" rx="5" fill="#ffe6cc" stroke="#d79b00" stroke-width="1.5px" />
+        <text x="85" y="37" font-family="Arial, Helvetica, sans-serif" font-size="13.5px" fill="#000" text-anchor="middle" font-weight="500">Merged Transcripts</text>
+    </g>
+
+
+    <!-- Col 4: Right processing pipeline -->
+    <g transform="translate(695, 428)">
+        <rect width="170" height="64" rx="5" fill="#dae8fc" stroke="#6c8ebf" stroke-width="1.5px" />
+        <text x="85" y="37" font-family="Arial, Helvetica, sans-serif" font-size="13.5px" fill="#000" text-anchor="middle" font-weight="500">Stringtie</text>
+    </g>
+
+    <g transform="translate(695, 528)">
+        <rect width="170" height="64" rx="5" fill="#dae8fc" stroke="#6c8ebf" stroke-width="1.5px" />
+        <text x="85" y="28" font-family="Arial, Helvetica, sans-serif" font-size="13.5px" fill="#000" text-anchor="middle" font-weight="500">Individual sample</text>
+        <text x="85" y="46" font-family="Arial, Helvetica, sans-serif" font-size="13.5px" fill="#000" text-anchor="middle" font-weight="500">assembly</text>
+    </g>
+
+    <g transform="translate(695, 628)">
+        <rect width="170" height="64" rx="5" fill="#dae8fc" stroke="#6c8ebf" stroke-width="1.5px" />
+        <text x="85" y="37" font-family="Arial, Helvetica, sans-serif" font-size="13.5px" fill="#000" text-anchor="middle" font-weight="500">prepDE.py</text>
+    </g>
+
+    <g transform="translate(695, 728)">
+        <rect width="170" height="64" rx="5" fill="#dae8fc" stroke="#6c8ebf" stroke-width="1.5px" />
+        <text x="85" y="37" font-family="Arial, Helvetica, sans-serif" font-size="13.5px" fill="#000" text-anchor="middle" font-weight="500">DESeq2</text>
+    </g>
+
+    <g transform="translate(695, 828)">
+        <rect width="170" height="64" rx="5" fill="#ffe6cc" stroke="#d79b00" stroke-width="1.5px" />
+        <text x="85" y="21" font-family="Arial, Helvetica, sans-serif" font-size="13.5px" fill="#000" text-anchor="middle" font-weight="500">Significant</text>
+        <text x="85" y="37" font-family="Arial, Helvetica, sans-serif" font-size="13.5px" fill="#000" text-anchor="middle" font-weight="500">Differentially</text>
+        <text x="85" y="53" font-family="Arial, Helvetica, sans-serif" font-size="13.5px" fill="#000" text-anchor="middle" font-weight="500">expressed genes</text>
+    </g>
+
+
+    <!-- Col 3.5 & 4.5: Bottom splits -->
+    <g transform="translate(585, 928)">
+        <rect width="170" height="64" rx="5" fill="#dae8fc" stroke="#6c8ebf" stroke-width="1.5px" />
+        <text x="85" y="37" font-family="Arial, Helvetica, sans-serif" font-size="13.5px" fill="#000" text-anchor="middle" font-weight="500">Blast2GO</text>
+    </g>
+
+    <g transform="translate(585, 1028)">
+        <rect width="170" height="64" rx="5" fill="#ffe6cc" stroke="#d79b00" stroke-width="1.5px" />
+        <text x="85" y="37" font-family="Arial, Helvetica, sans-serif" font-size="13.5px" fill="#000" text-anchor="middle" font-weight="500">GO analysis</text>
+    </g>
+
+    <g transform="translate(805, 928)">
+        <rect width="170" height="64" rx="5" fill="#dae8fc" stroke="#6c8ebf" stroke-width="1.5px" />
+        <text x="85" y="37" font-family="Arial, Helvetica, sans-serif" font-size="13.5px" fill="#000" text-anchor="middle" font-weight="500">KEGG KAAS server</text>
+    </g>
+
+    <g transform="translate(805, 1028)">
+        <rect width="170" height="64" rx="5" fill="#ffe6cc" stroke="#d79b00" stroke-width="1.5px" />
+        <text x="85" y="37" font-family="Arial, Helvetica, sans-serif" font-size="13.5px" fill="#000" text-anchor="middle" font-weight="500">KEGG pathways</text>
+    </g>
+</svg>
